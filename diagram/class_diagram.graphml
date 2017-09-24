@@ -137,9 +137,7 @@
             </y:ModelParameter>
           </y:NodeLabel>
           <y:UML clipContent="true" constraint="" omitDetails="false" stereotype="" use3DEffect="true">
-            <y:AttributeLabel>+ accountName : String
-+ password : String
-+ socialSecurityNr : long
+            <y:AttributeLabel>+ socialSecurityNr : long
 + firstName: String
 + lastName : String
 + address : String</y:AttributeLabel>
