@@ -4,6 +4,7 @@ package model;
 import io.Dao;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
+import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
 import java.util.HashMap;
@@ -50,6 +51,41 @@ public class Registry {
 
     public JsonArray getAllMembersInfo() {
         throw new NotImplementedException();
+    }
+
+    public JsonArray getAllMembersInfoTest() {
+        return Json.createArrayBuilder()
+            .add(Json.createObjectBuilder()
+                    .add("firstName", "Bengt")
+                    .add("lastName", "Bengtsson")
+                    .add("memberID", "1234")
+                    .add("socialSecurityNr", "9007250575")
+                    .add("numberOfBoats", 1)
+                    .add("boats", Json.createArrayBuilder()
+                        .add(Json.createObjectBuilder()
+                            .add("boatID", "12341")
+                            .add("size", 10)
+                            .add("type", "SailBoat"))))
+            .add(Json.createObjectBuilder()
+                    .add("firstName", "Lars")
+                    .add("lastName", "Larsson")
+                    .add("memberID", "1235")
+                    .add("socialSecurityNr", "9007250575")
+                    .add("numberOfBoats", 3)
+                    .add("boats", Json.createArrayBuilder()
+                        .add(Json.createObjectBuilder()
+                            .add("boatID", "12351")
+                            .add("size", 5)
+                            .add("type", "Canoe"))
+                        .add(Json.createObjectBuilder()
+                            .add("boatID", "12352")
+                            .add("size", 7)
+                            .add("type", "Motorsailer"))
+                        .add(Json.createObjectBuilder()
+                            .add("boatID", "12353")
+                            .add("size", 3)
+                            .add("type", "Other"))))
+            .build();
     }
 
     private Member findMember(long memberID) {

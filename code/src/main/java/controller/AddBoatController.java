@@ -1,15 +1,13 @@
 package controller;
 
 import model.Registry;
-import view.ConsoleView;
 import view.View; /**
  *
  */
 public class AddBoatController extends Controller {
 
-
-    public AddBoatController(ConsoleView consoleView, Registry registry) {
-        super(consoleView, registry);
+    public AddBoatController(View view, ConsoleController consoleController, Registry registry) {
+        super(view, consoleController, registry);
     }
 
     @Override

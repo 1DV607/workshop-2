@@ -14,39 +14,30 @@ public class Main {
         Dao dao = new Dao();
         JsonParser parser = new JsonParser();
         Registry registry = new Registry(dao, parser);
-        ConsoleView consoleView = new ConsoleView();
+        ConsoleController consoleController = new ConsoleController();
 
+        controller = new MenuController(new MenuView(), consoleController, registry);
+        consoleController.addController(controller);
 
-        controller = new MenuController(consoleView, registry);
-        view = new MenuView(controller);
-        consoleView.addView(view);
+        controller = new AddMemberController(new AddMemberView(), consoleController, registry);
+        consoleController.addController(controller);
 
-        controller = new AddMemberController(consoleView, registry);
-        view = new AddMemberView(controller);
-        consoleView.addView(view);
+        controller = new EditMemberController(new EditMemberView(), consoleController, registry);
+        consoleController.addController(controller);
 
-        controller = new EditMemberController(consoleView, registry);
-        view = new EditMemberView(controller);
-        consoleView.addView(view);
+        controller = new RemoveMemberController(new RemoveMemberView(), consoleController, registry);
+        consoleController.addController(controller);
 
-        controller = new RemoveMemberController(consoleView, registry);
-        view = new RemoveMemberView(controller);
-        consoleView.addView(view);
+        controller = new AddBoatController(new AddBoatView(), consoleController, registry);
+        consoleController.addController(controller);
 
-        controller = new AddBoatController(consoleView, registry);
-        view = new AddBoatView(controller);
-        consoleView.addView(view);
+        controller = new EditBoatController(new EditBoatView(), consoleController, registry);
+        consoleController.addController(controller);
 
-        controller = new EditBoatController(consoleView, registry);
-        view = new EditBoatView(controller);
-        consoleView.addView(view);
+        controller = new RemoveBoatController(new RemoveBoatView(), consoleController, registry);
+        consoleController.addController(controller);
 
-        controller= new RemoveBoatController(consoleView, registry);
-        view = new RemoveBoatView(controller);
-        consoleView.addView(view);
-
-        System.out.println("completed creating views");
-
+        consoleController.showView(0);
     }
 
 }

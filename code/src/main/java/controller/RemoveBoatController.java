@@ -1,15 +1,14 @@
 package controller;
 
 import model.Registry;
-import view.ConsoleView;
 import view.View; /**
  *
  */
 public class RemoveBoatController extends Controller {
 
 
-    public RemoveBoatController(ConsoleView consoleView, Registry registry) {
-        super(consoleView, registry);
+    public RemoveBoatController(View view, ConsoleController consoleController, Registry registry) {
+        super(view, consoleController, registry);
     }
 
     @Override

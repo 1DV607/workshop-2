@@ -1,7 +1,6 @@
 package controller;
 
 import model.Registry;
-import view.ConsoleView;
 import view.View;
 
 /**
@@ -9,22 +8,23 @@ import view.View;
  */
 public abstract class Controller {
 
-    private Registry registry;
-    private View view;
-    private ConsoleView consoleView;
+    String argument;
+    Registry registry;
+    View view;
+    ConsoleController consoleController;
 
-    public Controller(ConsoleView consoleView, Registry registry) {
+    public Controller(View view, ConsoleController consoleController, Registry registry) {
         this.view = view;
-        this.consoleView = consoleView;
+        this.consoleController = consoleController;
         this.registry = registry;
     }
 
+    public void setArgument(String argument) {
+        this.argument = argument;
+    }
 
     public abstract void onSubmit(String userInput);
 
     public abstract void onShow();
 
-    public void onSelect(int selection) {
-
-    }
 }
