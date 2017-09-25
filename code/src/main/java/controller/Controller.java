@@ -1,15 +1,33 @@
 package controller;
 
-import javax.json.JsonObject;
+import model.Registry;
+import view.ConsoleView;
+import view.View;
 
 /**
  *
  */
-public interface Controller {
+public abstract class Controller {
 
-    public void onSubmit(String userInput);
+    private Registry registry;
+    private View view;
+    private ConsoleView consoleView;
 
-    public void onShow();
+    public Controller(View view, ConsoleView consoleView, Registry registry) {
+        this.view = view;
+        this.consoleView = consoleView;
+        this.registry = registry;
+    }
 
-    public void onSelect(int selection);
+    public Controller() {
+
+    }
+
+    public abstract void onSubmit(String userInput);
+
+    public abstract void onShow();
+
+    public void onSelect(int selection) {
+
+    }
 }
