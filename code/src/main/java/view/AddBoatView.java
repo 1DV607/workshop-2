@@ -1,12 +1,14 @@
 package view;
 
+import controller.Controller;
+
 /**
  *
  */
-public class AddBoatView implements View {
+public class AddBoatView extends View {
 
-    public AddBoatView() {
-
+    public AddBoatView(Controller cont) {
+        super(cont);
     }
 
     @Override

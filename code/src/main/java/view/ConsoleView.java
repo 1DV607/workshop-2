@@ -15,7 +15,11 @@ public class ConsoleView {
         viewList = new ArrayList<View>();
     }
 
-    public void showView(View view) {
+    public void showView(int viewSelection) {
+        viewList.get(viewSelection).show();
+    }
 
+    public void addView(View view) {
+        viewList.add(view);
     }
 }

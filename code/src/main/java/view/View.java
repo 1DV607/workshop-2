@@ -1,9 +1,17 @@
 package view;
 
+import controller.Controller;
+
 /**
  *
  */
-public interface View {
+public abstract class View {
 
-    public void show();
+    private Controller controller;
+
+    public View(Controller cont) {
+        controller = cont;
+    }
+
+    public abstract void show();
 }

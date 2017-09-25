@@ -1,11 +1,14 @@
 package view;
 
+import controller.Controller;
+
 /**
  *
  */
-public class MenuView implements View {
+public class MenuView extends View {
 
-    public MenuView() {
+    public MenuView(Controller cont) {
+        super(cont);
 
     }
 

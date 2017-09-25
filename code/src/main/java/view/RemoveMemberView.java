@@ -1,11 +1,14 @@
 package view;
 
+import controller.Controller;
+
 /**
  *
  */
-public class RemoveMemberView implements View {
+public class RemoveMemberView extends View {
 
-    public RemoveMemberView() {
+    public RemoveMemberView(Controller cont) {
+        super(cont);
 
     }
 

@@ -1,11 +1,14 @@
 package view;
 
+import controller.Controller;
+
 /**
  *
  */
-public class RemoveBoatView implements View {
+public class RemoveBoatView extends View {
 
-    public RemoveBoatView() {
+    public RemoveBoatView(Controller cont) {
+        super(cont);
 
     }
 

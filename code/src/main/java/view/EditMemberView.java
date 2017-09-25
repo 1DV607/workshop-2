@@ -1,11 +1,14 @@
 package view;
 
+import controller.Controller;
+
 /**
  *
  */
-public class EditMemberView implements View {
+public class EditMemberView extends View {
 
-    public EditMemberView() {
+    public EditMemberView(Controller cont) {
+        super(cont);
 
     }
 

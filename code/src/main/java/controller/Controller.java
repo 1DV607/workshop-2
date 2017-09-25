@@ -13,15 +13,12 @@ public abstract class Controller {
     private View view;
     private ConsoleView consoleView;
 
-    public Controller(View view, ConsoleView consoleView, Registry registry) {
+    public Controller(ConsoleView consoleView, Registry registry) {
         this.view = view;
         this.consoleView = consoleView;
         this.registry = registry;
     }
 
-    public Controller() {
-
-    }
 
     public abstract void onSubmit(String userInput);
 

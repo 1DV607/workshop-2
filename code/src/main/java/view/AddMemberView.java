@@ -1,12 +1,14 @@
 package view;
 
+import controller.Controller;
+
 /**
  *
  */
-public class AddMemberView implements View {
+public class AddMemberView extends View {
 
-    public AddMemberView() {
-
+    public AddMemberView(Controller cont) {
+        super(cont);
     }
 
     @Override
