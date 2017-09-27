@@ -23,6 +23,18 @@ public class Dao {
         initializeWriter();
     }
 
+    public Dao(String file) {
+        try {
+            jsonFile = new File(file);
+
+        }
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        initializeReader();
+        initializeWriter();
+    }
+
     /**
      * Save JsonArray with members information at file path
      * @param members - Members information as JsonObject
@@ -60,7 +72,7 @@ public class Dao {
      */
     private void initializeJsonFile() {
         try {
-            jsonFile = new File(System.getProperty("user.home")+"The Happy Pirate.json");
+            jsonFile = new File(System.getProperty("user.home")+"/The_Happy_Pirate.json");
 
         }
         catch (Exception e) {
