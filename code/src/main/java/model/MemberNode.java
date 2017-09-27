@@ -1,6 +1,5 @@
 package model;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  *
@@ -13,11 +12,27 @@ class MemberNode extends Node {
         this.member = member;
     }
     public Member getMember() {
-        throw new NotImplementedException();
+        return member;
     }
 
     @Override
     public Boolean remove() {
-        throw new NotImplementedException();
+        Node lastNode = this.findEnd();
+        Node nextToRemove;
+
+        try {
+            while (lastNode.getPreviousNode() != null) {
+                nextToRemove = lastNode.getPreviousNode();
+                lastNode.setPreviousNode(null);
+                lastNode.setNextNode(null);
+                lastNode = nextToRemove;
+            }
+        }
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+
+        return true;
     }
 }

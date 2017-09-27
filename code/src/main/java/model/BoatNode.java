@@ -1,6 +1,5 @@
 package model;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  *
@@ -11,14 +10,29 @@ class BoatNode extends Node {
 
    public BoatNode(Boat boat) {
        this.boat = boat;
+
    }
 
    public Boat getBoat() {
-       throw new NotImplementedException();
+       return boat;
    }
 
     @Override
     public Boolean remove() {
-        throw new NotImplementedException();
+        Node previous = this.getPreviousNode();
+        Node next = this.getNextNode();
+
+        try {
+            previous.setNextNode(next);
+
+            if (next != null) {
+                next.setPreviousNode(previous);
+            }
+        }
+        catch (Exception e) {
+            return false;
+        }
+        return true;
+
     }
 }

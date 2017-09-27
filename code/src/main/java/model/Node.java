@@ -1,6 +1,5 @@
 package model;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  *
@@ -9,6 +8,7 @@ abstract class Node {
 
     private Node nextNode;
     private Node previousNode;
+
 
     public Node getNextNode() {
         return nextNode;
@@ -27,13 +27,20 @@ abstract class Node {
     }
 
     public void append(Node node) {
-
+        Node lastNode = findEnd();
+        lastNode.setNextNode(node);
+        node.setPreviousNode(lastNode);
     }
 
     public abstract Boolean remove();
 
-    private Node findEnd() {
-        throw new NotImplementedException();
+    Node findEnd() {
+        Node currentNode = this;
+
+        while(nextNode != null) {
+            currentNode = currentNode.nextNode;
+        }
+        return currentNode;
     }
 
 }
