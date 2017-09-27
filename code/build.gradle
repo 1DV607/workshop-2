@@ -1,5 +1,14 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.0-RC3'
+    }
+}
 apply plugin: 'java'
 apply plugin: 'application'
+apply plugin: 'org.junit.platform.gradle.plugin'
 
 mainClassName = 'Main'
 
@@ -12,7 +21,14 @@ targetCompatibility = 1.8
 
 dependencies {
     compile group: 'org.glassfish', name: 'javax.json', version: '1.0.4'
-    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.0.0-M4'
+    compile group: 'org.junit.platform', name: 'junit-platform-runner', version: '1.0.0-M3'
+
+    testCompile (
+        'org.junit.jupiter:junit-jupiter-api:5.0.0-RC3'
+    )
+    testRuntime (
+        'org.junit.jupiter:junit-jupiter-engine:5.0.0-RC3'
+    )
 }
 
 run {
