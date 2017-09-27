@@ -4,7 +4,7 @@ package model;
 /**
  *
  */
-class BoatNode extends Node {
+public class BoatNode extends Node {
 
    private Boat boat;
 

@@ -4,7 +4,7 @@ package model;
 /**
  *
  */
-class MemberNode extends Node {
+public class MemberNode extends Node {
 
     private Member member;
 

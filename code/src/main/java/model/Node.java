@@ -4,7 +4,7 @@ package model;
 /**
  *
  */
-abstract class Node {
+public abstract class Node {
 
     private Node nextNode;
     private Node previousNode;
