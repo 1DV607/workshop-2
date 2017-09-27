@@ -5,7 +5,7 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 /**
  *
  */
-abstract class Node {
+public abstract class Node {
 
     private Node nextNode;
     private Node previousNode;

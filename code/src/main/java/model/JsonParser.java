@@ -1,8 +1,13 @@
 package model;
 
+import java.util.Map;
+
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import javax.json.Json;
 import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
 import javax.json.JsonArray;
+import javax.json.JsonArrayBuilder;
 
 /**
  *
@@ -14,13 +19,13 @@ public class JsonParser {
         long memberID = Long.parseLong(json.getString("memberID"));
         String firstName = json.getString("firstName");
         String lastName = json.getString("lastName");
-        String adress = json.getString("adress");
+        String address = json.getString("address");
 
         Member member = new Member(memberID);
         member.setSocialSecurityNumber(ssn);
         member.setFirstName(firstName);
         member.setLastName(lastName);
-        member.setAdress(adress);
+        member.setAddress(address);
 
         return member;
     }
@@ -28,7 +33,7 @@ public class JsonParser {
     public Boat jsonToBoat(JsonObject json) {
         long boatID = Long.parseLong(json.getString("boatID"));
         int size = json.getInt("size");
-        BoatType type = (BoatType)json.getInt("boatType");
+        BoatType type = BoatType.values()[json.getInt("boatType")];
 
         Boat boat = new Boat(boatID);
         boat.setSize(size);
@@ -38,20 +43,20 @@ public class JsonParser {
     }
 
     public JsonObject memberToJson(Member member) {
-        return Json.createJsonObjectBuilder()
+        return Json.createObjectBuilder()
             .add("socialSecurityNumber", member.getSocialSecurityNumber())
             .add("memberID", member.getMemberID())
             .add("firstName", member.getFirstName())
             .add("lastName", member.getLastName())
-            .add("adress", member.getAdress())
+            .add("address", member.getAddress())
             .build();
     }
 
     public JsonObject boatToJson(Boat boat) {
-        return Json.createJsonObjectBuilder()
+        return Json.createObjectBuilder()
             .add("boatID", boat.getBoatID())
             .add("size", boat.getSize())
-            .add("boatType", (int)boat.getBoatType())
+            .add("boatType", boat.getBoatType().ordinal())
             .build();
     }
 
@@ -83,7 +88,7 @@ public class JsonParser {
             MemberNode mNode = map.get(key);
 
             JsonObject member = memberToJson(mNode.getMember());    // Create JSON member object
-            JsonArrayBuilder boatsBuilder = new Json.createArrayBuilder()
+            JsonArrayBuilder boatsBuilder = Json.createArrayBuilder();
 
             Node currentNode = mNode;
 
@@ -99,7 +104,7 @@ public class JsonParser {
             // Store member and associated boats in a JSON container object
             JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
             objectBuilder.add("member", member);
-            objectBuilder.add("boats", boatsbuilder.build());
+            objectBuilder.add("boats", boatsBuilder.build());
 
             arrayBuilder.add(objectBuilder.build());  // Add container object to array
         }
@@ -108,6 +113,6 @@ public class JsonParser {
     }
 
     public Map<Long, MemberNode> jsonToMap(JsonArray array) {
-
+        throw new NotImplementedException();
     }
 }

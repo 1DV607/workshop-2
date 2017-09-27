@@ -1,12 +1,12 @@
 import io.Dao;
-import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import static org.junit.Assert.*;
 
 import javax.json.Json;
 import javax.json.JsonArray;
@@ -45,8 +45,8 @@ public class DaoTest {
                     " \"memberID\" : \"85042249300003\", " +
                     " \"boats\" : 3";
 
-    @BeforeAll
-    static void beforeAll() {
+    @BeforeClass
+    public static void beforeAll() {
         jsonArrayBuilder = Json.createArrayBuilder();
 
         testDao = new Dao("./src/test/dao_test/output_test.json");
@@ -63,25 +63,25 @@ public class DaoTest {
 
     }
 
-    @AfterAll
-    static void afterAll() {
+    @AfterClass
+    public static void afterAll() {
 
     }
 
-    @BeforeEach
-    static void beforeEach() {
+    @Before
+    public void beforeEach() {
        empty = jsonArrayBuilder.build();
        oneMember = jsonArrayBuilder.add(MEMBER1).build();
        threeMembers = jsonArrayBuilder.add(MEMBER1).add(MEMBER2).add(MEMBER3).build();
     }
 
     @Test
-    static void saveTest() {
+    public void saveTest() {
         testDao.save(empty);
     }
 
     @Test
-    static void loadTest() {
+    public void loadTest() {
         fail("lala");
     }
 

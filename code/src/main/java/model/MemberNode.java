@@ -5,7 +5,7 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 /**
  *
  */
-class MemberNode extends Node {
+public class MemberNode extends Node {
 
     private Member member;
 
