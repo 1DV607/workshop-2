@@ -1,20 +1,39 @@
 package model;
 
 import java.util.Map;
+import java.util.HashMap;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
+import javax.json.JsonValue;
 
 /**
- *
+ *  Parses single Member and Boat objects to/from JSON as JsonObjects. Also
+ *  parses the specific Map used in the Registry to/from a JSON array as a
+ *  JsonArray for use when saving and loading the Registry.
  */
 public class JsonParser {
 
+    /**
+     *  Given a valid member JsonObject, parses it into a Member object
+     *  
+     *  @param json - JsonObject to parse to Member. Expects the JSON to have
+     *                the following values: 
+     *                
+     *                      "socialSecurityNumber"  (String)
+     *                      "memberID"              (String)
+     *                      "firstName"             (String)
+     *                      "lastName"              (String)
+     *                      "address"               (String)
+     *
+     *  @return - A Member object initialized with the values in the provided
+     *            JSON object.
+     */
     public Member jsonToMember(JsonObject json) {
+        // TODO: Validate the JSON?
         long ssn = Long.parseLong(json.getString("socialSecurityNumber"));
         long memberID = Long.parseLong(json.getString("memberID"));
         String firstName = json.getString("firstName");
@@ -30,7 +49,32 @@ public class JsonParser {
         return member;
     }
 
+    public JsonObject memberStringToJson(String firstName, String lastName,
+            String address, String memberID, String socialSecurityNumber) {
+        return Json.createObjectBuilder()
+            .add("socialSecurityNumber", socialSecurityNumber)
+            .add("memberID", memberID)
+            .add("firstName", firstName)
+            .add("lastName", lastName)
+            .add("address", address)
+            .build();
+    }
+
+    /**
+     *  Given a valid boat JsonObject, parses it into a Boat object
+     *  
+     *  @param json - JsonObject to parse to Boat. Expects the JSON to have
+     *                the following values: 
+     *                
+     *                      "boatID"            (String)
+     *                      "size"              (Int)
+     *                      "boatType"          (Int)
+     *
+     *  @return - A Boat object initialized with the values in the provided
+     *            JSON object.
+     */
     public Boat jsonToBoat(JsonObject json) {
+        // TODO: Validate the JSON?
         long boatID = Long.parseLong(json.getString("boatID"));
         int size = json.getInt("size");
         BoatType type = BoatType.values()[json.getInt("boatType")];
@@ -42,19 +86,31 @@ public class JsonParser {
         return boat;
     }
 
+    /**
+     *  Parses a Member object into a JsonObject.
+     *
+     *  @return - A member JsonObject with the values set to the fields in the
+     *            provided Member object.
+     */
     public JsonObject memberToJson(Member member) {
         return Json.createObjectBuilder()
-            .add("socialSecurityNumber", member.getSocialSecurityNumber())
-            .add("memberID", member.getMemberID())
+            .add("socialSecurityNumber", Long.toString(member.getSocialSecurityNumber()))
+            .add("memberID", Long.toString(member.getMemberID()))
             .add("firstName", member.getFirstName())
             .add("lastName", member.getLastName())
             .add("address", member.getAddress())
             .build();
     }
 
+    /**
+     *  Parses a Boat object into a JsonObject.
+     *
+     *  @return - A boat JsonObject with the values set to the fields in the
+     *            provided Boat object.
+     */
     public JsonObject boatToJson(Boat boat) {
         return Json.createObjectBuilder()
-            .add("boatID", boat.getBoatID())
+            .add("boatID", Long.toString(boat.getBoatID()))
             .add("size", boat.getSize())
             .add("boatType", boat.getBoatType().ordinal())
             .build();
@@ -79,7 +135,7 @@ public class JsonParser {
      *  @param  map - A Map with memberID as key and a linked list containing 
      *                Member and associated boats as value  
      *  
-     *  @return a JSON array containing all Members and Boats in 'map'
+     *  @return - a JSON array containing all Members and Boats in 'map'
      */
     public JsonArray mapToJson(Map<Long, MemberNode> map) {
         JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
@@ -112,7 +168,45 @@ public class JsonParser {
         return arrayBuilder.build();
     }
 
+    /**
+     *  Parses a JsonArray into a Map with memberID as key and a linked list 
+     *  a Member and it's associated Boats.
+     *
+     *  @param array - JsonArray to parse to Map. Expects the following format:
+     *
+     *  [
+     *      {
+     *          "member": { <member object> },
+     *          "boats": [ { <boat object 1> }, { <boat object 2> } ... ]
+     *      },
+     *      {
+     *          "member": { <member object 2 },
+     *          "boats": [ { <boat object 1> }, { <boat object 2> } ... ]
+     *      },
+     *      ...
+     *  ]
+     *
+     *  @return - A Map with the Members and associated Boats that are 
+     *            contained in the JsonArray.
+     */
     public Map<Long, MemberNode> jsonToMap(JsonArray array) {
-        throw new NotImplementedException();
+        Map<Long, MemberNode> result = new HashMap<>();
+
+        for (JsonValue jStruct : array) {
+            JsonObject jObject = (JsonObject)jStruct;
+            JsonObject jMember = jObject.getJsonObject("member");
+            JsonArray jBoats = jObject.getJsonArray("boats");
+            Member member = this.jsonToMember(jObject.getJsonObject("member"));
+            MemberNode mNode = new MemberNode(member);
+
+            for (JsonObject jBoat : jBoats.getValuesAs(JsonObject.class)) {
+                Boat boat = this.jsonToBoat(jBoat);
+                mNode.append(new BoatNode(boat));
+            }
+
+            result.put(member.getMemberID(), mNode);
+        }
+
+        return result;
     }
 }
