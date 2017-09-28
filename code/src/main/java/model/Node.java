@@ -37,7 +37,7 @@ public abstract class Node {
     Node findEnd() {
         Node currentNode = this;
 
-        while(nextNode != null) {
+        while(currentNode.nextNode != null) {
             currentNode = currentNode.nextNode;
         }
         return currentNode;
