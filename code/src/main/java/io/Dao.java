@@ -5,6 +5,7 @@ import javax.json.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.util.Scanner;
 
 /**
  * Write and Read from "The Happy Pirate.json" located at user.home directory
@@ -16,23 +17,18 @@ public class Dao {
     private JsonWriter writer;
     private JsonReader reader;
 
-
     public Dao() {
         initializeJsonFile();
-        initializeReader();
-        initializeWriter();
     }
 
-    public Dao(String file) {
+    public Dao(File file) {
         try {
-            jsonFile = new File(file);
+            jsonFile = file;
 
         }
         catch (Exception e) {
-            System.out.println(e.getMessage());
+            System.out.println(e.getMessage().toString());
         }
-        initializeReader();
-        initializeWriter();
     }
 
     /**
@@ -43,6 +39,7 @@ public class Dao {
      */
     public boolean save(JsonArray members) {
         try {
+            initializeWriter();
             writer.writeArray(members);
         }
         catch (Exception e) {
@@ -58,6 +55,7 @@ public class Dao {
     public JsonArray load() {
         JsonArray members;
         try {
+            initializeReader();
             members = reader.readArray();
         }
         catch (Exception e) {
@@ -76,7 +74,7 @@ public class Dao {
 
         }
         catch (Exception e) {
-            System.out.println(e.getMessage());
+            System.out.println(e.getMessage().toString());
         }
     }
 
@@ -89,7 +87,7 @@ public class Dao {
             reader = Json.createReader(fileStream);
         }
         catch (Exception e) {
-            System.out.println(e.getMessage());
+            System.out.println(e.getMessage().toString());
         }
     }
 
@@ -102,7 +100,8 @@ public class Dao {
            writer = Json.createWriter(fileStream);
        }
        catch (Exception e) {
-           System.out.println(e.getMessage());
+           System.out.println(e.getMessage().toString());
        }
     }
+
 }
