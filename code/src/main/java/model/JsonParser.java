@@ -1,7 +1,7 @@
 package model;
 
 import java.util.Map;
-import java.util.TreeMap;
+import java.util.HashMap;
 
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -190,7 +190,7 @@ public class JsonParser {
      *            contained in the JsonArray.
      */
     public Map<Long, MemberNode> jsonToMap(JsonArray array) {
-        Map<Long, MemberNode> result = new TreeMap<>();
+        Map<Long, MemberNode> result = new HashMap<>();
 
         for (JsonValue jStruct : array) {
             JsonObject jObject = (JsonObject)jStruct;
