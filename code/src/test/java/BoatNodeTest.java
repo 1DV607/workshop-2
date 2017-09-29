@@ -13,7 +13,7 @@ import static org.junit.Assert.assertEquals;
  */
 public class BoatNodeTest {
 
-    private final static Boat BOAT = new Boat();
+    private final static Boat BOAT = new Boat(45);
 
     private static ArrayList<Node> nodeArray10;
     private static ArrayList<Node> nodeArray1000;

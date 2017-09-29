@@ -2,7 +2,8 @@ package model;
 
 
 /**
- *
+ * Represents a Member as a MemberNode, inherits from Node Class
+ * Used to store Members in a linked list
  */
 public class MemberNode extends Node {
 
@@ -16,6 +17,11 @@ public class MemberNode extends Node {
         return member;
     }
 
+    /**
+     * Removes this MemberNode by going through each linked Node and setting Next/Previous Nodes to null
+     *
+     * @return true if this Node was successfully removed otherwise false
+     */
     @Override
     public Boolean remove() {
         Node lastNode = this.findEnd();

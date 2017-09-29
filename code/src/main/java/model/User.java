@@ -1,23 +1,24 @@
 package model;
 
 /**
- *
+ * Represent a User (Abstract class)
+ * Contains information about the User's social security number, first and last name and address
  */
 public abstract class User {
 
 
 
-    private long socialSecurityNumber;
+    private String socialSecurityNumber;
     private String firstName;
     private String lastName;
     private String address;
 
 
-    public long getSocialSecurityNumber() {
+    public String getSocialSecurityNumber() {
         return socialSecurityNumber;
     }
 
-    public void setSocialSecurityNumber(long socialSecurityNumber) {
+    public void setSocialSecurityNumber(String socialSecurityNumber) {
         this.socialSecurityNumber = socialSecurityNumber;
     }
 

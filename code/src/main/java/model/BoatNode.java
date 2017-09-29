@@ -2,7 +2,8 @@ package model;
 
 
 /**
- *
+ * Represents a Boat as a BoatNode, inherits from Node Class
+ * Used to store Boats in a linked list
  */
 public class BoatNode extends Node {
 
@@ -17,6 +18,11 @@ public class BoatNode extends Node {
        return boat;
    }
 
+    /**
+     * Removes this BoatNode from the linked list by connecting previous and next nodes to each other
+     *
+     * @return true if the Node was successfully removed otherwise false
+     */
     @Override
     public Boolean remove() {
         Node previous = this.getPreviousNode();

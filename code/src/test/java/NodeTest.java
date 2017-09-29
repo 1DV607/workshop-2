@@ -1,10 +1,8 @@
 import model.Member;
 import model.MemberNode;
 import model.Node;
-import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -13,11 +11,17 @@ import static org.junit.Assert.*;
 
 public class NodeTest {
 
-    private final static Member MEMBER = new Member();
+    //used to create MemberNodes
+    private final static Member MEMBER = new Member(45);
 
+    //used to store Nodes
     private static ArrayList<Node> nodeArray10;
     private static ArrayList<Node> nodeArray1000;
 
+    /**
+     * Initializes the ArrayLists
+     * Adds MemberNodes to the ArrayLists
+     */
     @BeforeClass
     public static void beforeAll() {
         nodeArray10 = new ArrayList<Node>();
@@ -32,6 +36,10 @@ public class NodeTest {
 
     }
 
+    /**
+     * Removes the Next/Previous pointers for all
+     * Nodes in the ArrayLists
+     */
     @After
     public void after() {
         for (Node n : nodeArray10) {
@@ -45,6 +53,10 @@ public class NodeTest {
         }
     }
 
+    /**
+     * Append the MemberNodes to startingNode (Node at possition 0 in ArrayList)
+     * Check that all nodes are present and added in an correct order
+     */
     @Test
     public void appendTest() {
         Node startingNode = nodeArray10.get(0);

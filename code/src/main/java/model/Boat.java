@@ -1,7 +1,9 @@
 package model;
 
 /**
- *
+ * Represents a Boat,
+ * Contains information about the Boat's type and size
+ * Generates and contains the Boat's unique Boat ID
  */
 public class Boat {
 
@@ -13,8 +15,8 @@ public class Boat {
         this.boatID = boatID;
     }
 
-    public Boat() {
-
+    public Boat(long memberID, int numberOfBoats) {
+        boatID = generateBoatID(memberID, numberOfBoats);
     }
 
     public BoatType getBoatType() {
@@ -35,6 +37,20 @@ public class Boat {
 
     public long getBoatID() {
         return boatID;
+    }
+
+    /**
+     * Takes a MemberID and the number of Boats currently owned by the Member to create
+     * an unique boat ID
+     * @param memberID - ID of the Member who owns the boat
+     * @param numberOfBoats - number of boats the Member owns
+     * @return boatID, long
+     */
+    private long generateBoatID(long memberID, int numberOfBoats) {
+        String createBoatID;
+        createBoatID = Long.toString(memberID) + Integer.toString(numberOfBoats);
+
+        return Long.parseLong(createBoatID);
     }
 
 }

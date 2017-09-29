@@ -34,7 +34,7 @@ public class JsonParser {
      */
     public Member jsonToMember(JsonObject json) {
         // TODO: Validate the JSON?
-        long ssn = Long.parseLong(json.getString("socialSecurityNumber"));
+        String ssn = json.getString("socialSecurityNumber");
         long memberID = Long.parseLong(json.getString("memberID"));
         String firstName = json.getString("firstName");
         String lastName = json.getString("lastName");
@@ -94,7 +94,7 @@ public class JsonParser {
      */
     public JsonObject memberToJson(Member member) {
         return Json.createObjectBuilder()
-            .add("socialSecurityNumber", Long.toString(member.getSocialSecurityNumber()))
+            .add("socialSecurityNumber", member.getSocialSecurityNumber())
             .add("memberID", Long.toString(member.getMemberID()))
             .add("firstName", member.getFirstName())
             .add("lastName", member.getLastName())
