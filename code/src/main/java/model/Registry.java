@@ -29,8 +29,21 @@ public class Registry {
         throw new NotImplementedException();
     }
 
+    /**
+     * Removes a Member and all Boats connected to this member
+     * @param memberID - id of the Member to remove
+     * @return true if the Member was successfully removed, otherwise false
+     */
     public boolean removeMember(long memberID) {
-        throw new NotImplementedException();
+        MemberNode memberNode = members.get(memberID);
+        if (memberNode == null) {
+            return false;
+        }
+        else {
+            memberNode.remove();
+            members.remove(memberID);
+            return true;
+        }
     }
 
     public boolean editMember(long memberID, JsonObject json) {
@@ -41,8 +54,21 @@ public class Registry {
         throw new NotImplementedException();
     }
 
-    public boolean removeBoat(long memberID, long boatID) {
-        throw new NotImplementedException();
+    /**
+     * Removes a BoatNode from the linked list
+     * @param memberID - id of the Member who owns the Boat
+     * @param boatID - id of the boat to remove
+     * @return true if the boat was successfully removed, otherwise false
+     */
+    public boolean removeBoat(long memberID, long boatID)  {
+        try {
+            BoatNode boatNode = findBoat(memberID, boatID);
+            boatNode.remove();
+            return true;
+        }
+        catch (NullPointerException exception) {
+            return false;
+        }
     }
 
     public boolean editBoat(long memberID, long boatID, JsonObject json) {
@@ -96,8 +122,28 @@ public class Registry {
 
     }
 
-    private Boat findBoat(long memberID, long boatID) {
-        throw new NotImplementedException();
+    /**
+     * Takes a memberID and a boatID and returns the specific boat by going
+     * through the Nodes in the Hash Map and comparing the boat ID's
+     * @param memberID - id of the member who owns the boat
+     * @param boatID - id of the boat to find
+     * @return Boat or null if the Boat wasn't found
+     * @throws NullPointerException if the Member does not exist or if the Member has no Boats
+     */
+    private BoatNode findBoat(long memberID, long boatID) throws NullPointerException {
+
+        Node memberNode = members.get(memberID);
+        BoatNode boatNode = (BoatNode) memberNode.getNextNode();
+
+        while (boatNode.getNextNode() != null) {
+            long id = boatNode.getBoat().getBoatID();
+            if (Long.compare(id, boatID) == 0) {
+                return boatNode;
+            }
+            boatNode = (BoatNode) boatNode.getNextNode();
+
+        }
+        return null;
     }
 
     private void setBoatInfo(Boat boat, JsonObject json) {
