@@ -8,6 +8,8 @@ import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonValue;
 import javax.json.JsonObject;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonObjectBuilder;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -23,13 +25,6 @@ import model.JsonParser;
 import model.Member;
 import model.Boat;
 import model.BoatType;
-
-// Utility class
-class Array {
-  public static <A> A[] of(A ... elements) {
-    return elements;
-  }
-}
 
 public class JsonParserTest {
 
@@ -68,167 +63,203 @@ public class JsonParserTest {
 
     @Test
     public void mapToJsonSingleNoBoatsTest() {
-        final String EXPECTED = 
-            "[" + 
-              "{" +
-                "\"member\":" +
-                  "{" +
-                    "\"socialSecurityNumber\":" +   "\"5010010202\"," +
-                    "\"memberID\":"             +   "\"1111\"," +
-                    "\"firstName\":"            +   "\"Lars\"," +
-                    "\"lastName\":"             +   "\"Larsson\"," +
-                    "\"address\":"              +   "\"Larsgatan 10\"" +
-                  "}," + 
-                "\"boats\":" + 
-                  "[" +
-                  "]" +
-              "}" +
-            "]";
+        //final String EXPECTED = 
+        //    "[" + 
+        //      "{" +
+        //        "\"member\":" +
+        //          "{" +
+        //            "\"socialSecurityNumber\":" +   "\"5010010202\"," +
+        //            "\"memberID\":"             +   "\"1111\"," +
+        //            "\"firstName\":"            +   "\"Lars\"," +
+        //            "\"lastName\":"             +   "\"Larsson\"," +
+        //            "\"address\":"              +   "\"Larsgatan 10\"" +
+        //          "}," + 
+        //        "\"boats\":" + 
+        //          "[" +
+        //          "]" +
+        //      "}" +
+        //    "]";
 
-        Member member = new Member(1111);
-        member.setFirstName("Lars");
-        member.setLastName("Larsson");
-        member.setSocialSecurityNumber(5010010202L);
-        member.setAddress("Larsgatan 10");
+        //Member member = new Member(1111);
+        //member.setFirstName("Lars");
+        //member.setLastName("Larsson");
+        //member.setSocialSecurityNumber(5010010202L);
+        //member.setAddress("Larsgatan 10");
 
-        map.put(member.getMemberID(), new MemberNode(member));
-        JsonArray jArr = parser.mapToJson(map);
+        //map.put(member.getMemberID(), new MemberNode(member));
+        //jsonarray jarr = parser.maptojson(map);
 
-        assertEquals(EXPECTED, jArr.toString());
+        //assertequals(expected, jarr.tostring());
     }
 
     @Test
-    public void mapToJsonMultipleMembersTest() {
-        Map<String, String[]> expected = new HashMap<>();
-        expected.put("firstName", Array.of("Lars", "Kalle", "Per"));
-        expected.put("lastName", Array.of("Larsson", "Kallesson", "Persson"));
-        expected.put("address", Array.of("Larsgatan 1", "Kallegatan 1", "Persgatan 1"));
-        expected.put("memberID", Array.of("1111", "2222", "3333"));
-        expected.put("socialSecurityNumber", Array.of("1111111111", "2222222222", "3333333333"));
+    public void maptojsonmultiplememberstest() {
+        //final JsonArray expected = JsonParserTest.createJsonArray(
+        //    new String[][] {
+        //        new String[] { "Lars", "Kalle", "Per" },
+        //        new String[] { "Larsson", "Kallesson", "Persson" },
+        //        new String[] { "Larsgatan 1", "Kallegatan 2", "Persgatan 3" },
+        //        new String[] { "1111111111", "2222222222", "3333333333" },
+        //        new String[] { "1111", "2222", "3333" },
+        //        new String[] { "111 222", "333", "444 555 666" },
+        //    },
+        //    new String[][] {
+        //        new String[] { "111", "222", "333", "444", "555", "666" },
+        //        new String[] { 10, 11, 12, 13, 14, 15 },
+        //        new String[] { 0, 0, 1, 2, 2, 2 }
+        //    });
 
-        Map<String, String[][]> expectedBoats = new HashMap<>();
-        expectedBoats.put("1111", Array.of( 
-            Array.of("111", "10", "0"),
-            Array.of("222", "11", "0") 
-        ));
 
-        expectedBoats.put("2222", Array.of( 
-            Array.of("333", "12", "1") 
-        ));
+        //Member member = new Member(1111);
+        //member.setFirstName("Lars");
+        //member.setLastName("Larsson");
+        //member.setSocialSecurityNumber(1111111111L);
+        //member.setAddress("Larsgatan 1");
 
-        expectedBoats.put("3333", Array.of(
-            Array.of("444", "13", "2" ),
-            Array.of("555", "14", "2" ),
-            Array.of("666", "15", "2" )
-        ));
+        //Boat boat1 = new Boat(111);
+        //boat1.setSize(10);
+        //boat1.setBoatType(BoatType.SailBoat);
 
-        final String[] MEMBER_PROPERTIES = { "firstName", "lastName", "address",
-                "memberID", "socialSecurityNumber" };
-        final String[] BOAT_PROPERTIES = { "boatID", "size", "boatType" };
+        //Boat boat2 = new Boat(222);
+        //boat2.setSize(11);
+        //boat2.setBoatType(BoatType.SailBoat);
 
-        Member member = new Member(1111);
-        member.setFirstName("Lars");
-        member.setLastName("Larsson");
-        member.setSocialSecurityNumber(1111111111L);
-        member.setAddress("Larsgatan 1");
+        //MemberNode mNode = new MemberNode(member);
+        //mNode.append(new BoatNode(boat1));
+        //mNode.append(new BoatNode(boat2));
 
-        Boat boat1 = new Boat(111);
-        boat1.setSize(10);
-        boat1.setBoatType(BoatType.SailBoat);
+        //map.put(member.getMemberID(), new MemberNode(member));
 
-        Boat boat2 = new Boat(222);
-        boat2.setSize(11);
-        boat2.setBoatType(BoatType.SailBoat);
+        //member = new Member(2222);
+        //member.setFirstName("Kalle");
+        //member.setLastName("Kallesson");
+        //member.setSocialSecurityNumber(2222222222L);
+        //member.setAddress("Kallegatan 2");
 
-        MemberNode mNode = new MemberNode(member);
-        mNode.append(new BoatNode(boat1));
-        mNode.append(new BoatNode(boat2));
+        //boat1 = new Boat(333);
+        //boat1.setSize(12);
+        //boat1.setBoatType(BoatType.Motorsailer);
 
-        map.put(member.getMemberID(), new MemberNode(member));
+        //mNode = new MemberNode(member);
+        //mNode.append(new BoatNode(boat1));
 
-        member = new Member(2222);
-        member.setFirstName("Kalle");
-        member.setLastName("Kallesson");
-        member.setSocialSecurityNumber(2222222222L);
-        member.setAddress("Kallegatan 2");
+        //map.put(member.getMemberID(), new MemberNode(member));
 
-        boat1 = new Boat(333);
-        boat1.setSize(12);
-        boat1.setBoatType(BoatType.Motorsailer);
+        //member = new Member(3333);
+        //member.setFirstName("Per");
+        //member.setLastName("Persson");
+        //member.setSocialSecurityNumber(3333333333L);
+        //member.setAddress("Persgatan 3");
 
-        mNode = new MemberNode(member);
-        mNode.append(new BoatNode(boat1));
+        //boat1 = new Boat(444);
+        //boat1.setSize(13);
+        //boat1.setBoatType(BoatType.Canoe);
 
-        map.put(member.getMemberID(), new MemberNode(member));
+        //boat2 = new Boat(555);
+        //boat2.setSize(14);
+        //boat2.setBoatType(BoatType.Canoe); 
+        //Boat boat3 = new Boat(666);
+        //boat3.setSize(15);
+        //boat3.setBoatType(BoatType.Canoe);
 
-        member = new Member(3333);
-        member.setFirstName("Per");
-        member.setLastName("Persson");
-        member.setSocialSecurityNumber(3333333333L);
-        member.setAddress("Persgatan 3");
+        //mNode = new MemberNode(member);
+        //mNode.append(new BoatNode(boat1));
+        //mNode.append(new BoatNode(boat2));
+        //mNode.append(new BoatNode(boat3));
 
-        boat1 = new Boat(444);
-        boat1.setSize(13);
-        boat1.setBoatType(BoatType.Canoe);
+        //map.put(member.getMemberID(), new MemberNode(member));
 
-        boat2 = new Boat(555);
-        boat2.setSize(14);
-        boat2.setBoatType(BoatType.Canoe);
+        //JsonArray jArr = parser.mapToJson(map);
+    }
 
-        Boat boat3 = new Boat(666);
-        boat3.setSize(15);
-        boat3.setBoatType(BoatType.Canoe);
+    @Test
+    public void createJsonMemberArrayTest() {
+        JsonArray expected = Json.createArrayBuilder()
+            .add(Json.createObjectBuilder()
+                    .add("member", Json.createObjectBuilder()
+                        .add("firstName", "Lars")
+                        .add("lastName", "Larsson")
+                        .add("address", "Larsgatan 1")
+                        .add("socialSecurityNumber", "1111111111")
+                        .add("memberID", "1111"))
+                    .add("boats", Json.createArrayBuilder()
+                        .add(Json.createObjectBuilder()
+                            .add("boatID", "111")
+                            .add("size", "10")
+                            .add("boatType", "0"))
+                        .add(Json.createObjectBuilder()
+                            .add("boatID", "222")
+                            .add("size", "11")
+                            .add("boatType", "0"))))
+            .add(Json.createObjectBuilder()
+                    .add("member", Json.createObjectBuilder()
+                        .add("firstName", "Kalle")
+                        .add("lastName", "Kallesson")
+                        .add("address", "Kallegatan 2")
+                        .add("socialSecurityNumber", "2222222222")
+                        .add("memberID", "2222"))
+                    .add("boats", Json.createArrayBuilder()
+                        .add(Json.createObjectBuilder()
+                            .add("boatID", "333")
+                            .add("size", "12")
+                            .add("boatType", "1"))))
+            .build();
 
-        mNode = new MemberNode(member);
-        mNode.append(new BoatNode(boat1));
-        mNode.append(new BoatNode(boat2));
-        mNode.append(new BoatNode(boat3));
+        JsonArray actual = JsonParserTest.createJsonMemberArray(
+            new String[][] {
+                new String[] { "Lars", "Kalle" },
+                new String[] { "Larsson", "Kallesson" },
+                new String[] { "Larsgatan 1", "Kallegatan 2" },
+                new String[] { "1111111111", "2222222222" },
+                new String[] { "1111", "2222" },
+                new String[] { "111 222", "333", ""}
+            },
+            new String[][] {
+                new String[] { "111", "222", "333" },
+                new String[] { "10", "11", "12" },
+                new String[] { "0", "0", "1" }
+            });
 
-        map.put(member.getMemberID(), new MemberNode(member));
+        assertEquals(expected, actual);
+    }
 
-        JsonArray jArr = parser.mapToJson(map);
+    private static JsonArray createJsonMemberArray(String[][] members,
+                                                   String[][] boats) {
+        JsonArrayBuilder expectedJson = Json.createArrayBuilder();
+        int nrOfMembers = members[0].length;
+        int nrOfBoats = boats[0].length;
 
-        SortedMap<String, String[]> actual = new TreeMap<>();
-        SortedMap<String, String[]> actualBoats = new TreeMap<>();
+        System.out.println("Members: " + nrOfMembers + " Boats: " + nrOfBoats);
 
-        for (JsonValue obj : jArr) {
-            JsonObject jMember = ((JsonObject)obj).getJsonObject("member");
+        for (int mI = 0; mI < nrOfMembers; mI++) {
+            System.out.println(mI);
+            JsonObjectBuilder container = Json.createObjectBuilder();
 
-            for (String prop : MEMBER_PROPERTIES) {
-                actual.put(prop, jMember.getString(prop));
+            container.add("member", Json.createObjectBuilder()
+                    .add("firstName", members[0][mI])
+                    .add("lastName", members[1][mI])
+                    .add("address", members[2][mI])
+                    .add("socialSecurityNumber", members[3][mI])
+                    .add("memberID", members[4][mI]));
+
+            JsonArrayBuilder jBoats = Json.createArrayBuilder();
+
+            for (String mBoatID : members[5][mI].split(" ")) {
+                for (int bI = 0; bI < nrOfBoats; bI++) {
+                    if (boats[0][bI].equals(mBoatID)) {
+                        jBoats.add(Json.createObjectBuilder()
+                                .add("boatID", boats[0][bI])
+                                .add("size", boats[1][bI])
+                                .add("boatType", boats[2][bI]));
+                    }
+                }
             }
 
-            String[] boatInfo = new String[BOAT_PROPERTIES.length];
-
-            for (int i = 0; i < BOAT_PROPERTIES.length; i++) {
-                JsonObject jBoat = (JsonObject)bObj;
-
-                boatInfo[i] = jBoat.getString(BOAT_PROPERTIES[i]);
-            }
-
-            actualBoats.put(jMember.getString("memberID"), boatInfo);
+            container.add("boats", jBoats);
+            expectedJson.add(container);
         }
 
-        for (String mProp : MEMBER_PROPERTIES) {
-            for (String expValue : expected.get(mProp)) {
-                assertTrue(Arrays.asList(actual.get(mProp)).contains(expValue));
-            }
-        }
-
-        for (int kIndex = 0; kIndex < expectedBoats.keySet().size(); kIndex++) {
-
-            /*
-             * Assert that boats belong to correct Member
-             */
-            String expectedKey = (String)expectedBoats.keySet().toArray()[kIndex];
-            String actualKey = (String)actualBoats.keySet().toArray()[kIndex];
-            assertEquals(expectedKey, actualKey);
-
-            for (int vIndex = 0; vIndex < expectedBoats.get(expectedKey).length; vIndex++) {
-                String expValue = expectedBoats.get(expectedKey)[vIndex];
-                String actValue = actualBoats.get(expectedKey)[vIndex];
-                assertEquals(expValue, actValue);
-            }
-        }
+        return expectedJson.build();
     }
 }
+
