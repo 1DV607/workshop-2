@@ -1,5 +1,6 @@
 package model;
 
+import java.util.Objects;
 
 /**
  * Represents a Member as a MemberNode, inherits from Node Class
@@ -42,5 +43,18 @@ public class MemberNode extends Node {
         }
 
         return true;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) { return true; }
+        if ( !(o instanceof MemberNode) ) { return false; }
+
+        return this.hashCode() == ((MemberNode)o).hashCode();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(member);
     }
 }

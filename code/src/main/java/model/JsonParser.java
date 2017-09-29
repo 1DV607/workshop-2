@@ -1,7 +1,7 @@
 package model;
 
 import java.util.Map;
-import java.util.HashMap;
+import java.util.TreeMap;
 
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -76,8 +76,8 @@ public class JsonParser {
     public Boat jsonToBoat(JsonObject json) {
         // TODO: Validate the JSON?
         long boatID = Long.parseLong(json.getString("boatID"));
-        int size = json.getInt("size");
-        BoatType type = BoatType.values()[json.getInt("boatType")];
+        int size = Integer.parseInt(json.getString("size"));
+        BoatType type = BoatType.values()[Integer.parseInt(json.getString("boatType"))];
 
         Boat boat = new Boat(boatID);
         boat.setSize(size);
@@ -111,8 +111,8 @@ public class JsonParser {
     public JsonObject boatToJson(Boat boat) {
         return Json.createObjectBuilder()
             .add("boatID", Long.toString(boat.getBoatID()))
-            .add("size", boat.getSize())
-            .add("boatType", boat.getBoatType().ordinal())
+            .add("size", Integer.toString(boat.getSize()))
+            .add("boatType", Integer.toString(boat.getBoatType().ordinal()))
             .build();
     }
 
@@ -152,9 +152,9 @@ public class JsonParser {
              * Collect all boats associated with the member in a JSON array
              */
             while (currentNode.getNextNode() != null) {
+                currentNode = currentNode.getNextNode();
                 BoatNode bNode = (BoatNode)currentNode;
                 boatsBuilder.add(boatToJson(bNode.getBoat()));
-                currentNode = currentNode.getNextNode();
             }
 
             // Store member and associated boats in a JSON container object
@@ -190,7 +190,7 @@ public class JsonParser {
      *            contained in the JsonArray.
      */
     public Map<Long, MemberNode> jsonToMap(JsonArray array) {
-        Map<Long, MemberNode> result = new HashMap<>();
+        Map<Long, MemberNode> result = new TreeMap<>();
 
         for (JsonValue jStruct : array) {
             JsonObject jObject = (JsonObject)jStruct;

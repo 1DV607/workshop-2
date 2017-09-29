@@ -28,14 +28,10 @@ import model.BoatType;
 
 public class JsonParserTest {
 
-    private final static String EMPTY_JSON_ARRAY = "[]";
-
-    private static Map<Long, MemberNode> map;
     private static JsonParser parser;
     
     @BeforeClass
     public static void initAll() {
-        map = new HashMap<Long, MemberNode>();
         parser = new JsonParser();
     }
 
@@ -46,130 +42,196 @@ public class JsonParserTest {
 
     @Before
     public void init() {
-
     }
 
     @After
     public void tearDown() {
-        map.clear();
+    }
+
+    @Test 
+    public void boatToJsonTest() {
+        JsonObject expected = Json.createObjectBuilder()
+            .add("boatID", "123")
+            .add("size", "0")
+            .add("boatType", "1")
+            .build();
+
+        Boat boat = new Boat(123, 0, BoatType.Motorsailer);
+        JsonObject actual = parser.boatToJson(boat);
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void jsonToBoatTest() {
+        Boat expected = new Boat(666, 10, BoatType.Kayak);
+
+        JsonObject json = Json.createObjectBuilder()
+            .add("boatID", "666")
+            .add("size", "10")
+            .add("boatType", "3")
+            .build();
+
+        Boat actual = parser.jsonToBoat(json);
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void memberToJsonTest() {
+        JsonObject expected = Json.createObjectBuilder()
+            .add("socialSecurityNumber", "1234512345")
+            .add("memberID", "1234")
+            .add("firstName", "Daniel")
+            .add("lastName", "Danielsson")
+            .add("address", "Danielgatan 1")
+            .build();
+
+        Member member = new Member(1234, "1234512345", "Daniel", "Danielsson", "Danielgatan 1");
+        JsonObject actual = parser.memberToJson(member);
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void jsonToMemberTest() {
+        Member expected = new Member(2345, "9876598765", "Ernst", "Ernstsson", "Ernstgatan 1");
+
+        JsonObject json = Json.createObjectBuilder()
+            .add("socialSecurityNumber", "9876598765")
+            .add("memberID", "2345")
+            .add("firstName", "Ernst")
+            .add("lastName", "Ernstsson")
+            .add("address", "Ernstgatan 1")
+            .build();
+
+        Member actual = parser.jsonToMember(json);
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void jsonToMapTestEmpty() {
+        JsonArray jsonArr = Json.createArrayBuilder().build();
+
+        Map<Long, MemberNode> map = parser.jsonToMap(jsonArr);
+
+        assertNotNull(map);
+        assertTrue(map.isEmpty());
+    }
+
+    @Test
+    public void jsonToMapSingleMemberTest() {
+        Map<Long, MemberNode> expected = new HashMap<>();
+        Member member = new Member(1111, "1111111111", "Anna", "Annasson", "Annagatan 1"); 
+        Boat boat1 = new Boat(111, 5, BoatType.Canoe);
+        Boat boat2 = new Boat(222, 10, BoatType.SailBoat);
+        MemberNode mNode = new MemberNode(member);
+        mNode.append(new BoatNode(boat1));
+        mNode.append(new BoatNode(boat2));
+        expected.put(member.getMemberID(), mNode);
+
+        JsonArray jsonArr = JsonParserTest.createJsonMemberArray(
+            new String[][] {
+                new String[] { "1111111111" },
+                new String[] { "1111" },
+                new String[] { "Anna" },
+                new String[] { "Annasson" },
+                new String[] { "Annagatan 1" },
+                new String[] { "111 222" },
+            },
+            new String[][] {
+                new String[] { "111", "222" },
+                new String[] { "5", "10" },
+                new String[] { "2", "1" }
+            }
+        );
+
+        Map<Long, MemberNode> actual = parser.jsonToMap(jsonArr);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void jsonToMapMultipleMemberTest() {
+        Map<Long, MemberNode> expected = new HashMap<>();
+        MemberNode mNode = new MemberNode(new Member(1111, "1111111111", "Anna", "Annasson", "Annagatan 1"));
+        mNode.append(new BoatNode(new Boat(111, 5, BoatType.Canoe)));
+        mNode.append(new BoatNode(new Boat(222, 10, BoatType.SailBoat)));
+        expected.put(1111L, mNode);
+        mNode = new MemberNode(new Member(2222, "2222222222", "Bertil", "Bertilsson", "Bertilgatan 1"));
+        mNode.append(new BoatNode(new Boat(333, 9, BoatType.Motorsailer)));
+        mNode.append(new BoatNode(new Boat(444, 15, BoatType.SailBoat)));
+        expected.put(2222L, mNode);
+        mNode = new MemberNode(new Member(3333, "3333333333", "Cici", "Cicisson", "Cicigatan 1"));
+        expected.put(3333L, mNode);
+
+        JsonArray jsonArr = JsonParserTest.createJsonMemberArray(
+            new String[][] {
+                new String[] { "1111111111", "2222222222", "3333333333" },
+                new String[] { "1111", "2222", "3333" },
+                new String[] { "Anna", "Bertil", "Cici" },
+                new String[] { "Annasson", "Bertilsson", "Cicisson" },
+                new String[] { "Annagatan 1", "Bertilgatan 1", "Cicigatan 1" },
+                new String[] { "111 222", "333 444", "" },
+            },
+            new String[][] {
+                new String[] { "111", "222", "333", "444" },
+                new String[] { "5", "10", "9", "15" },
+                new String[] { "2", "1", "1", "0" }
+            }
+        );
+
+        Map<Long, MemberNode> actual = parser.jsonToMap(jsonArr);
+        assertEquals(expected, actual);
     }
 
     @Test
     public void mapToJsonTestEmpty() {
-        JsonArray jArr = parser.mapToJson(map);
+        JsonArray jArr = parser.mapToJson(new HashMap<Long, MemberNode>());
 
-        assertEquals(EMPTY_JSON_ARRAY, jArr.toString());
+        assertEquals("[]", jArr.toString());
     }
 
     @Test
-    public void mapToJsonSingleNoBoatsTest() {
-        //final String EXPECTED = 
-        //    "[" + 
-        //      "{" +
-        //        "\"member\":" +
-        //          "{" +
-        //            "\"socialSecurityNumber\":" +   "\"5010010202\"," +
-        //            "\"memberID\":"             +   "\"1111\"," +
-        //            "\"firstName\":"            +   "\"Lars\"," +
-        //            "\"lastName\":"             +   "\"Larsson\"," +
-        //            "\"address\":"              +   "\"Larsgatan 10\"" +
-        //          "}," + 
-        //        "\"boats\":" + 
-        //          "[" +
-        //          "]" +
-        //      "}" +
-        //    "]";
+    public void mapToJsonSingleMemberTest() {
+        JsonArray expected = JsonParserTest.createJsonMemberArray(
+            new String[][] {
+                new String[] { "1111111111" },
+                new String[] { "1111" },
+                new String[] { "Lars" },
+                new String[] { "Larsson" },
+                new String[] { "Larsgatan 1" },
+                new String[] { "" },
+            },
+            new String[][] {}
+        );
 
-        //Member member = new Member(1111);
-        //member.setFirstName("Lars");
-        //member.setLastName("Larsson");
-        //member.setSocialSecurityNumber(5010010202L);
-        //member.setAddress("Larsgatan 10");
-
-        //map.put(member.getMemberID(), new MemberNode(member));
-        //jsonarray jarr = parser.maptojson(map);
-
-        //assertequals(expected, jarr.tostring());
+        Map<Long, MemberNode> map = parser.jsonToMap(expected);
+        JsonArray actual = parser.mapToJson(map);
+        assertEquals(expected.toString(), actual.toString());
     }
 
     @Test
-    public void maptojsonmultiplememberstest() {
-        //final JsonArray expected = JsonParserTest.createJsonArray(
-        //    new String[][] {
-        //        new String[] { "Lars", "Kalle", "Per" },
-        //        new String[] { "Larsson", "Kallesson", "Persson" },
-        //        new String[] { "Larsgatan 1", "Kallegatan 2", "Persgatan 3" },
-        //        new String[] { "1111111111", "2222222222", "3333333333" },
-        //        new String[] { "1111", "2222", "3333" },
-        //        new String[] { "111 222", "333", "444 555 666" },
-        //    },
-        //    new String[][] {
-        //        new String[] { "111", "222", "333", "444", "555", "666" },
-        //        new String[] { 10, 11, 12, 13, 14, 15 },
-        //        new String[] { 0, 0, 1, 2, 2, 2 }
-        //    });
+    public void mapToJsonMultipleMembersTest() {
+        final JsonArray expected = JsonParserTest.createJsonMemberArray(
+            new String[][] {
+                new String[] { "1111111111", "2222222222", "3333333333" },
+                new String[] { "1111", "2222", "3333" },
+                new String[] { "Lars", "Kalle", "Per" },
+                new String[] { "Larsson", "Kallesson", "Persson" },
+                new String[] { "Larsgatan 1", "Kallegatan 2", "Persgatan 3" },
+                new String[] { "111 222", "333", "444 555 666" },
+            },
+            new String[][] {
+                new String[] { "111", "222", "333", "444", "555", "666" },
+                new String[] { "10", "11", "12", "13", "14", "15" },
+                new String[] { "0", "0", "1", "2", "2", "2" }
+            });
 
 
-        //Member member = new Member(1111);
-        //member.setFirstName("Lars");
-        //member.setLastName("Larsson");
-        //member.setSocialSecurityNumber(1111111111L);
-        //member.setAddress("Larsgatan 1");
-
-        //Boat boat1 = new Boat(111);
-        //boat1.setSize(10);
-        //boat1.setBoatType(BoatType.SailBoat);
-
-        //Boat boat2 = new Boat(222);
-        //boat2.setSize(11);
-        //boat2.setBoatType(BoatType.SailBoat);
-
-        //MemberNode mNode = new MemberNode(member);
-        //mNode.append(new BoatNode(boat1));
-        //mNode.append(new BoatNode(boat2));
-
-        //map.put(member.getMemberID(), new MemberNode(member));
-
-        //member = new Member(2222);
-        //member.setFirstName("Kalle");
-        //member.setLastName("Kallesson");
-        //member.setSocialSecurityNumber(2222222222L);
-        //member.setAddress("Kallegatan 2");
-
-        //boat1 = new Boat(333);
-        //boat1.setSize(12);
-        //boat1.setBoatType(BoatType.Motorsailer);
-
-        //mNode = new MemberNode(member);
-        //mNode.append(new BoatNode(boat1));
-
-        //map.put(member.getMemberID(), new MemberNode(member));
-
-        //member = new Member(3333);
-        //member.setFirstName("Per");
-        //member.setLastName("Persson");
-        //member.setSocialSecurityNumber(3333333333L);
-        //member.setAddress("Persgatan 3");
-
-        //boat1 = new Boat(444);
-        //boat1.setSize(13);
-        //boat1.setBoatType(BoatType.Canoe);
-
-        //boat2 = new Boat(555);
-        //boat2.setSize(14);
-        //boat2.setBoatType(BoatType.Canoe); 
-        //Boat boat3 = new Boat(666);
-        //boat3.setSize(15);
-        //boat3.setBoatType(BoatType.Canoe);
-
-        //mNode = new MemberNode(member);
-        //mNode.append(new BoatNode(boat1));
-        //mNode.append(new BoatNode(boat2));
-        //mNode.append(new BoatNode(boat3));
-
-        //map.put(member.getMemberID(), new MemberNode(member));
-
-        //JsonArray jArr = parser.mapToJson(map);
+        Map<Long, MemberNode> map = parser.jsonToMap(expected);
+        JsonArray actual = parser.mapToJson(map);
+        assertEquals(expected.toString(), actual.toString());
     }
 
     @Test
@@ -177,11 +239,11 @@ public class JsonParserTest {
         JsonArray expected = Json.createArrayBuilder()
             .add(Json.createObjectBuilder()
                     .add("member", Json.createObjectBuilder()
+                        .add("socialSecurityNumber", "1111111111")
+                        .add("memberID", "1111")
                         .add("firstName", "Lars")
                         .add("lastName", "Larsson")
-                        .add("address", "Larsgatan 1")
-                        .add("socialSecurityNumber", "1111111111")
-                        .add("memberID", "1111"))
+                        .add("address", "Larsgatan 1"))
                     .add("boats", Json.createArrayBuilder()
                         .add(Json.createObjectBuilder()
                             .add("boatID", "111")
@@ -193,25 +255,33 @@ public class JsonParserTest {
                             .add("boatType", "0"))))
             .add(Json.createObjectBuilder()
                     .add("member", Json.createObjectBuilder()
+                        .add("socialSecurityNumber", "2222222222")
+                        .add("memberID", "2222")
                         .add("firstName", "Kalle")
                         .add("lastName", "Kallesson")
-                        .add("address", "Kallegatan 2")
-                        .add("socialSecurityNumber", "2222222222")
-                        .add("memberID", "2222"))
+                        .add("address", "Kallegatan 2"))
                     .add("boats", Json.createArrayBuilder()
                         .add(Json.createObjectBuilder()
                             .add("boatID", "333")
                             .add("size", "12")
                             .add("boatType", "1"))))
+            .add(Json.createObjectBuilder()
+                    .add("member", Json.createObjectBuilder()
+                        .add("socialSecurityNumber", "3333333333")
+                        .add("memberID", "3333")
+                        .add("firstName", "Per")
+                        .add("lastName", "Persson")
+                        .add("address", "Persgatan 3"))
+                    .add("boats", Json.createArrayBuilder()))
             .build();
 
         JsonArray actual = JsonParserTest.createJsonMemberArray(
             new String[][] {
-                new String[] { "Lars", "Kalle" },
-                new String[] { "Larsson", "Kallesson" },
-                new String[] { "Larsgatan 1", "Kallegatan 2" },
-                new String[] { "1111111111", "2222222222" },
-                new String[] { "1111", "2222" },
+                new String[] { "1111111111", "2222222222", "3333333333" },
+                new String[] { "1111", "2222", "3333" },
+                new String[] { "Lars", "Kalle", "Per" },
+                new String[] { "Larsson", "Kallesson", "Persson" },
+                new String[] { "Larsgatan 1", "Kallegatan 2", "Persgatan 3" },
                 new String[] { "111 222", "333", ""}
             },
             new String[][] {
@@ -227,20 +297,19 @@ public class JsonParserTest {
                                                    String[][] boats) {
         JsonArrayBuilder expectedJson = Json.createArrayBuilder();
         int nrOfMembers = members[0].length;
-        int nrOfBoats = boats[0].length;
-
-        System.out.println("Members: " + nrOfMembers + " Boats: " + nrOfBoats);
+        int nrOfBoats = boats.length > 0 
+            ? boats[0].length 
+            : 0;
 
         for (int mI = 0; mI < nrOfMembers; mI++) {
-            System.out.println(mI);
             JsonObjectBuilder container = Json.createObjectBuilder();
 
             container.add("member", Json.createObjectBuilder()
-                    .add("firstName", members[0][mI])
-                    .add("lastName", members[1][mI])
-                    .add("address", members[2][mI])
-                    .add("socialSecurityNumber", members[3][mI])
-                    .add("memberID", members[4][mI]));
+                    .add("socialSecurityNumber", members[0][mI])
+                    .add("memberID", members[1][mI])
+                    .add("firstName", members[2][mI])
+                    .add("lastName", members[3][mI])
+                    .add("address", members[4][mI]));
 
             JsonArrayBuilder jBoats = Json.createArrayBuilder();
 

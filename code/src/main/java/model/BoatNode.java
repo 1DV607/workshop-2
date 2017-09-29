@@ -1,5 +1,6 @@
 package model;
 
+import java.util.Objects;
 
 /**
  * Represents a Boat as a BoatNode, inherits from Node Class
@@ -40,5 +41,18 @@ public class BoatNode extends Node {
         }
         return true;
 
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) { return true; }
+        if ( !(o instanceof BoatNode) ) { return false; }
+
+        return this.hashCode() == ((BoatNode)o).hashCode();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(boat);
     }
 }

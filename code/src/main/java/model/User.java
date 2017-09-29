@@ -6,13 +6,22 @@ package model;
  */
 public abstract class User {
 
-
-
     private String socialSecurityNumber;
     private String firstName;
     private String lastName;
     private String address;
 
+    protected User() {
+
+    }
+
+    protected User(String socialSecurityNumber, String firstName,
+                   String lastName, String address) {
+        this.socialSecurityNumber = socialSecurityNumber;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.address = address;
+    }
 
     public String getSocialSecurityNumber() {
         return socialSecurityNumber;

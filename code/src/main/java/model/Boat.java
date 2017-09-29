@@ -1,5 +1,6 @@
 package model;
 
+import java.util.Objects;
 /**
  * Represents a Boat,
  * Contains information about the Boat's type and size
@@ -17,6 +18,12 @@ public class Boat {
 
     public Boat(long memberID, int numberOfBoats) {
         boatID = generateBoatID(memberID, numberOfBoats);
+    }
+
+    public Boat(long boatID, int size, BoatType type) {
+        this.boatID = boatID;
+        setSize(size);
+        setBoatType(type);
     }
 
     public BoatType getBoatType() {
@@ -37,6 +44,19 @@ public class Boat {
 
     public long getBoatID() {
         return boatID;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) { return true; }
+        if ( !(o instanceof Boat) ) { return false; }
+
+        return this.hashCode() == ((Boat)o).hashCode();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(boatID, size, boatType);
     }
 
     /**
