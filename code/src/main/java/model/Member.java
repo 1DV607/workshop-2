@@ -10,6 +10,9 @@ public class Member extends User {
     public Member(long memberID) {
         this.memberID = memberID;
     }
+    public Member() {
+
+    }
 
     public long getMemberID() {
         return memberID;

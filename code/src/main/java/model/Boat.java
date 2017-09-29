@@ -13,6 +13,10 @@ public class Boat {
         this.boatID = boatID;
     }
 
+    public Boat() {
+
+    }
+
     public BoatType getBoatType() {
         return boatType;
     }

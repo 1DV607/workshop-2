@@ -11,6 +11,7 @@ public class MemberNode extends Node {
     public MemberNode(Member member) {
         this.member = member;
     }
+
     public Member getMember() {
         return member;
     }
@@ -27,6 +28,7 @@ public class MemberNode extends Node {
                 lastNode.setNextNode(null);
                 lastNode = nextToRemove;
             }
+            this.setNextNode(null);
         }
         catch (Exception e) {
             System.out.println(e.getMessage());
