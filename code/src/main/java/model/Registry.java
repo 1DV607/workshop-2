@@ -2,12 +2,10 @@ package model;
 
 
 import io.Dao;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -92,12 +90,13 @@ public class Registry {
      * @return true if successful otherwise false
      */
     public boolean addBoat(long memberID, JsonObject json) {
+        System.out.println("in add boat");
         try {
             MemberNode memberNode = findMember(memberID);
 
             int nrOfBoats = 0;
-            Node currentNode;
-            while ( (currentNode = memberNode.getNextNode()) != null ) {
+            Node currentNode = memberNode;
+            while ( (currentNode = currentNode.getNextNode()) != null ) {
                 nrOfBoats++;
             }
 

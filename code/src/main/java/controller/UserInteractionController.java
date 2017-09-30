@@ -40,30 +40,37 @@ public class UserInteractionController implements UserInteractionObserver {
         switch ((UserCommand)lastCommands[0]) {
             case AddMember: {
                 ui.displayAddMember();
+                break;
             }
             case EditMember: {
                 ui.displayEditMember(registry.getMember(getMemberID()));
+                break;
             }
+
             case RemoveMember: {
                 registry.removeMember(getMemberID());
                 members = registry.getAllMembersInfo();
                 chooseCorrectListVerbosity();
-
+                break;
             }
             case AddBoat: {
                ui.displayAddBoat(registry.getMember(getMemberID()));
+                break;
             }
             case EditBoat: {
                 ui.displayEditBoat(registry.getMember(getMemberID()), registry.getBoat(getMemberID(), getBoatID()));
+                break;
             }
             case RemoveBoat: {
                 registry.removeBoat(getMemberID(), getBoatID());
                 members = registry.getAllMembersInfo();
                 chooseCorrectListVerbosity();
+                break;
             }
             case ChangeList: {
                 listChooise = !listChooise;
                 chooseCorrectListVerbosity();
+                break;
             }
             case Exit: {
                 System.exit(0);
@@ -81,87 +88,69 @@ public class UserInteractionController implements UserInteractionObserver {
 
                 if (registry.addMember(information)) {
                     updateMemberList();
-                    chooseCorrectListVerbosity();
                 }
                 else {
                     ui.displayError("Unable to add member");
                 }
-
+                break;
             }
             case EditMember: {
 
                 if (registry.editMember(getMemberID(), information)) {
                     updateMemberList();
-                    chooseCorrectListVerbosity();
                 }
                 else {
                     ui.displayError("Unable to edit member");
                 }
-
+                break;
             }
             case RemoveMember: {
 
                 if (registry.removeMember(getMemberID())) {
                     updateMemberList();
-                    chooseCorrectListVerbosity();
                 }
                 else {
                     ui.displayError("Unable to remove member");
                 }
-
+                break;
             }
             case AddBoat: {
-
+                System.out.println("Add Boat");
                 if (registry.addBoat(getMemberID(), information)) {
+                    System.out.println("Adding a boat");
                     updateMemberList();
-                    chooseCorrectListVerbosity();
+                    System.out.println("done adding the boat");
                 }
                 else {
                     ui.displayError("Unable to add boat");
                 }
-
+                break;
             }
             case EditBoat: {
 
                 if (registry.editBoat(getMemberID(), getBoatID(), information)) {
                     updateMemberList();
-                    chooseCorrectListVerbosity();
                 }
                 else {
                     ui.displayError("Unable to edit boat");
                 }
-
+                break;
             }
             case RemoveBoat: {
 
                 if (registry.removeBoat(getMemberID(), getBoatID())) {
                     updateMemberList();
-                    chooseCorrectListVerbosity();
                 }
                 else {
                     ui.displayError("Unable to remove boat");
                 }
-
+                break;
             }
             case ChangeList: {
-
+                break;
             }
         }
-    }
-
-    /**
-     * Takes a String and check if it contains Json
-     * @param string - String
-     * @return true if the String contains Json, otherwise false
-     */
-    private boolean isJsonString(String string) {
-
-        if (string.contains("memberID") || string.contains("boatID")) {
-            return true;
-        }
-        else {
-            return false;
-        }
+        chooseCorrectListVerbosity();
     }
 
     private void chooseCorrectListVerbosity() {

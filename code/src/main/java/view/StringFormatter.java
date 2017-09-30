@@ -31,7 +31,7 @@ public class StringFormatter {
         JsonArray array;
         for (int i = 0; i < memberInformation.size(); i++) {
             object = memberInformation.getJsonObject(i).getJsonObject("member");
-            String nr = i+". ";
+            String nr = (i+1) +". ";
             String name = object.getString("firstName")+" "+object.getString("lastName");
             String memberID = object.getString("memberID");
             String SSN = object.getString("socialSecurityNumber");
@@ -41,9 +41,9 @@ public class StringFormatter {
             array = memberInformation.getJsonObject(i).getJsonArray("boats");
 
             for (int j = 0; j < array.size(); j++) {
-                object = array.getJsonObject(j).getJsonObject("boat");
+                object = array.getJsonObject(j);
 
-                String boatNr = j + ". ";
+                String boatNr = (j+1) + ". ";
                 String boatType = object.getString("boatType");
                 String size = object.getString("size");
                 String boatID = object.getString("boatID");
@@ -64,8 +64,8 @@ public class StringFormatter {
      * @return String, listed Members
      */
     public String getMemberListCompact(JsonArray memberInformation) {
-        
-		stringBuilder = new StringBuilder();
+        System.out.println("now we are getting started :P");
+        stringBuilder = new StringBuilder();
         JsonObject object;
 
         stringBuilder.append("Compact Member List \n");
@@ -76,7 +76,7 @@ public class StringFormatter {
         for (int i = 0; i < memberInformation.size(); i++) {
             object = memberInformation.getJsonObject(i).getJsonObject("member");
 
-            String nr = i+". ";
+            String nr = (i+1)+". ";
             String name = object.getString("firstName")+" "+object.getString("lastName");
             String memberID = object.getString("memberID");
             String numberOfBoats = memberInformation.getJsonObject(i).getJsonArray("boats").size()+"";
@@ -86,7 +86,7 @@ public class StringFormatter {
 
         }
 
-
+        System.out.println("I got here :D happy day");
         return stringBuilder.toString();
     }
 }
