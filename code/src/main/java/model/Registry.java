@@ -210,9 +210,14 @@ public class Registry {
 
         Node memberNode = members.get(memberID);
         BoatNode boatNode = (BoatNode) memberNode.getNextNode();
+        
+        long id =  boatNode.getBoat().getBoatID();
+        if (Long.compare(id, boatID) == 0) {
+            return boatNode;
+        }
 
         while (boatNode.getNextNode() != null) {
-            long id = boatNode.getBoat().getBoatID();
+            id = boatNode.getBoat().getBoatID();
             if (Long.compare(id, boatID) == 0) {
                 return boatNode;
             }
