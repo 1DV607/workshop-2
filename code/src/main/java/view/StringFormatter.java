@@ -56,7 +56,8 @@ public class StringFormatter {
 
 
     public String getMemberListCompact(JsonArray memberInformation) {
-        stringBuilder = new StringBuilder();
+        
+		stringBuilder = new StringBuilder();
         JsonObject object;
 
         stringBuilder.append("Compact Member List \n");

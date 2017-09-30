@@ -6,15 +6,14 @@ package controller;
  */
 public enum UserCommand {
 
-
     AddMember,
     EditMember,
     RemoveMember,
     AddBoat,
     EditBoat,
     RemoveBoat,
-    ChangeList;
-
+    ChangeList,
+    Exit;
 
     public static UserCommand getCommand(int i) {
         return UserCommand.values()[i-1];

@@ -14,5 +14,6 @@ public class Main {
 
         UserInteractionController controller = new UserInteractionController(consoleView, registry);
         consoleView.addObserver(controller);
+        controller.launch();
     }
 }

@@ -18,15 +18,19 @@ public class UserInteractionController implements UserInteractionObserver {
     JsonParser jsonParser;
     InputDecoder decoder;
     Object [] lastCommands;
-    Boolean listChooise;
+    boolean listChooise;
 
     public UserInteractionController(UserInterface ui, Registry registry) {
+        listChooise = true;
         this.ui = ui;
         this.registry = registry;
         jsonParser = new JsonParser();
         decoder = new InputDecoder();
         members = registry.getAllMembersInfo();
+    }
 
+    public void launch() {
+        ui.displayVerboseList(members); 
     }
 
     @Override
@@ -60,6 +64,9 @@ public class UserInteractionController implements UserInteractionObserver {
             case ChangeList: {
                 listChooise = !listChooise;
                 chooseCorrectListVerbosity();
+            }
+            case Exit: {
+                System.exit(0);
             }
         }
 
