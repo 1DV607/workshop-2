@@ -16,9 +16,9 @@ public interface UserInterface {
 
     public void displayEditMember(JsonObject jsonMember);
 
-    public void displayAddBoat();
+    public void displayAddBoat(JsonObject jsonMember);
 
-    public void displayEditBoat(JsonObject jsonBoat);
+    public void displayEditBoat(JsonObject jsonMember, JsonObject jsonBoat);
 
     public void displayError(String message);
 }
