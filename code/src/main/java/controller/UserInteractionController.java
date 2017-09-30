@@ -6,7 +6,6 @@ import view.UserInterface;
 
 import javax.json.JsonArray;
 import javax.json.JsonObject;
-import javax.json.JsonString;
 
 /**
  * Created by Caroline Nilsson on 2017-09-30.
@@ -174,7 +173,7 @@ public class UserInteractionController implements UserInteractionObserver {
 
     private long getBoatID() {
         long boatID = Long.parseLong((String) lastCommands[2]);
-        return boatID
+        return boatID;
     }
 
     private void updateMemberList() {
