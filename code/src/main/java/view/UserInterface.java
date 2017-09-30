@@ -21,4 +21,6 @@ public interface UserInterface {
     public void displayEditBoat(JsonObject jsonMember, JsonObject jsonBoat);
 
     public void displayError(String message);
+
+    public void displayWelcome();
 }

@@ -30,6 +30,7 @@ public class UserInteractionController implements UserInteractionObserver {
     }
 
     public void launch() {
+        ui.displayWelcome();
         ui.displayVerboseList(members); 
     }
 

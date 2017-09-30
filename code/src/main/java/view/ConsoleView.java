@@ -184,6 +184,32 @@ public class ConsoleView implements UserInterface {
         interactionObserver.onErrorDismissed();
     }
 
+    @Override
+    public void displayWelcome() {
+        System.out.println("" +
+                           "                          |\"-,_                       \n" +
+                           "                          I--(_                       \n" +
+                           "                         ,I?8,                        \n" +
+                           "                         d|`888.                      \n" +
+                           "                        d8| 8888b                     \n" +
+                           "                       ,88| ?8888b                    \n" +
+                           "                      ,888| `88888b                   \n" +
+                           "                     ,8888|  8888g8b                  \n" +
+                           "                    ,88888|  888PX?8b                 \n" +
+                           "                   ,888888|  8888bd88,                \n" +
+                           "                  o8888888| ,888888888                \n" +
+                           "                 d8888888P| d888888888b               \n" +
+                           "              _.d888gggg8'| 8gg88888888,              \n" +
+                           "             '\\==-,,,,,,,,|/;,,,,,-==;7               \n" +
+                           "             _ \\__...____...__    __/ _                ");
+        System.out.println();
+        System.out.println("======================================================");
+        System.out.println("||           Welcome to The Happy Pirate!           ||");
+        System.out.println("======================================================");
+        System.out.println();
+        getInput("Press 'Enter' to start!");
+    }
+
     private void displayMenu() {
         System.out.println("");
         System.out.println("==============================");
