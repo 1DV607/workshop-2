@@ -1,8 +1,12 @@
 package view;
 
+import java.util.Scanner;
+
 import controller.UserInteractionObserver;
 
+import javax.json.Json;
 import javax.json.JsonArray;
+import javax.json.JsonObject;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,15 +52,15 @@ public class ConsoleView implements UserInterface {
 
     @Override
     public void displayVerboseList(JsonArray jsonArray) {
-        displayMemberList(true);
+        displayMemberList(true, jsonArray);
     }
 
     @Override
     public void displayCompactList(JsonArray jsonArray) {
-        displayMemberList(false);
+        displayMemberList(false, jsonArray);
     }
 
-    private void displayMemberList(boolean verbose) {
+    private void displayMemberList(boolean verbose, JsonArray jsonArray) {
         String list;
         
         if (verbose) {
@@ -65,7 +69,7 @@ public class ConsoleView implements UserInterface {
             list = formatter.getMemberListVerbose(jsonArray);
         }
 
-        System.out.println(listOutput);
+        System.out.println(list);
         displayMenu();
         String selection = getInput("> ");
         interactionObserver.onCommandSelected(selection);
@@ -79,7 +83,7 @@ public class ConsoleView implements UserInterface {
         String lastName = getInput("Last name: ");
         String address = getInput("Address: ");
 
-        JsonObject info = new Json.createJsonBuilder()
+        JsonObject info = Json.createObjectBuilder()
             .add("socialSecurityNumber", socialSecurityNumber)
             .add("firstName", firstName)
             .add("lastName", lastName)
@@ -100,7 +104,7 @@ public class ConsoleView implements UserInterface {
         String address = getInput(String.format("Address (current: %s): ",
                     jsonMember.getString("address")));
 
-        JsonObject info = new Json.createJsonBuilder()
+        JsonObject info = Json.createObjectBuilder()
             .add("socialSecurityNumber", "")
             .add("firstName", firstName)
             .add("lastName", lastName)
@@ -113,11 +117,11 @@ public class ConsoleView implements UserInterface {
     @Override
     public void displayAddBoat(JsonObject jsonMember) {
         System.out.printf("Please enter the information about %s's new boat.",
-                member.getString("firstName"));
+                jsonMember.getString("firstName"));
         String size = getInput("Enter length (meters): ");
         String boatType = getInput("Enter type (SailBoat/Motorsailer/Canoe/Kayak/Other): ");
 
-        JsonObject info = new Json.createJsonBuilder()
+        JsonObject info = Json.createObjectBuilder()
             .add("size", size)
             .add("boatType", boatType)
             .build();
@@ -134,7 +138,7 @@ public class ConsoleView implements UserInterface {
         String boatType = getInput(String.format("Boat type (current: %s): ",
                     jsonMember.getString("boatType")));
 
-        JsonObject info = new Json.createJsonBuilder()
+        JsonObject info = Json.createObjectBuilder()
             .add("boatID", "")
             .add("size", size)
             .add("boatType", boatType)
