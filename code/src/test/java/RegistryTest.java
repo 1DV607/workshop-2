@@ -21,14 +21,14 @@ import model.JsonParser;
 
 public class RegistryTest {
 
-    //private static final File daoTestOut = new File("");
+    private static final File daoTestOut = new File("./src/test/registry_test/registry_test_out.json");
     private static Dao dao;
     private static JsonParser parser;
     private static Registry registry;
 
     @BeforeClass
     public static void beforeAll() {
-        dao = new Dao();
+        dao = new Dao(daoTestOut);
         parser = new JsonParser();
     }
 
@@ -165,7 +165,7 @@ public class RegistryTest {
         assertEquals(1, boats.size());
         Boat boat = boats.get(0);
         assertEquals(5, boat.getSize());
-        assertEquals(BoatType.Motorsailer, boat.getBoatType());
+        assertEquals(BoatType.Canoe, boat.getBoatType());
     }
 
     @Test
@@ -196,7 +196,7 @@ public class RegistryTest {
 
     @Test
     public void getAllMembersInfoTest() {
-
+        
     }
 
     private static boolean hasMember(Registry registry, long memberId) {
