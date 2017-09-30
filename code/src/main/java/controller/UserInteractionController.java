@@ -66,6 +66,9 @@ public class UserInteractionController implements UserInteractionObserver {
                 listChooise = !listChooise;
                 chooseCorrectListVerbosity();
             }
+            case Exit: {
+                System.exit(0);
+            }
         }
 
 

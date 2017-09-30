@@ -169,6 +169,7 @@ public class ConsoleView implements UserInterface {
         System.out.println("6. Remove boat <boat nr> (NOT AVAILABLE)");
 
         System.out.println("7. Change list verbosity.");
+        System.out.println("8. Exit");
         System.out.println();
         System.out.println("Enter selection nr (Ex: '5 2.1') ");          
     }
