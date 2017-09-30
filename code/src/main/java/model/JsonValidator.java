@@ -14,7 +14,7 @@ public class JsonValidator {
 
         try {
             Integer.parseInt(jsonBoat.getString("size"));
-            BoatType type = BoatType.values()[Integer.parseInt(jsonBoat.getString("boatType"))];
+            BoatType.fromString(jsonBoat.getString("boatType"));
         } catch (Exception ex) {
             return false;
         }

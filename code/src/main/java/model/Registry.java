@@ -5,6 +5,7 @@ import io.Dao;
 
 import javax.json.Json;
 import javax.json.JsonArray;
+import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import java.util.Map;
 
@@ -184,6 +185,31 @@ public class Registry {
     }
 
     /**
+     * Returns all Boat objects associated with the Member with the specified
+     * memberID.
+     * @param memberID - long, ID of the Member who owns the Boats
+     * @return JsonArray of member's boats
+     */
+    public JsonArray getMemberBoats(long memberID) {
+        JsonArrayBuilder json = Json.createArrayBuilder();
+
+        try {
+            MemberNode mNode = findMember(memberID);
+
+            Node current = mNode;
+            while ( (current = current.getNextNode()) != null) {
+                Boat boat = ((BoatNode)current).getBoat();
+                json.add(jsonParser.boatToJson(boat));
+            }
+
+            return json.build();
+        }
+        catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
      * Returns the Boat object as an JsonObject
      * @param memberID - long, ID of the Member who owns the Boat
      * @param boatID - long, ID of the Boat
@@ -279,7 +305,7 @@ public class Registry {
         String size = json.getString("size");
 
         if (boatType.length() != 0) {
-            boat.setBoatType(BoatType.values()[Integer.parseInt(boatType)] );
+            boat.setBoatType(BoatType.fromString(boatType));
         }
         if (size.length() != 0)  {
             boat.setSize(Integer.parseInt(size));
