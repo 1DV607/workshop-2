@@ -17,6 +17,12 @@ import javax.json.JsonValue;
  */
 public class JsonParser {
 
+    private JsonValidator validator;
+
+    public JsonParser() {
+        validator = new JsonValidator();
+    }
+
     /**
      *  Given a valid member JsonObject, parses it into a Member object
      *  
@@ -33,7 +39,11 @@ public class JsonParser {
      *            JSON object.
      */
     public Member jsonToMember(JsonObject json) {
-        // TODO: Validate the JSON?
+
+        if ( ! validator.isValidMember(json)) {
+            throw new IllegalArgumentException();
+        }
+
         String ssn = json.getString("socialSecurityNumber");
         long memberID = Long.parseLong(json.getString("memberID"));
         String firstName = json.getString("firstName");
@@ -50,6 +60,10 @@ public class JsonParser {
     }
 
     public Member jsonToNewMember(JsonObject json) {
+        if ( ! validator.isValidMember(json)) {
+            throw new IllegalArgumentException();
+        }
+
         String ssn = json.getString("socialSecurityNumber");
         String firstName = json.getString("firstName");
         String lastName = json.getString("lastName");
@@ -88,7 +102,10 @@ public class JsonParser {
      *            JSON object.
      */
     public Boat jsonToBoat(JsonObject json) {
-        // TODO: Validate the JSON?
+        if ( ! validator.isValidBoat(json)) {
+            throw new IllegalArgumentException();
+        }
+
         long boatID = Long.parseLong(json.getString("boatID"));
         int size = Integer.parseInt(json.getString("size"));
         BoatType type = BoatType.values()[Integer.parseInt(json.getString("boatType"))];
@@ -101,7 +118,10 @@ public class JsonParser {
     }
 
     public Boat jsonToNewBoat(JsonObject json, long memberId, int nrOfBoats) {
-        // TODO: Validate the JSON?
+        if ( ! validator.isValidBoat(json)) {
+            throw new IllegalArgumentException();
+        }
+
         int size = Integer.parseInt(json.getString("size"));
         BoatType type = BoatType.values()[Integer.parseInt(json.getString("boatType"))];
 
@@ -216,6 +236,11 @@ public class JsonParser {
      *            contained in the JsonArray.
      */
     public Map<Long, MemberNode> jsonToMap(JsonArray array) {
+
+        if ( ! validator.isValidMemberArray(array)) {
+            throw new IllegalArgumentException();
+        }
+
         Map<Long, MemberNode> result = new HashMap<>();
 
         for (JsonValue jStruct : array) {
