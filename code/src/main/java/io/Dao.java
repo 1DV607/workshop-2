@@ -1,6 +1,5 @@
 package io;
 
-
 import javax.json.*;
 import java.io.File;
 import java.io.FileInputStream;
@@ -59,7 +58,7 @@ public class Dao {
             members = reader.readArray();
         }
         catch (Exception e) {
-            return null;
+            return Json.createArrayBuilder().build();
         }
 
         return members;

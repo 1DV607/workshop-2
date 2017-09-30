@@ -46,7 +46,7 @@ public class RegistryTest {
             .add("socialSecurityNumber", "5711032040")
             .build();
 
-        registry.addMember(memberJson);
+        assertTrue(registry.addMember(memberJson));
 
         long memberID = RegistryTest.getMemberBySsn(registry, memberJson.getString("socialSecurityNumber")).getMemberID();
 
@@ -245,6 +245,8 @@ public class RegistryTest {
         for (JsonValue container : registry.getAllMembersInfo()) {
             JsonObject member = ((JsonObject)container).getJsonObject("member");
             String mSsn = member.getString("socialSecurityNumber");
+
+            System.out.println("member: " + member);
 
             if (ssn.equals(mSsn)) {
                 return parser.jsonToMember(member);

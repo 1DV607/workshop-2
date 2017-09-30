@@ -32,7 +32,7 @@ public class Registry {
      */
     public boolean addMember(JsonObject json) {
         try {
-            Member member = jsonParser.jsonToMember(json);
+            Member member = jsonParser.jsonToNewMember(json);
             long memberID = member.getMemberID();
             MemberNode memberNode = new MemberNode(member);
             members.put(memberID, memberNode);
@@ -94,7 +94,14 @@ public class Registry {
     public boolean addBoat(long memberID, JsonObject json) {
         try {
             MemberNode memberNode = findMember(memberID);
-            Boat boat = jsonParser.jsonToBoat(json);
+
+            int nrOfBoats = 0;
+            Node currentNode;
+            while ( (currentNode = memberNode.getNextNode()) != null ) {
+                nrOfBoats++;
+            }
+
+            Boat boat = jsonParser.jsonToNewBoat(json, memberID, nrOfBoats + 1);
             BoatNode boatNode = new BoatNode(boat);
             memberNode.append(boatNode);
             saveChanges();
