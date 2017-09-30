@@ -104,6 +104,18 @@ public class ConsoleView implements UserInterface {
         String address = getInput(String.format("Address (current: %s): ",
                     jsonMember.getString("address")));
 
+        if (firstName.isEmpty()) {
+            firstName = jsonMember.getString("firstName");
+        } 
+
+        if (lastName.isEmpty()) {
+            lastName = jsonMember.getString("lastName");
+        }
+
+        if (address.isEmpty()) {
+            address = jsonMember.getString("address");
+        }
+
         JsonObject info = Json.createObjectBuilder()
             .add("socialSecurityNumber", "")
             .add("firstName", firstName)
@@ -137,6 +149,14 @@ public class ConsoleView implements UserInterface {
                     jsonMember.getString("size")));
         String boatType = getInput(String.format("Boat type (current: %s): ",
                     jsonMember.getString("boatType")));
+
+        if (size.isEmpty()) {
+            size = jsonBoat.getString("size");
+        } 
+
+        if (boatType.isEmpty()) {
+            boatType = jsonBoat.getString("boatType");
+        }
 
         JsonObject info = Json.createObjectBuilder()
             .add("boatID", "")
