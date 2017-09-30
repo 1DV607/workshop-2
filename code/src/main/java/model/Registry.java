@@ -22,11 +22,27 @@ public class Registry {
     public Registry(Dao dao, JsonParser jsonParser) {
         this.dao = dao;
         this.jsonParser = jsonParser;
-        members = new HashMap<Long, MemberNode>();
+        members = jsonParser.jsonToMap(dao.load());
     }
 
+    /**
+     * Adds a new Member to the linked list with the member id as key
+     * @param json - Member information as a JsonObject
+     * @return true if successfully added otherwise false
+     */
     public boolean addMember(JsonObject json) {
-        throw new NotImplementedException();
+        try {
+            Member member = jsonParser.jsonToMember(json);
+            long memberID = member.getMemberID();
+            MemberNode memberNode = new MemberNode(member);
+            members.put(memberID, memberNode);
+            saveChanges();
+            return true;
+        }
+        catch (Exception e) {
+            return false;
+        }
+
     }
 
     /**
@@ -35,23 +51,58 @@ public class Registry {
      * @return true if the Member was successfully removed, otherwise false
      */
     public boolean removeMember(long memberID) {
-        MemberNode memberNode = members.get(memberID);
-        if (memberNode == null) {
-            return false;
-        }
-        else {
-            memberNode.remove();
+        MemberNode memberToRemove;
+        try {
+            memberToRemove = findMember(memberID);
+            memberToRemove.remove();
             members.remove(memberID);
+            saveChanges();
             return true;
         }
+        catch (NullPointerException e) {
+            return false;
+        }
     }
 
+    /**
+     * Takes a member id and change the Members information to the information
+     * contained within the JsonObject
+     * @param memberID - long, the id of the Member to change information
+     * @param json - JsonObject, the new information
+     * @return true if edit was successful otherwise false
+     */
     public boolean editMember(long memberID, JsonObject json) {
-        throw new NotImplementedException();
+        try {
+            MemberNode memberNode = findMember(memberID);
+            Member member = memberNode.getMember();
+            setMemberInfo(member, json);
+            saveChanges();
+            return true;
+        }
+        catch (Exception exception) {
+            return false;
+        }
     }
 
+    /**
+     * Takes a member id and a JsonObject and adds a Boat to the member with
+     * the information contained within the JsonObject
+     * @param memberID - long, the Members id
+     * @param json - JsonObject, contains information about the boat
+     * @return true if successful otherwise false
+     */
     public boolean addBoat(long memberID, JsonObject json) {
-        throw new NotImplementedException();
+        try {
+            MemberNode memberNode = findMember(memberID);
+            Boat boat = jsonParser.jsonToBoat(json);
+            BoatNode boatNode = new BoatNode(boat);
+            memberNode.append(boatNode);
+            saveChanges();
+            return true;
+        }
+        catch (Exception exception) {
+            return false;
+        }
     }
 
     /**
@@ -64,6 +115,7 @@ public class Registry {
         try {
             BoatNode boatNode = findBoat(memberID, boatID);
             boatNode.remove();
+            saveChanges();
             return true;
         }
         catch (NullPointerException exception) {
@@ -71,55 +123,79 @@ public class Registry {
         }
     }
 
+    /**
+     * takes a member id, a boat id and a JsonObject and change the information of the Boat
+     * to the information contained within the JsonObject
+     * @param memberID - long, the id of the Member who owns the Boat
+     * @param boatID - long, id of the Boat to change
+     * @param json - JsonObject, contains the new information
+     * @return true if successful otherwise false
+     */
     public boolean editBoat(long memberID, long boatID, JsonObject json) {
-        throw new NotImplementedException();
+        try {
+            BoatNode boatNode = findBoat(memberID, boatID);
+            Boat boat = boatNode.getBoat();
+            setBoatInfo(boat, json);
+            saveChanges();
+            return true;
+        }
+        catch (Exception exception) {
+            return false;
+        }
     }
 
+    /**
+     * Returns an JsonArray containing all Members and Boats stored in the HashMap
+     * @return - JsonArray, containing all Members information
+     */
     public JsonArray getAllMembersInfo() {
-        throw new NotImplementedException();
+        JsonArray array;
+        try {
+            array = jsonParser.mapToJson(members);
+            return array;
+        }
+        catch (Exception exception) {
+            array = Json.createArrayBuilder().build();
+            return array;
+        }
     }
 
-    public JsonArray getAllMembersInfoTest() {
-        return Json.createArrayBuilder()
-            .add(Json.createObjectBuilder()
-                    .add("firstName", "Bengt")
-                    .add("lastName", "Bengtsson")
-                    .add("memberID", "1234")
-                    .add("socialSecurityNr", "9007250575")
-                    .add("numberOfBoats", 1)
-                    .add("boats", Json.createArrayBuilder()
-                        .add(Json.createObjectBuilder()
-                            .add("boatID", "12341")
-                            .add("size", 10)
-                            .add("type", "SailBoat"))))
-            .add(Json.createObjectBuilder()
-                    .add("firstName", "Lars")
-                    .add("lastName", "Larsson")
-                    .add("memberID", "1235")
-                    .add("socialSecurityNr", "9007250575")
-                    .add("numberOfBoats", 3)
-                    .add("boats", Json.createArrayBuilder()
-                        .add(Json.createObjectBuilder()
-                            .add("boatID", "12351")
-                            .add("size", 5)
-                            .add("type", "Canoe"))
-                        .add(Json.createObjectBuilder()
-                            .add("boatID", "12352")
-                            .add("size", 7)
-                            .add("type", "Motorsailer"))
-                        .add(Json.createObjectBuilder()
-                            .add("boatID", "12353")
-                            .add("size", 3)
-                            .add("type", "Other"))))
-            .build();
+    /**
+     * Takes a member id and uses the id as key to finding the MemberNode in the HashMap
+     * @param memberID - id of the Member to find
+     * @return MemberNode, belonging to the member id
+     * @throws NullPointerException
+     */
+    private MemberNode findMember(long memberID) throws NullPointerException {
+        MemberNode memberNode = members.get(memberID);
+        if (memberNode == null) {
+            throw new NullPointerException();
+        }
+        else {
+            return memberNode;
+        }
     }
 
-    private Member findMember(long memberID) {
-        throw new NotImplementedException();
-    }
-
+    /**
+     * Takes a Member and a JsonObject and change the information stored in Member
+     * to the information contained in JsonObject unless the Strings are empty
+     * @param member - Member, the member to change
+     * @param json - JsonObject, containing the new information
+     */
     private void setMemberInfo(Member member, JsonObject json) {
+        String firstName = json.getString("firstName");
+        String lastName = json.getString("lastName");
+        String address = json.getString("address");
 
+        if (firstName.length() != 0) {
+            member.setFirstName(firstName);
+        }
+        if (lastName.length() != 0) {
+            member.setLastName(lastName);
+        }
+        if (address.length() != 0) {
+            member.setAddress(address);
+        }
     }
 
     /**
@@ -146,7 +222,28 @@ public class Registry {
         return null;
     }
 
-    private void setBoatInfo(Boat boat, JsonObject json) {
+    /**
+     * Takes a Boat and a JsonObject and change the information in the Boat object
+     * to the information in the JsonObject unless the Strings are empty
+     * @param boat - Boat, to change information in
+     * @param json - JsonObject, containing the new information
+     */
+    private void setBoatInfo(Boat boat, JsonObject json) throws NumberFormatException {
+        String boatType = json.getString("boatType");
+        String size = json.getString("size");
 
+        if (boatType.length() != 0) {
+            boat.setBoatType(BoatType.values()[Integer.parseInt(boatType)] );
+        }
+        if (size.length() != 0)  {
+            boat.setSize(Integer.parseInt(size));
+        }
+    }
+
+    /**
+     * Calls the method save() in dao to save new information.
+     */
+    private void saveChanges() {
+        dao.save(jsonParser.mapToJson(members));
     }
 }
