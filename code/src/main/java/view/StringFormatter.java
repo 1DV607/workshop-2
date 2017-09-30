@@ -5,7 +5,7 @@ import javax.json.JsonObject;
 import javax.json.JsonValue;
 
 /**
- * 
+ * Formats an JsonValue (Array) into a String: Verbose List, Compact List
  */
 public class StringFormatter {
 
@@ -15,6 +15,11 @@ public class StringFormatter {
 
     }
 
+    /**
+     * Creates a verbose Member List containing the information in memberInformation
+     * @param memberInformation - JsonArray, containing Members and Boats
+     * @return - String, listed Members and Boats
+     */
     public String getMemberListVerbose(JsonArray memberInformation) {
         stringBuilder = new StringBuilder();
 
@@ -53,8 +58,11 @@ public class StringFormatter {
     }
 
 
-
-
+    /**
+     * Creates a compact Member List containing the information in memberInformation
+     * @param memberInformation - JsonArray, containing members and boats
+     * @return String, listed Members
+     */
     public String getMemberListCompact(JsonArray memberInformation) {
         
 		stringBuilder = new StringBuilder();
