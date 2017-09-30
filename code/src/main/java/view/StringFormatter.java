@@ -108,4 +108,61 @@ public class StringFormatter {
         return stringBuilder.toString();
     }
 
+    public String getMenu(boolean verbose) {
+        stringBuilder = new StringBuilder();
+
+        stringBuilder.append("\n");
+        stringBuilder.append("=======================================================================\n");
+
+        stringBuilder.append(String.format("%-31s %-4s %-31s %-2s \n",
+                 "||","Menu", "", "||"));
+        stringBuilder.append("=======================================================================\n");
+        stringBuilder.append(String.format("%-2s %-65s %-2s \n",
+                "||", "", "||"));
+
+        stringBuilder.append(String.format("%-1s %-65s %-2s \n",
+               "||", "1. Add member", "||" ));
+        stringBuilder.append(String.format("%-1s %-65s %-2s \n",
+                "||", "2. Edit member <member nr>", "||" ));
+        stringBuilder.append(String.format("%-1s %-65s %-2s \n",
+                "||", "3. Remove member <member nr>", "||" ));
+        stringBuilder.append(String.format("%-1s %-65s %-2s \n",
+                "||", "4. Add boat <member nr>", "||" ));
+
+        if (verbose) {
+            stringBuilder.append(String.format("%-1s %-65s %-2s \n",
+                    "||", "5. Edit boat <member nr> <boat nr>", "||" ));
+            stringBuilder.append(String.format("%-1s %-65s %-2s \n",
+                    "||", "6. Remove boat <member nr> <boat nr>", "||" ));
+        }
+        else {
+            stringBuilder.append(String.format("%-1s %-65s %-2s \n",
+                    "||", "5. Edit boat <member nr> <boat nr> (NOT AVAILABLE)", "||" ));
+            stringBuilder.append(String.format("%-1s %-65s %-2s \n",
+                    "||", "6. Remove boat <member nr> <boat nr> (NOT AVAILABLE)", "||" ));
+        }
+        stringBuilder.append(String.format("%-1s %-65s %-2s \n",
+                "||", "7. Change list verbosity.", "||" ));
+        stringBuilder.append(String.format("%-1s %-65s %-2s \n",
+                "||", "8. Exit", "||" ));
+        if (!verbose) {
+            stringBuilder.append(String.format("%-2s %-65s %-2s \n",
+                    "||", "", "||"));
+            stringBuilder.append(String.format("%-1s %-65s %-2s \n",
+                    "|| ", "Actions 5, 6 only available at verbose listings", "||" ));
+        }
+        stringBuilder.append(String.format("%-2s %-65s %-2s \n",
+                "||", "", "||"));
+        stringBuilder.append("=======================================================================\n");
+        stringBuilder.append("\n");
+        stringBuilder.append("Enter selection nr <Menu Choice> <Member Nr> <Boat Nr> \n");
+        stringBuilder.append("Ex: '5 2 1' = Edit boat 1 at member 2. Ex: '1' = Add new member\n ");
+        stringBuilder.append("-----------------------------------------------------------------------\n");
+        stringBuilder.append("\n");
+
+
+
+        return stringBuilder.toString();
+    }
+
 }
