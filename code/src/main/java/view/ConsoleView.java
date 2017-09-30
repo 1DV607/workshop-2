@@ -91,7 +91,23 @@ public class ConsoleView implements UserInterface {
 
     @Override
     public void displayEditMember(JsonObject jsonMember) {
+        System.out.println("Please enter the new information. Leave a field blank to keep current information.");
+        System.out.println();
+        String firstName = getInput(String.format("First name (current: %s): ",
+                    jsonMember.getString("firstName")));
+        String lastName = getInput(String.format("Last name (current: %s): ",
+                    jsonMember.getString("lastName")));
+        String address = getInput(String.format("Address (current: %s): ",
+                    jsonMember.getString("address")));
 
+        JsonObject info = new Json.createJsonBuilder()
+            .add("socialSecurityNumber", "")
+            .add("firstName", firstName)
+            .add("lastName", lastName)
+            .add("address", address)
+            .build();
+
+        interactionObserver.onSubmitted(info);
     }
 
     @Override
@@ -111,12 +127,28 @@ public class ConsoleView implements UserInterface {
 
     @Override
     public void displayEditBoat(JsonObject jsonMember, JsonObject jsonBoat) {
+        System.out.println("Please enter the new information. Leave a field blank to keep current information.");
+        System.out.println();
+        String size = getInput(String.format("Boat length (meters) (current: %s): ",
+                    jsonMember.getString("size")));
+        String boatType = getInput(String.format("Boat type (current: %s): ",
+                    jsonMember.getString("boatType")));
 
+        JsonObject info = new Json.createJsonBuilder()
+            .add("boatID", "")
+            .add("size", size)
+            .add("boatType", boatType)
+            .build();
+
+        interactionObserver.onSubmitted(info);
     }
 
     @Override
     public void displayError(String message) {
-
+        System.out.println("=======================================");
+        System.out.println(message);
+        System.out.println("=======================================");
+        System.out.println();
     }
 
     private void displayMenu() {
