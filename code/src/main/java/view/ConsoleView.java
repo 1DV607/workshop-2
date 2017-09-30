@@ -29,7 +29,7 @@ public class ConsoleView implements UserInterface {
 
     @Override
     public void displayVerboseList(JsonArray jsonArray) {
-
+        
     }
 
     @Override
@@ -43,7 +43,7 @@ public class ConsoleView implements UserInterface {
     }
 
     @Override
-    public void displayEditMember() {
+    public void displayEditMember(JsonObject jsonMember) {
 
     }
 
@@ -53,7 +53,7 @@ public class ConsoleView implements UserInterface {
     }
 
     @Override
-    public void displayEditBoat() {
+    public void displayEditBoat(JsonObject jsonBoat) {
 
     }
 }

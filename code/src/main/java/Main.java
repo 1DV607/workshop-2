@@ -10,7 +10,6 @@ public class Main {
 
         View view;
 
-
         Dao dao = new Dao();
         JsonParser parser = new JsonParser();
         Registry registry = new Registry(dao, parser);
@@ -33,8 +32,6 @@ public class Main {
 
         view = new EditBoatView();
         consoleView.addView(view);
-
-
 
     }
 
