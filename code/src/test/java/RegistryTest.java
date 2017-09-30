@@ -21,14 +21,14 @@ import model.JsonParser;
 
 public class RegistryTest {
 
-    //private static final File daoTestOut = new File("");
+    private static final File daoTestOut = new File("./src/test/registry_test/registry_test_out.json");
     private static Dao dao;
     private static JsonParser parser;
     private static Registry registry;
 
     @BeforeClass
     public static void beforeAll() {
-        dao = new Dao();
+        dao = new Dao(daoTestOut);
         parser = new JsonParser();
     }
 
@@ -46,7 +46,7 @@ public class RegistryTest {
             .add("socialSecurityNumber", "5711032040")
             .build();
 
-        registry.addMember(memberJson);
+        assertTrue(registry.addMember(memberJson));
 
         long memberID = RegistryTest.getMemberBySsn(registry, memberJson.getString("socialSecurityNumber")).getMemberID();
 
@@ -165,7 +165,7 @@ public class RegistryTest {
         assertEquals(1, boats.size());
         Boat boat = boats.get(0);
         assertEquals(5, boat.getSize());
-        assertEquals(BoatType.Motorsailer, boat.getBoatType());
+        assertEquals(BoatType.Canoe, boat.getBoatType());
     }
 
     @Test
@@ -196,7 +196,7 @@ public class RegistryTest {
 
     @Test
     public void getAllMembersInfoTest() {
-
+        
     }
 
     private static boolean hasMember(Registry registry, long memberId) {
@@ -245,6 +245,8 @@ public class RegistryTest {
         for (JsonValue container : registry.getAllMembersInfo()) {
             JsonObject member = ((JsonObject)container).getJsonObject("member");
             String mSsn = member.getString("socialSecurityNumber");
+
+            System.out.println("member: " + member);
 
             if (ssn.equals(mSsn)) {
                 return parser.jsonToMember(member);

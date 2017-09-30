@@ -49,6 +49,20 @@ public class JsonParser {
         return member;
     }
 
+    public Member jsonToNewMember(JsonObject json) {
+        String ssn = json.getString("socialSecurityNumber");
+        String firstName = json.getString("firstName");
+        String lastName = json.getString("lastName");
+        String address = json.getString("address");
+
+        Member member = new Member(ssn);
+        member.setSocialSecurityNumber(ssn);
+        member.setFirstName(firstName);
+        member.setLastName(lastName);
+        member.setAddress(address);
+        return member;
+    }
+
     public JsonObject memberStringToJson(String firstName, String lastName,
             String address, String memberID, String socialSecurityNumber) {
         return Json.createObjectBuilder()
@@ -80,6 +94,18 @@ public class JsonParser {
         BoatType type = BoatType.values()[Integer.parseInt(json.getString("boatType"))];
 
         Boat boat = new Boat(boatID);
+        boat.setSize(size);
+        boat.setBoatType(type);
+
+        return boat;
+    }
+
+    public Boat jsonToNewBoat(JsonObject json, long memberId, int nrOfBoats) {
+        // TODO: Validate the JSON?
+        int size = Integer.parseInt(json.getString("size"));
+        BoatType type = BoatType.values()[Integer.parseInt(json.getString("boatType"))];
+
+        Boat boat = new Boat(memberId, nrOfBoats);
         boat.setSize(size);
         boat.setBoatType(type);
 
