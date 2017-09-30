@@ -7,9 +7,6 @@ import view.*;
 public class Main {
 
     public static void main(String[] args) {
-
-        View view;
-
         Dao dao = new Dao();
         JsonParser parser = new JsonParser();
         Registry registry = new Registry(dao, parser);
@@ -17,22 +14,5 @@ public class Main {
 
         UserInteractionController controller = new UserInteractionController(consoleView, registry);
         consoleView.addObserver(controller);
-
-        view = new MenuView();
-        consoleView.addView(view);
-
-        view = new AddMemberView();
-        consoleView.addView(view);
-
-        view = new EditMemberView();
-        consoleView.addView(view);
-
-        view = new AddBoatView();
-        consoleView.addView(view);
-
-        view = new EditBoatView();
-        consoleView.addView(view);
-
     }
-
 }
