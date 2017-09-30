@@ -9,35 +9,33 @@ public class Main {
     public static void main(String[] args) {
 
         View view;
-        Controller controller;
+
 
         Dao dao = new Dao();
         JsonParser parser = new JsonParser();
         Registry registry = new Registry(dao, parser);
-        ConsoleController consoleController = new ConsoleController();
+        ConsoleView consoleView = new ConsoleView();
 
-        controller = new MenuController(new MenuView(), consoleController, registry);
-        consoleController.addController(controller);
+        UserInteractionController controller = new UserInteractionController(consoleView, registry);
+        consoleView.addObserver(controller);
 
-        controller = new AddMemberController(new AddMemberView(), consoleController, registry);
-        consoleController.addController(controller);
+        view = new MenuView();
+        consoleView.addView(view);
 
-        controller = new EditMemberController(new EditMemberView(), consoleController, registry);
-        consoleController.addController(controller);
+        view = new AddMemberView();
+        consoleView.addView(view);
 
-        controller = new RemoveMemberController(new RemoveMemberView(), consoleController, registry);
-        consoleController.addController(controller);
+        view = new EditMemberView();
+        consoleView.addView(view);
 
-        controller = new AddBoatController(new AddBoatView(), consoleController, registry);
-        consoleController.addController(controller);
+        view = new AddBoatView();
+        consoleView.addView(view);
 
-        controller = new EditBoatController(new EditBoatView(), consoleController, registry);
-        consoleController.addController(controller);
+        view = new EditBoatView();
+        consoleView.addView(view);
 
-        controller = new RemoveBoatController(new RemoveBoatView(), consoleController, registry);
-        consoleController.addController(controller);
 
-        consoleController.showView(0);
+
     }
 
 }

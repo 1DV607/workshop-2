@@ -1,5 +1,7 @@
 package view;
 
+import controller.UserInteractionObserver;
+
 import javax.json.JsonArray;
 import javax.json.JsonObject;
 import java.util.Scanner;
@@ -9,6 +11,7 @@ import java.util.Scanner;
  */
 public class MenuView extends View {
 
+    private UserInteractionObserver interactionObserver;
     private Scanner scanner;
     private boolean verbose;
 
@@ -20,11 +23,21 @@ public class MenuView extends View {
     public void show() {
     }
 
+
+    @Override
+    public void addObserver(UserInteractionObserver observer) {
+        interactionObserver = observer;
+    }
+
     public void toggleVerbosity() {
         verbose = !verbose;
     }
 
-    public void showMemberList(JsonArray memberInfo) {
+    public void showMemberListCompact(JsonArray memberInfo) {
+
+    }
+
+    public void showMemberListVerbose(JsonArray memberInfo) {
         StringBuilder list = new StringBuilder();
 
         if (!verbose) {
