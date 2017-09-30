@@ -50,8 +50,8 @@ public class RegistryTest {
 
         long memberID = RegistryTest.getMemberBySsn(registry, memberJson.getString("socialSecurityNumber")).getMemberID();
 
-        assertTrue(RegistryTest.hasMember(registry, memberID));
-        Member member = RegistryTest.getMemberById(registry, memberID);
+        Member member = parser.jsonToMember(registry.getMember(memberID));
+        assertNotNull(member);
 
         assertEquals("Ernst", member.getFirstName());
         assertEquals("Kirchsteiger", member.getLastName());
@@ -81,7 +81,8 @@ public class RegistryTest {
 
         registry.editMember(memberID, editedMember);
 
-        Member edited = RegistryTest.getMemberById(registry, memberID);
+        Member edited = parser.jsonToMember(registry.getMember(memberID));
+        assertNotNull(edited);
         assertEquals("Ernst", edited.getFirstName());
         assertEquals("Kirchsteiger", edited.getLastName());
         assertEquals("5711032040", edited.getSocialSecurityNumber());
@@ -102,7 +103,7 @@ public class RegistryTest {
                 member.getString("socialSecurityNumber")).getMemberID();
 
         registry.removeMember(memberID);
-        assertFalse(RegistryTest.hasMember(registry, memberID));
+        assertNull(registry.getMember(memberID));
     }
 
     @Test
@@ -125,7 +126,9 @@ public class RegistryTest {
 
         registry.addBoat(memberID, boatJson);
 
-        Boat boat = RegistryTest.getBoats(registry, memberID).get(0);
+        List<Boat> boats = parser.jsonToBoatList(registry.getMemberBoats(memberID));
+        assertNotNull(boats);
+        Boat boat = boats.get(0);
         long boatId = boat.getBoatID();
         assertEquals(10, boat.getSize());
         assertEquals(BoatType.Sailboat, boat.getBoatType());
@@ -151,7 +154,7 @@ public class RegistryTest {
 
         registry.addBoat(memberID, boatJson);
 
-        long boatId = RegistryTest.getBoats(registry, memberID).get(0).getBoatID();
+        long boatId = parser.jsonToBoatList(registry.getMemberBoats(memberID)).get(0).getBoatID();
 
         JsonObject boatJsonEdit = Json.createObjectBuilder()
             .add("size", "5")
@@ -160,10 +163,7 @@ public class RegistryTest {
 
         registry.editBoat(memberID, boatId, boatJsonEdit);
 
-        System.out.println(registry.getAllMembersInfo());
-
-        assertTrue(RegistryTest.hasBoat(registry, memberID, boatId));
-        List<Boat> boats = RegistryTest.getBoats(registry, memberID);
+        List<Boat> boats = parser.jsonToBoatList(registry.getMemberBoats(memberID));
         assertEquals(1, boats.size());
         Boat boat = boats.get(0);
         assertEquals(5, boat.getSize());
@@ -190,55 +190,15 @@ public class RegistryTest {
 
         registry.addBoat(memberID, boatJson);
 
-        long boatId = RegistryTest.getBoats(registry, memberID).get(0).getBoatID();
+        long boatId = parser.jsonToBoatList(registry.getMemberBoats(memberID)).get(0).getBoatID();
 
         registry.removeBoat(memberID, boatId);
-        assertFalse(RegistryTest.hasBoat(registry, memberID, boatId));
+        assertNull(registry.getBoat(memberID, boatId));
     }
 
     @Test
     public void getAllMembersInfoTest() {
         
-    }
-
-    private static boolean hasMember(Registry registry, long memberId) {
-        try {
-            Member member = RegistryTest.getMemberById(registry, memberId);
-            return true;
-        } catch (NoSuchElementException ex) {
-            return false;
-        }
-    }
-
-    private static boolean hasBoat(Registry registry, long memberId, long boatId) {
-        try {
-            List<Boat> boats = getBoats(registry, memberId);
-            
-            for (Boat boat : boats) {
-                if (boat.getBoatID() == boatId) {
-                    return true;
-                }
-            }
-
-            return false;
-        } catch (NoSuchElementException ex) {
-            return false;
-        }
-    }
-
-    private static Member getMemberById(Registry registry, long memberID) throws NoSuchElementException {
-        JsonParser parser = new JsonParser();
-
-        for (JsonValue container : registry.getAllMembersInfo()) {
-            JsonObject member = ((JsonObject)container).getJsonObject("member");
-            long mID = Long.parseLong(member.getString("memberID"));
-
-            if (memberID == mID) {
-                return parser.jsonToMember(member);
-            }
-        }
-
-        throw new NoSuchElementException();
     }
 
     private static Member getMemberBySsn(Registry registry, String ssn) throws NoSuchElementException {
@@ -252,27 +212,6 @@ public class RegistryTest {
 
             if (ssn.equals(mSsn)) {
                 return parser.jsonToMember(member);
-            }
-        }
-
-        throw new NoSuchElementException();
-    }
-    
-    private static List<Boat> getBoats(Registry registry, long memberID) throws NoSuchElementException {
-        JsonParser parser = new JsonParser();
-
-        for (JsonValue container : registry.getAllMembersInfo()) {
-            JsonObject member = ((JsonObject)container).getJsonObject("member");
-            long mID = Long.parseLong(member.getString("memberID"));
-
-            if (memberID == mID) {
-                List<Boat> boats = new ArrayList<>();
-
-                for (JsonValue boat : ((JsonObject)container).getJsonArray("boats")) {
-                    boats.add(parser.jsonToBoat((JsonObject)boat));
-                }
-
-                return boats;
             }
         }
 

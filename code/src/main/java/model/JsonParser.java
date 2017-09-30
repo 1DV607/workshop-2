@@ -1,5 +1,7 @@
 package model;
 
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
 
@@ -160,6 +162,20 @@ public class JsonParser {
             .add("size", Integer.toString(boat.getSize()))
             .add("boatType", boat.getBoatType().getName())
             .build();
+    }
+
+    public List<Boat> jsonToBoatList(JsonArray json) throws IllegalArgumentException {
+        if ( ! validator.isValidBoatArray(json) ) {
+            throw new IllegalArgumentException();
+        }
+
+        List<Boat> boats = new ArrayList<>();
+
+        for (JsonValue val : json) {
+            boats.add(jsonToBoat((JsonObject)val));
+        }
+
+        return boats;
     }
 
     /**

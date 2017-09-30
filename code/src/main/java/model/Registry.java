@@ -5,6 +5,7 @@ import io.Dao;
 
 import javax.json.Json;
 import javax.json.JsonArray;
+import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import java.util.Map;
 
@@ -177,6 +178,31 @@ public class Registry {
             MemberNode memberNode = findMember(memberID);
             json = jsonParser.memberToJson(memberNode.getMember());
             return json;
+        }
+        catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
+     * Returns all Boat objects associated with the Member with the specified
+     * memberID.
+     * @param memberID - long, ID of the Member who owns the Boats
+     * @return JsonArray of member's boats
+     */
+    public JsonArray getMemberBoats(long memberID) {
+        JsonArrayBuilder json = Json.createArrayBuilder();
+
+        try {
+            MemberNode mNode = findMember(memberID);
+
+            Node current = mNode;
+            while ( (current = current.getNextNode()) != null) {
+                Boat boat = ((BoatNode)current).getBoat();
+                json.add(jsonParser.boatToJson(boat));
+            }
+
+            return json.build();
         }
         catch (Exception e) {
             return null;
