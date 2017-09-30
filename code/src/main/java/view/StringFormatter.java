@@ -23,24 +23,38 @@ public class StringFormatter {
     public String getMemberListVerbose(JsonArray memberInformation) {
         stringBuilder = new StringBuilder();
 
+        stringBuilder.append("\n \n");
         stringBuilder.append("Verbose Member List \n");
-        stringBuilder.append(String.format("%-4s %-20s %-12s %-25s \n",
-                "Nr", "Name", "Member ID", "Social Security Number"));
 
         JsonObject object;
         JsonArray array;
         for (int i = 0; i < memberInformation.size(); i++) {
+
+            stringBuilder.append("\n");
+            stringBuilder.append("============================================================================\n");
+            stringBuilder.append(String.format("%-4s %-30s %-12s %-25s %-2s \n",
+                    "Nr", "| Name", "| Member ID", "| Social Security Number", "|"));
+            stringBuilder.append("============================================================================\n");
+
             object = memberInformation.getJsonObject(i).getJsonObject("member");
             String nr = (i+1) +". ";
-            String name = object.getString("firstName")+" "+object.getString("lastName");
-            String memberID = object.getString("memberID");
-            String SSN = object.getString("socialSecurityNumber");
+            String name = " "+object.getString("firstName")+" "+object.getString("lastName");
+            String memberID = " "+object.getString("memberID");
+            String SSN = " "+object.getString("socialSecurityNumber");
 
-            stringBuilder.append(String.format("%-4s %-20s %-12s %-25s \n",
-                    nr, name, memberID, SSN ));
+            stringBuilder.append(String.format("%-4s %-30s %-12s %-25s \n",
+                     nr, name, memberID, SSN ));
             array = memberInformation.getJsonObject(i).getJsonArray("boats");
 
             for (int j = 0; j < array.size(); j++) {
+                if (j == 0) {
+                    stringBuilder.append(String.format("%-4s %-30s \n",
+                            "", "-----------------------------------------------------------------------"));
+                    stringBuilder.append(String.format("%-4s %-4s %-15s %-10s %-37s %-2s \n",
+                            "", "| Nr", "| Boat Type", "| Size", "| Boat ID", "|"));
+                    stringBuilder.append(String.format("%-4s %-30s \n" ,
+                            "", "-----------------------------------------------------------------------"));
+                }
                 object = array.getJsonObject(j);
 
                 String boatNr = (j+1) + ". ";
@@ -48,9 +62,10 @@ public class StringFormatter {
                 String size = object.getString("size");
                 String boatID = object.getString("boatID");
 
-                stringBuilder.append(String.format("%-10s %-4s %-10s %-5s %-12s \n",
+                stringBuilder.append(String.format("%-5s %-4s %-15s %-10s %-15s \n",
                         "", boatNr, boatType, size, boatID));
             }
+            stringBuilder.append("\n");
 
         }
 
@@ -64,29 +79,33 @@ public class StringFormatter {
      * @return String, listed Members
      */
     public String getMemberListCompact(JsonArray memberInformation) {
-        System.out.println("now we are getting started :P");
         stringBuilder = new StringBuilder();
         JsonObject object;
 
+        stringBuilder.append("\n \n");
         stringBuilder.append("Compact Member List \n");
-        stringBuilder.append(String.format("%-4s %-20s %-12s %-4s \n",
-                "Nr", "Name", "Member ID", "Nr of Boats"));
 
+        stringBuilder.append("\n");
+        stringBuilder.append("=======================================================================\n");
+        stringBuilder.append(String.format("%-4s %-30s %-15s %-17s %-2s \n",
+                "Nr", "| Name", "| Member ID", "| Nr of boats", "|"));
+        stringBuilder.append("=======================================================================\n");
 
         for (int i = 0; i < memberInformation.size(); i++) {
+
             object = memberInformation.getJsonObject(i).getJsonObject("member");
 
             String nr = (i+1)+". ";
-            String name = object.getString("firstName")+" "+object.getString("lastName");
-            String memberID = object.getString("memberID");
-            String numberOfBoats = memberInformation.getJsonObject(i).getJsonArray("boats").size()+"";
+            String name = " "+ object.getString("firstName")+" "+object.getString("lastName");
+            String memberID = " " +object.getString("memberID");
+            String numberOfBoats = " "+ memberInformation.getJsonObject(i).getJsonArray("boats").size()+"";
 
-            stringBuilder.append(String.format("%-4s %-20s %-12s %-4s \n",
+            stringBuilder.append(String.format("%-4s %-30s %-15s %-17s \n",
                     nr, name, memberID, numberOfBoats));
 
         }
 
-        System.out.println("I got here :D happy day");
         return stringBuilder.toString();
     }
+
 }

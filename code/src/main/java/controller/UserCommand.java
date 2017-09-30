@@ -15,7 +15,7 @@ public enum UserCommand {
     ChangeList,
     Exit;
 
-    public static UserCommand getCommand(int i) {
+    public static UserCommand getCommand(int i) throws ArrayIndexOutOfBoundsException {
         return UserCommand.values()[i-1];
     }
 }

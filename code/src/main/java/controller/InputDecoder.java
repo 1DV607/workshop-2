@@ -30,7 +30,7 @@ public class InputDecoder {
         String member = (inputParts.length >= 2)
                 ? inputParts[1]
                 : "";
-        String boat = (inputParts.length == 3)
+        String boat = (inputParts.length >= 3)
                 ? inputParts[2]
                 : "";
 
@@ -40,15 +40,16 @@ public class InputDecoder {
         }
 
         if (member.length() != 0) {
-            JsonObject jsonMember = json.getJsonObject(Integer.parseInt(member)).getJsonObject("member");
+            JsonObject jsonMember = json.getJsonObject((Integer.parseInt(member))-1).getJsonObject("member");
             String memberID = jsonMember.getString("memberID");
             userCommands [1] = memberID;
         }
 
         if (boat.length() != 0) {
-            JsonObject jsonBoat = json.getJsonObject(Integer.parseInt(member)).getJsonArray("boats")
-                    .getJsonObject(Integer.parseInt(boat));
+            JsonObject jsonBoat = json.getJsonObject((Integer.parseInt(member))-1).getJsonArray("boats")
+                    .getJsonObject((Integer.parseInt(boat))-1);
             String boatID = jsonBoat.getString("boatID");
+            userCommands [2] = boatID;
         }
 
         return userCommands;

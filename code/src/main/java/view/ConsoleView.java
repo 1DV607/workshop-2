@@ -21,6 +21,7 @@ public class ConsoleView implements UserInterface {
     private AddBoatView addBoatView;
     private EditBoatView editBoatView;
 
+    private boolean verbose;
     private List<View> views;
     private UserInteractionObserver interactionObserver;
 
@@ -52,21 +53,23 @@ public class ConsoleView implements UserInterface {
 
     @Override
     public void displayVerboseList(JsonArray jsonArray) {
-        displayMemberList(true, jsonArray);
+        verbose = true;
+        displayMemberList(jsonArray);
     }
 
     @Override
     public void displayCompactList(JsonArray jsonArray) {
-        displayMemberList(false, jsonArray);
+        verbose = false;
+        displayMemberList(jsonArray);
     }
 
-    private void displayMemberList(boolean verbose, JsonArray jsonArray) {
+    private void displayMemberList(JsonArray jsonArray) {
         String list;
         
         if (verbose) {
-            list = formatter.getMemberListCompact(jsonArray);
-        } else {
             list = formatter.getMemberListVerbose(jsonArray);
+        } else {
+            list = formatter.getMemberListCompact(jsonArray);
         }
 
         System.out.println(list);
@@ -78,6 +81,7 @@ public class ConsoleView implements UserInterface {
     @Override
     public void displayAddMember() {
         System.out.println("Please enter the new member's information.");
+        System.out.println("");
         String socialSecurityNumber = getInput("Social security number: ");
         String firstName = getInput("First name: ");
         String lastName = getInput("Last name: ");
@@ -96,7 +100,7 @@ public class ConsoleView implements UserInterface {
     @Override
     public void displayEditMember(JsonObject jsonMember) {
         System.out.println("Please enter the new information. Leave a field blank to keep current information.");
-        System.out.println();
+        System.out.println("");
         String firstName = getInput(String.format("First name (current: %s): ",
                     jsonMember.getString("firstName")));
         String lastName = getInput(String.format("Last name (current: %s): ",
@@ -130,6 +134,7 @@ public class ConsoleView implements UserInterface {
     public void displayAddBoat(JsonObject jsonMember) {
         System.out.printf("Please enter the information about %s's new boat.",
                 jsonMember.getString("firstName"));
+        System.out.println("");
         String size = getInput("Enter length (meters): ");
         String boatType = getInput("Enter type (SailBoat/Motorsailer/Canoe/Kayak/Other): ");
 
@@ -144,11 +149,11 @@ public class ConsoleView implements UserInterface {
     @Override
     public void displayEditBoat(JsonObject jsonMember, JsonObject jsonBoat) {
         System.out.println("Please enter the new information. Leave a field blank to keep current information.");
-        System.out.println();
+        System.out.println("");
         String size = getInput(String.format("Boat length (meters) (current: %s): ",
-                    jsonMember.getString("size")));
+                    jsonBoat.getString("size")));
         String boatType = getInput(String.format("Boat type (current: %s): ",
-                    jsonMember.getString("boatType")));
+                    jsonBoat.getString("boatType")));
 
         if (size.isEmpty()) {
             size = jsonBoat.getString("size");
@@ -169,29 +174,44 @@ public class ConsoleView implements UserInterface {
 
     @Override
     public void displayError(String message) {
+        System.out.println();
         System.out.println("=======================================");
         System.out.println(message);
         System.out.println("=======================================");
         System.out.println();
+        getInput("Press enter to continue");
+
+        interactionObserver.onErrorDismissed();
     }
 
     private void displayMenu() {
-        System.out.println("MENU");
-        System.out.println("==========");
+        System.out.println("");
+        System.out.println("==============================");
+        System.out.println(" MENU");
+        System.out.println("==============================");
         System.out.println("1. Add member");
         System.out.println("2. Edit member <member nr>");
         System.out.println("3. Remove member <member nr>");
         System.out.println("4. Add boat <member nr>");
 
-        System.out.println("5. Edit boat <boat nr>");
-        System.out.println("6. Remove boat <boat nr>");
-        System.out.println("5. Edit boat <boat nr> (NOT AVAILABLE)");
-        System.out.println("6. Remove boat <boat nr> (NOT AVAILABLE)");
+        if (verbose) {
+            System.out.println("5. Edit boat <member nr> <boat nr>");
+            System.out.println("6. Remove boat <member nr> <boat nr>");
+        }
+        else {
+            System.out.println("5. Edit boat <member nr> <boat nr> (NOT AVAILABLE)");
+            System.out.println("6. Remove boat <member nr> <boat nr> (NOT AVAILABLE)");
+        }
 
         System.out.println("7. Change list verbosity.");
         System.out.println("8. Exit");
         System.out.println();
-        System.out.println("Enter selection nr (Ex: '5 2.1') ");          
+        if (!verbose) {
+            System.out.println("Actions 5, 6 only available at verbose listings");
+            System.out.println("");
+        }
+        System.out.println("Enter selection nr <Menu Choice> <Member Nr> <Boat Nr>");
+        System.out.println("Ex: '5 2 1' = Edit boat 1 at member 2. Ex: '1' = Add new member");
     }
 
     private String getInput(String prompt) {

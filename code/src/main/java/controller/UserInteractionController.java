@@ -8,7 +8,7 @@ import javax.json.JsonArray;
 import javax.json.JsonObject;
 
 /**
- * Created by Caroline Nilsson on 2017-09-30.
+ *
  */
 public class UserInteractionController implements UserInteractionObserver {
 
@@ -35,36 +35,82 @@ public class UserInteractionController implements UserInteractionObserver {
 
     @Override
     public void onCommandSelected(String userInput) {
-        lastCommands = decoder.getUserCommands(userInput, members);
+        try {
+            lastCommands = decoder.getUserCommands(userInput, members);
+        }
+        catch (Exception e) {
+            ui.displayError("Invalid command, please try again");
+            return;
+        }
 
         switch ((UserCommand)lastCommands[0]) {
+
             case AddMember: {
                 ui.displayAddMember();
                 break;
             }
             case EditMember: {
-                ui.displayEditMember(registry.getMember(getMemberID()));
+
+                if (isValidCommand()) {
+                    ui.displayEditMember(registry.getMember(getMemberID()));
+                }
+                else {
+                    ui.displayError("Invalid command, please try again.");
+                }
                 break;
             }
 
             case RemoveMember: {
-                registry.removeMember(getMemberID());
-                members = registry.getAllMembersInfo();
-                chooseCorrectListVerbosity();
+
+                if (isValidCommand()) {
+                    registry.removeMember(getMemberID());
+                    members = registry.getAllMembersInfo();
+                    chooseCorrectListVerbosity();
+                }
+                else {
+                    ui.displayError("Invalid command, please try again.");
+                }
                 break;
             }
             case AddBoat: {
-               ui.displayAddBoat(registry.getMember(getMemberID()));
+                if (isValidCommand()) {
+                    ui.displayAddBoat(registry.getMember(getMemberID()));
+                }
+                else {
+                    ui.displayError("Invalid command, please try again.");
+                }
                 break;
             }
             case EditBoat: {
-                ui.displayEditBoat(registry.getMember(getMemberID()), registry.getBoat(getMemberID(), getBoatID()));
+                if (!listChooise) {
+                    ui.displayError("Not possible to edit boat in compact list view");
+                }
+                else if (isValidCommandWithBoat()) {
+                    ui.displayEditBoat(registry.getMember(getMemberID()), registry.getBoat(getMemberID(), getBoatID()));
+
+                }
+                else {
+                    ui.displayError("Invalid command, please try again.");
+                }
+
+
                 break;
             }
             case RemoveBoat: {
-                registry.removeBoat(getMemberID(), getBoatID());
-                members = registry.getAllMembersInfo();
-                chooseCorrectListVerbosity();
+
+                if (!listChooise) {
+                    ui.displayError("Not possible to remove boat in compact list view");
+                }
+                else if (isValidCommandWithBoat()) {
+                    registry.removeBoat(getMemberID(), getBoatID());
+                    members = registry.getAllMembersInfo();
+                    chooseCorrectListVerbosity();
+                }
+                else{
+                    ui.displayError("Invalid command, please try again.");
+                }
+
+
                 break;
             }
             case ChangeList: {
@@ -115,11 +161,9 @@ public class UserInteractionController implements UserInteractionObserver {
                 break;
             }
             case AddBoat: {
-                System.out.println("Add Boat");
+
                 if (registry.addBoat(getMemberID(), information)) {
-                    System.out.println("Adding a boat");
                     updateMemberList();
-                    System.out.println("done adding the boat");
                 }
                 else {
                     ui.displayError("Unable to add boat");
@@ -138,7 +182,10 @@ public class UserInteractionController implements UserInteractionObserver {
             }
             case RemoveBoat: {
 
-                if (registry.removeBoat(getMemberID(), getBoatID())) {
+                if (!listChooise) {
+                    ui.displayError("Not possible to edit boat in compact list view");
+                }
+                else if (registry.removeBoat(getMemberID(), getBoatID())) {
                     updateMemberList();
                 }
                 else {
@@ -153,6 +200,11 @@ public class UserInteractionController implements UserInteractionObserver {
         chooseCorrectListVerbosity();
     }
 
+    @Override
+    public void onErrorDismissed() {
+        chooseCorrectListVerbosity();
+    }
+
     private void chooseCorrectListVerbosity() {
         if (listChooise) {
             ui.displayVerboseList(members);
@@ -163,6 +215,7 @@ public class UserInteractionController implements UserInteractionObserver {
     }
 
     private long getMemberID() {
+
         long memberID = Long.parseLong((String) lastCommands[1]);
         return memberID;
     }
@@ -170,6 +223,33 @@ public class UserInteractionController implements UserInteractionObserver {
     private long getBoatID() {
         long boatID = Long.parseLong((String) lastCommands[2]);
         return boatID;
+    }
+
+    private boolean isValidCommandWithBoat() {
+        long memberID;
+        long boatID;
+        System.out.println("boat id = " + (String) lastCommands[2]);
+        try {
+            memberID = getMemberID();
+            boatID = getBoatID();
+            return true;
+        }
+        catch (Exception e) {
+            return false;
+
+        }
+    }
+
+    private boolean isValidCommand() {
+        long memberID;
+        try {
+            memberID = getMemberID();
+            return true;
+        }
+        catch (Exception e) {
+            return false;
+
+        }
     }
 
     private void updateMemberList() {
