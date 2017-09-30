@@ -161,6 +161,41 @@ public class Registry {
     }
 
     /**
+     * Returns the Member object as a JsonObject
+     * @param memberID - ID of the Member
+     * @return JsonObject, null if the Member wasn't found
+     */
+    public JsonObject getMember(long memberID) {
+        JsonObject json;
+        try {
+            MemberNode memberNode = findMember(memberID);
+            json = jsonParser.memberToJson(memberNode.getMember());
+            return json;
+        }
+        catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
+     * Returns the Boat object as an JsonObject
+     * @param memberID - long, ID of the Member who owns the Boat
+     * @param boatID - long, ID of the Boat
+     * @return JsonObject, null if the boat wasn't found
+     */
+    public JsonObject getBoat(long memberID, long boatID) {
+        JsonObject json;
+        try {
+            BoatNode boatNode = findBoat(memberID, boatID);
+            json = jsonParser.boatToJson(boatNode.getBoat());
+            return json;
+        }
+        catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
      * Takes a member id and uses the id as key to finding the MemberNode in the HashMap
      * @param memberID - id of the Member to find
      * @return MemberNode, belonging to the member id
@@ -210,7 +245,7 @@ public class Registry {
 
         Node memberNode = members.get(memberID);
         BoatNode boatNode = (BoatNode) memberNode.getNextNode();
-        
+
         long id =  boatNode.getBoat().getBoatID();
         if (Long.compare(id, boatID) == 0) {
             return boatNode;
