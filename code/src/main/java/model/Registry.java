@@ -279,7 +279,7 @@ public class Registry {
         String size = json.getString("size");
 
         if (boatType.length() != 0) {
-            boat.setBoatType(BoatType.values()[Integer.parseInt(boatType)] );
+            boat.setBoatType(BoatType.fromString(boatType));
         }
         if (size.length() != 0)  {
             boat.setSize(Integer.parseInt(size));

@@ -120,7 +120,7 @@ public class RegistryTest {
 
         JsonObject boatJson = Json.createObjectBuilder()
             .add("size", "10")
-            .add("boatType", "0")
+            .add("boatType", "Sailboat")
             .build();
 
         registry.addBoat(memberID, boatJson);
@@ -128,7 +128,7 @@ public class RegistryTest {
         Boat boat = RegistryTest.getBoats(registry, memberID).get(0);
         long boatId = boat.getBoatID();
         assertEquals(10, boat.getSize());
-        assertEquals(BoatType.SailBoat, boat.getBoatType());
+        assertEquals(BoatType.Sailboat, boat.getBoatType());
     }
 
     @Test
@@ -146,7 +146,7 @@ public class RegistryTest {
 
         JsonObject boatJson = Json.createObjectBuilder()
             .add("size", "10")
-            .add("boatType", "0")
+            .add("boatType", "Sailboat")
             .build();
 
         registry.addBoat(memberID, boatJson);
@@ -155,10 +155,12 @@ public class RegistryTest {
 
         JsonObject boatJsonEdit = Json.createObjectBuilder()
             .add("size", "5")
-            .add("boatType", "2")
+            .add("boatType", "Canoe")
             .build();
 
         registry.editBoat(memberID, boatId, boatJsonEdit);
+
+        System.out.println(registry.getAllMembersInfo());
 
         assertTrue(RegistryTest.hasBoat(registry, memberID, boatId));
         List<Boat> boats = RegistryTest.getBoats(registry, memberID);
@@ -183,7 +185,7 @@ public class RegistryTest {
 
         JsonObject boatJson = Json.createObjectBuilder()
             .add("size", "10")
-            .add("boatType", "0")
+            .add("boatType", "Sailboat")
             .build();
 
         registry.addBoat(memberID, boatJson);

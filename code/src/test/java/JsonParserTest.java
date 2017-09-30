@@ -39,7 +39,7 @@ public class JsonParserTest {
         JsonObject expected = Json.createObjectBuilder()
             .add("boatID", "123")
             .add("size", "0")
-            .add("boatType", "1")
+            .add("boatType", "Motorsailer")
             .build();
 
         Boat boat = new Boat(123, 0, BoatType.Motorsailer);
@@ -55,7 +55,7 @@ public class JsonParserTest {
         JsonObject json = Json.createObjectBuilder()
             .add("boatID", "666")
             .add("size", "10")
-            .add("boatType", "3")
+            .add("boatType", "Kayak")
             .build();
 
         Boat actual = parser.jsonToBoat(json);
@@ -111,7 +111,7 @@ public class JsonParserTest {
         Map<Long, MemberNode> expected = new HashMap<>();
         Member member = new Member(1111, "1111111111", "Anna", "Annasson", "Annagatan 1"); 
         Boat boat1 = new Boat(111, 5, BoatType.Canoe);
-        Boat boat2 = new Boat(222, 10, BoatType.SailBoat);
+        Boat boat2 = new Boat(222, 10, BoatType.Sailboat);
         MemberNode mNode = new MemberNode(member);
         mNode.append(new BoatNode(boat1));
         mNode.append(new BoatNode(boat2));
@@ -129,7 +129,7 @@ public class JsonParserTest {
             new String[][] {
                 new String[] { "111", "222" },
                 new String[] { "5", "10" },
-                new String[] { "2", "1" }
+                new String[] { "Canoe", "Sailboat" }
             }
         );
 
@@ -142,11 +142,11 @@ public class JsonParserTest {
         Map<Long, MemberNode> expected = new HashMap<>();
         MemberNode mNode = new MemberNode(new Member(1111, "1111111111", "Anna", "Annasson", "Annagatan 1"));
         mNode.append(new BoatNode(new Boat(111, 5, BoatType.Canoe)));
-        mNode.append(new BoatNode(new Boat(222, 10, BoatType.SailBoat)));
+        mNode.append(new BoatNode(new Boat(222, 10, BoatType.Sailboat)));
         expected.put(1111L, mNode);
         mNode = new MemberNode(new Member(2222, "2222222222", "Bertil", "Bertilsson", "Bertilgatan 1"));
         mNode.append(new BoatNode(new Boat(333, 9, BoatType.Motorsailer)));
-        mNode.append(new BoatNode(new Boat(444, 15, BoatType.SailBoat)));
+        mNode.append(new BoatNode(new Boat(444, 15, BoatType.Sailboat)));
         expected.put(2222L, mNode);
         mNode = new MemberNode(new Member(3333, "3333333333", "Cici", "Cicisson", "Cicigatan 1"));
         expected.put(3333L, mNode);
@@ -163,7 +163,7 @@ public class JsonParserTest {
             new String[][] {
                 new String[] { "111", "222", "333", "444" },
                 new String[] { "5", "10", "9", "15" },
-                new String[] { "2", "1", "1", "0" }
+                new String[] { "Canoe", "Motorsailer", "Motorsailer", "Sailboat" }
             }
         );
 
@@ -212,7 +212,7 @@ public class JsonParserTest {
             new String[][] {
                 new String[] { "111", "222", "333", "444", "555", "666" },
                 new String[] { "10", "11", "12", "13", "14", "15" },
-                new String[] { "0", "0", "1", "2", "2", "2" }
+                new String[] { "Sailboat", "Sailboat", "Motorsailer", "Canoe", "Canoe", "Canoe" }
             });
 
 

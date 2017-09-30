@@ -108,7 +108,7 @@ public class JsonParser {
 
         long boatID = Long.parseLong(json.getString("boatID"));
         int size = Integer.parseInt(json.getString("size"));
-        BoatType type = BoatType.values()[Integer.parseInt(json.getString("boatType"))];
+        BoatType type = BoatType.fromString(json.getString("boatType"));
 
         Boat boat = new Boat(boatID);
         boat.setSize(size);
@@ -123,7 +123,7 @@ public class JsonParser {
         }
 
         int size = Integer.parseInt(json.getString("size"));
-        BoatType type = BoatType.values()[Integer.parseInt(json.getString("boatType"))];
+        BoatType type = BoatType.fromString(json.getString("boatType"));
 
         Boat boat = new Boat(memberId, nrOfBoats);
         boat.setSize(size);
@@ -158,7 +158,7 @@ public class JsonParser {
         return Json.createObjectBuilder()
             .add("boatID", Long.toString(boat.getBoatID()))
             .add("size", Integer.toString(boat.getSize()))
-            .add("boatType", Integer.toString(boat.getBoatType().ordinal()))
+            .add("boatType", boat.getBoatType().getName())
             .build();
     }
 
