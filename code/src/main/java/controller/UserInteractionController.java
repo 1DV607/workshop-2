@@ -35,6 +35,10 @@ public class UserInteractionController implements UserInteractionObserver {
     @Override
     public void onCommandSelected(String userInput) {
         try {
+            if (userInput.isEmpty()) {
+                throw new IllegalArgumentException("Empty input");
+            }
+
             lastCommands = decoder.getUserCommands(userInput, members);
         }
         catch (Exception e) {
@@ -227,7 +231,6 @@ public class UserInteractionController implements UserInteractionObserver {
     private boolean isValidCommandWithBoat() {
         long memberID;
         long boatID;
-        System.out.println("boat id = " + (String) lastCommands[2]);
         try {
             memberID = getMemberID();
             boatID = getBoatID();

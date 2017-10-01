@@ -1,0 +1,54 @@
+[
+    {
+        "member": {
+            "memberID":             "1111",
+            "socialSecurityNumber": "1111111111",
+            "firstName":            "Anna",
+            "lastName":             "Annasson",
+            "address":              "Annagatan 1"
+        },
+        "boats": [
+            { 
+                "boatID":           "111",
+                "size":             "5",
+                "boatType":         "Canoe"
+            },
+            {
+                "boatID":           "222",
+                "size":             "10",
+                "boatType":         "Motorsailer"
+            }
+        ]
+    },
+    {
+        "member": {
+            "memberID":             "2222",
+            "socialSecurityNumber": "2222222222",
+            "firstName":            "Bertil",
+            "lastName":             "Bertilsson",
+            "address":              "Bertilgatan 1"
+        },
+        "boats": [
+            { 
+                "boatID":           "333",
+                "size":             "9",
+                "boatType":         "Motorsailer"
+            },
+            {
+                "boatID":           "444",
+                "size":             "15",
+                "boatType":         "Sailboat"
+            }
+        ]
+    },
+    {
+        "member": {
+            "memberID":             "3333",
+            "socialSecurityNumber": "3333333333",
+            "firstName":            "Cici",
+            "lastName":             "Cicisson",
+            "address":              "Cicigatan 1"
+        },
+        "boats": [ ]
+    }
+]

@@ -21,14 +21,15 @@ import model.JsonParser;
 
 public class RegistryTest {
 
-    private static final File daoTestOut = new File("./src/test/registry_test/registry_test_out.json");
+    private static final String JSON_FILE_DIR = "./src/test/registry_test/";
+    private static final File DAO_TEST_OUT = new File("./build/test/registry_test/registry_test_out.json");
     private static Dao dao;
     private static JsonParser parser;
     private static Registry registry;
 
     @BeforeClass
     public static void beforeAll() {
-        dao = new Dao(daoTestOut);
+        dao = new Dao(DAO_TEST_OUT);
         parser = new JsonParser();
     }
 
@@ -39,68 +40,42 @@ public class RegistryTest {
 
     @Test
     public void addMemberTest() {
-        JsonObject memberJson = Json.createObjectBuilder()
-            .add("firstName", "Ernst")
-            .add("lastName", "Kirchsteiger")
-            .add("address", "Tralalaland 1")
-            .add("socialSecurityNumber", "5711032040")
-            .build();
-
+        JsonObject memberJson = TestUtils.readJsonObjectFromFile(JSON_FILE_DIR + "member.json");
         assertTrue(registry.addMember(memberJson));
-
         long memberID = RegistryTest.getMemberBySsn(registry, memberJson.getString("socialSecurityNumber")).getMemberID();
 
-        Member member = parser.jsonToMember(registry.getMember(memberID));
-        assertNotNull(member);
-
-        assertEquals("Ernst", member.getFirstName());
-        assertEquals("Kirchsteiger", member.getLastName());
-        assertEquals("Tralalaland 1", member.getAddress());
-        assertEquals("5711032040", member.getSocialSecurityNumber());
+        Member expected = parser.jsonToNewMember(memberJson);
+        Member actual = parser.jsonToNewMember(registry.getMember(memberID));
+        assertEquals(expected.getSocialSecurityNumber(), actual.getSocialSecurityNumber());
+        assertEquals(expected.getFirstName(), actual.getFirstName());
+        assertEquals(expected.getLastName(), actual.getLastName());
+        assertEquals(expected.getAddress(), actual.getAddress());
     }
 
     @Test
     public void editMemberTest() {
-        JsonObject member = Json.createObjectBuilder()
-            .add("firstName", "Ernst")
-            .add("lastName", "Kirchsteiger")
-            .add("address", "Tralalaland 1")
-            .add("socialSecurityNumber", "5711032040")
-            .build();
-
-        registry.addMember(member);
+        JsonObject memberJson = TestUtils.readJsonObjectFromFile(JSON_FILE_DIR + "member.json");
+        registry.addMember(memberJson);
         long memberID = RegistryTest.getMemberBySsn(registry,
-                member.getString("socialSecurityNumber")).getMemberID();
+                memberJson.getString("socialSecurityNumber")).getMemberID();
 
-        JsonObject editedMember = Json.createObjectBuilder()
-            .add("firstName", "")
-            .add("lastName", "")
-            .add("socialSecurityNumber", "")
-            .add("address", "Lyckliga gatan 7")
-            .build();
+        JsonObject memberJsonEdited = TestUtils.readJsonObjectFromFile(JSON_FILE_DIR + "member_edited.json");
+        assertTrue(registry.editMember(memberID, memberJsonEdited));
 
-        registry.editMember(memberID, editedMember);
-
-        Member edited = parser.jsonToMember(registry.getMember(memberID));
-        assertNotNull(edited);
-        assertEquals("Ernst", edited.getFirstName());
-        assertEquals("Kirchsteiger", edited.getLastName());
-        assertEquals("5711032040", edited.getSocialSecurityNumber());
-        assertEquals("Lyckliga gatan 7", edited.getAddress());
+        Member expected = parser.jsonToNewMember(memberJsonEdited);
+        Member actual = parser.jsonToMember(registry.getMember(memberID));
+        assertEquals(expected.getSocialSecurityNumber(), actual.getSocialSecurityNumber());
+        assertEquals(expected.getFirstName(), actual.getFirstName());
+        assertEquals(expected.getLastName(), actual.getLastName());
+        assertEquals(expected.getAddress(), actual.getAddress());
     }
 
     @Test
     public void removeMemberTest() {
-        JsonObject member = Json.createObjectBuilder()
-            .add("firstName", "Ernst")
-            .add("lastName", "Kirchsteiger")
-            .add("address", "Tralalaland 1")
-            .add("socialSecurityNumber", "5711032040")
-            .build();
-
-        registry.addMember(member);
+        JsonObject memberJson = TestUtils.readJsonObjectFromFile(JSON_FILE_DIR + "member.json");
+        registry.addMember(memberJson);
         long memberID = RegistryTest.getMemberBySsn(registry,
-                member.getString("socialSecurityNumber")).getMemberID();
+                memberJson.getString("socialSecurityNumber")).getMemberID();
 
         registry.removeMember(memberID);
         assertNull(registry.getMember(memberID));
@@ -108,88 +83,55 @@ public class RegistryTest {
 
     @Test
     public void addBoatTest() {
-        JsonObject member = Json.createObjectBuilder()
-            .add("firstName", "Ernst")
-            .add("lastName", "Kirchsteiger")
-            .add("address", "Tralalaland 1")
-            .add("socialSecurityNumber", "5711032040")
-            .build();
-
-        registry.addMember(member);
+        JsonObject memberJson = TestUtils.readJsonObjectFromFile(JSON_FILE_DIR + "member.json");
+        registry.addMember(memberJson);
         long memberID = RegistryTest.getMemberBySsn(registry,
-                member.getString("socialSecurityNumber")).getMemberID();
+                memberJson.getString("socialSecurityNumber")).getMemberID();
 
-        JsonObject boatJson = Json.createObjectBuilder()
-            .add("size", "10")
-            .add("boatType", "Sailboat")
-            .build();
-
-        registry.addBoat(memberID, boatJson);
+        JsonObject boatJson = TestUtils.readJsonObjectFromFile(JSON_FILE_DIR + "boat.json");
+        assertTrue(registry.addBoat(memberID, boatJson));
 
         List<Boat> boats = parser.jsonToBoatList(registry.getMemberBoats(memberID));
         assertNotNull(boats);
-        Boat boat = boats.get(0);
-        long boatId = boat.getBoatID();
-        assertEquals(10, boat.getSize());
-        assertEquals(BoatType.Sailboat, boat.getBoatType());
+        assertEquals(1, boats.size());
+        Boat expected = parser.jsonToNewBoat(boatJson, memberID, registry.getMemberBoats(memberID).size());
+        Boat actual = boats.get(0);
+        assertEquals(expected.getSize(), actual.getSize());
+        assertEquals(expected.getBoatType(), actual.getBoatType());
     }
 
     @Test
     public void editBoatTest() {
-        JsonObject member = Json.createObjectBuilder()
-            .add("firstName", "Ernst")
-            .add("lastName", "Kirchsteiger")
-            .add("address", "Tralalaland 1")
-            .add("socialSecurityNumber", "5711032040")
-            .build();
-
-        registry.addMember(member);
+        JsonObject memberJson = TestUtils.readJsonObjectFromFile(JSON_FILE_DIR + "member.json");
+        registry.addMember(memberJson);
         long memberID = RegistryTest.getMemberBySsn(registry,
-                member.getString("socialSecurityNumber")).getMemberID();
+                memberJson.getString("socialSecurityNumber")).getMemberID();
 
-        JsonObject boatJson = Json.createObjectBuilder()
-            .add("size", "10")
-            .add("boatType", "Sailboat")
-            .build();
-
+        JsonObject boatJson = TestUtils.readJsonObjectFromFile(JSON_FILE_DIR + "boat.json");
         registry.addBoat(memberID, boatJson);
-
         long boatId = parser.jsonToBoatList(registry.getMemberBoats(memberID)).get(0).getBoatID();
 
-        JsonObject boatJsonEdit = Json.createObjectBuilder()
-            .add("size", "5")
-            .add("boatType", "Canoe")
-            .build();
-
-        registry.editBoat(memberID, boatId, boatJsonEdit);
+        JsonObject boatJsonEdit = TestUtils.readJsonObjectFromFile(JSON_FILE_DIR + "boat_edited.json");
+        assertTrue(registry.editBoat(memberID, boatId, boatJsonEdit));
 
         List<Boat> boats = parser.jsonToBoatList(registry.getMemberBoats(memberID));
+        assertNotNull(boats);
         assertEquals(1, boats.size());
-        Boat boat = boats.get(0);
-        assertEquals(5, boat.getSize());
-        assertEquals(BoatType.Canoe, boat.getBoatType());
+        Boat expected = parser.jsonToNewBoat(boatJsonEdit, memberID, registry.getMemberBoats(memberID).size());
+        Boat actual = boats.get(0);
+        assertEquals(expected.getSize(), actual.getSize());
+        assertEquals(expected.getBoatType(), actual.getBoatType());
     }
 
     @Test
     public void removeBoatTest() {
-        JsonObject member = Json.createObjectBuilder()
-            .add("firstName", "Ernst")
-            .add("lastName", "Kirchsteiger")
-            .add("address", "Tralalaland 1")
-            .add("socialSecurityNumber", "5711032040")
-            .build();
-
-        registry.addMember(member);
+        JsonObject memberJson = TestUtils.readJsonObjectFromFile(JSON_FILE_DIR + "member.json");
+        registry.addMember(memberJson);
         long memberID = RegistryTest.getMemberBySsn(registry,
-                member.getString("socialSecurityNumber")).getMemberID();
+                memberJson.getString("socialSecurityNumber")).getMemberID();
 
-        JsonObject boatJson = Json.createObjectBuilder()
-            .add("size", "10")
-            .add("boatType", "Sailboat")
-            .build();
-
+        JsonObject boatJson = TestUtils.readJsonObjectFromFile(JSON_FILE_DIR + "boat.json");
         registry.addBoat(memberID, boatJson);
-
         long boatId = parser.jsonToBoatList(registry.getMemberBoats(memberID)).get(0).getBoatID();
 
         registry.removeBoat(memberID, boatId);
