@@ -7,48 +7,26 @@ import controller.UserInteractionObserver;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  *
  */
 public class ConsoleView implements UserInterface {
 
-    private MenuView menuView;
-    private AddMemberView addMemberView;
-    private EditMemberView editMemberView;
-    private AddBoatView addBoatView;
-    private EditBoatView editBoatView;
+
 
     private boolean verbose;
-    private List<View> views;
     private UserInteractionObserver interactionObserver;
 
     private StringFormatter formatter = new StringFormatter();
 
     public ConsoleView() {
-        views = new ArrayList<>();
 
-        menuView = new MenuView();
-        addMemberView = new AddMemberView();
-        editMemberView = new EditMemberView();
-        addBoatView = new AddBoatView();
-        editBoatView = new EditBoatView();
-
-        views.add(menuView);
-        views.add(addMemberView);
-        views.add(editMemberView);
-        views.add(addBoatView);
-        views.add(editBoatView);
     }
 
     public void addObserver(UserInteractionObserver interactionObserver) {
         this.interactionObserver = interactionObserver;
 
-        for (View view : views) {
-            view.addObserver(interactionObserver);
-        }
     }
 
     @Override
