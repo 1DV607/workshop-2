@@ -4,8 +4,20 @@ import javax.json.JsonObject;
 import javax.json.JsonArray;
 import javax.json.JsonValue;
 
+/**
+ *  Helper class that validates that JsonObjects/JsonArrays representing Boats and Members has 
+ *  the correct structure and the correct fields.
+ */
 public class JsonValidator {
     
+    /**
+     *  Checks if the specified JsonObject contains the neccessary fields in 
+     *  order to be parsed as a Boat. 
+     *
+     *  @param jsonBoat - Boat JsonObject to validate
+     *
+     *  @return true if JSON is valid, false if it is not.
+     */
     public boolean isValidBoat(JsonObject jsonBoat) {
         if ( ! (jsonBoat.keySet().contains("size")
                && jsonBoat.keySet().contains("boatType")) ) {
@@ -22,6 +34,17 @@ public class JsonValidator {
         return true;
     }
 
+    /**
+     *  Checks if the specified JsonObject contains the neccessary fields in 
+     *  order to be parsed as a Member. Also ensures that values are not empty
+     *  and that the social security number is a number.
+     *
+     *  Does not check for field memberID as it is optional when parsing a Member.
+     *
+     *  @param jsonMember - Member JsonObject to validate
+     *
+     *  @return true if JSON is valid, false if it is not.
+     */
     public boolean isValidMember(JsonObject jsonMember) {
         if ( ! (jsonMember.keySet().contains("socialSecurityNumber")
                && jsonMember.keySet().contains("firstName")
@@ -45,6 +68,16 @@ public class JsonValidator {
         return true;
     }
 
+    /**
+     *  Checks that the provided JsonArray has the correct structure in order
+     *  to be parsed as a Map by JsonParser. Also checks each member and each boat
+     *  for validity.
+     *
+     *  @param arr - JsonArray to validate.
+     *
+     *  @return true if array structure is valid AND all json members are valid 
+     *          AND all json boats are valid, false otherwise.
+     */
     public boolean isValidMemberArray(JsonArray arr) {
         for (JsonValue val : arr) {
             JsonObject member = ((JsonObject)val).getJsonObject("member");
@@ -63,6 +96,15 @@ public class JsonValidator {
         return true;
     }
 
+    /**
+     *  Checks that the provided JsonArray has the correct structure in order
+     *  to be parsed as a List by JsonParser. Also validates all Boats in the 
+     *  array individually.
+     *
+     *  @param arr - JsonArray to validate.
+     *
+     *  @return true if array structure is valid AND each json boat is valid, false otherwise.
+     */
     public boolean isValidBoatArray(JsonArray arr) {
         for (JsonValue val : arr) {
             JsonObject boat = (JsonObject)val;
