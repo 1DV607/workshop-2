@@ -5,7 +5,8 @@ import javax.json.JsonObject;
 import javax.json.JsonValue;
 
 /**
- * Formats an JsonValue (Array) into a String: Verbose List, Compact List
+ * Formats text to show in console.
+ * Verbose/Compact Member List, and the Menu options
  */
 public class StringFormatter {
 
@@ -108,6 +109,11 @@ public class StringFormatter {
         return stringBuilder.toString();
     }
 
+    /**
+     * Creates a String with all the Menu Options formatted nicely for output into the console.
+     * @param verbose - boolean, whether the list is in compact or verbose format
+     * @return String, containing the Menu options in a nice output format
+     */
     public String getMenu(boolean verbose) {
         stringBuilder = new StringBuilder();
 
