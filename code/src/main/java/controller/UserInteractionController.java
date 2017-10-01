@@ -7,7 +7,10 @@ import javax.json.JsonArray;
 import javax.json.JsonObject;
 
 /**
- *
+ * implements UserInteractionObserver
+ * Collects User Input and decides what view is to be shown,
+ * Collects information from the User and Registry and provide information
+ * to the User and Registry.
  */
 public class UserInteractionController implements UserInteractionObserver {
 
@@ -16,10 +19,10 @@ public class UserInteractionController implements UserInteractionObserver {
     Registry registry;
     InputDecoder decoder;
     Object [] lastCommands;
-    boolean listChooise;
+    boolean listChoise;
 
     public UserInteractionController(UserInterface ui, Registry registry) {
-        listChooise = true;
+        listChoise = true;
         this.ui = ui;
         this.registry = registry;
 
@@ -27,11 +30,20 @@ public class UserInteractionController implements UserInteractionObserver {
         members = registry.getAllMembersInfo();
     }
 
+    /**
+     * launch the welcome message and shows a verbose list of all members
+     */
     public void launch() {
         ui.displayWelcome();
         ui.displayVerboseList(members); 
     }
 
+    /**
+     * Takes user input and activates the view chosen by the user,
+     * also collects information from Registry if needed
+     * Shows error message if the command was not valid
+     * @param userInput - String, containing <command> <member nr> <boat nr>
+     */
     @Override
     public void onCommandSelected(String userInput) {
         try {
@@ -50,6 +62,16 @@ public class UserInteractionController implements UserInteractionObserver {
 
             case AddMember: {
                 ui.displayAddMember();
+                break;
+            }
+            case ViewMember: {
+                if (isValidCommand()) {
+                    long memberID = getMemberID();
+                    ui.displayMemberInformation(registry.getMember(memberID), registry.getMemberBoats(memberID));
+                }
+                else {
+                    ui.displayError("Invalid command, please try again.");
+                }
                 break;
             }
             case EditMember: {
@@ -85,7 +107,7 @@ public class UserInteractionController implements UserInteractionObserver {
                 break;
             }
             case EditBoat: {
-                if (!listChooise) {
+                if (!listChoise) {
                     ui.displayError("Not possible to edit boat in compact list view");
                 }
                 else if (isValidCommandWithBoat()) {
@@ -101,7 +123,7 @@ public class UserInteractionController implements UserInteractionObserver {
             }
             case RemoveBoat: {
 
-                if (!listChooise) {
+                if (!listChoise) {
                     ui.displayError("Not possible to remove boat in compact list view");
                 }
                 else if (isValidCommandWithBoat()) {
@@ -117,7 +139,7 @@ public class UserInteractionController implements UserInteractionObserver {
                 break;
             }
             case ChangeList: {
-                listChooise = !listChooise;
+                listChoise = !listChoise;
                 chooseCorrectListVerbosity();
                 break;
             }
@@ -129,10 +151,17 @@ public class UserInteractionController implements UserInteractionObserver {
 
     }
 
+    /**
+     * Takes a JsonObject containing new information and sends this to the Registry, and
+     * updates the Member List with the new information.
+     * Shows error message if the desired task could not be completed
+     * @param information - JsonObject, containing the new information
+     */
     @Override
     public void onSubmitted(JsonObject information) {
 
         switch ((UserCommand)lastCommands[0]) {
+
             case AddMember: {
 
                 if (registry.addMember(information)) {
@@ -141,6 +170,9 @@ public class UserInteractionController implements UserInteractionObserver {
                 else {
                     ui.displayError("Unable to add member");
                 }
+                break;
+            }
+            case ViewMember: {
                 break;
             }
             case EditMember: {
@@ -185,7 +217,7 @@ public class UserInteractionController implements UserInteractionObserver {
             }
             case RemoveBoat: {
 
-                if (!listChooise) {
+                if (!listChoise) {
                     ui.displayError("Not possible to edit boat in compact list view");
                 }
                 else if (registry.removeBoat(getMemberID(), getBoatID())) {
@@ -203,13 +235,18 @@ public class UserInteractionController implements UserInteractionObserver {
         chooseCorrectListVerbosity();
     }
 
+
     @Override
-    public void onErrorDismissed() {
+    public void onContinue() {
         chooseCorrectListVerbosity();
     }
 
+    /**
+     * calls different display methods depending on boolean - listChoice
+     * Allways the list option latest chosen by the User
+     */
     private void chooseCorrectListVerbosity() {
-        if (listChooise) {
+        if (listChoise) {
             ui.displayVerboseList(members);
         }
         else {
@@ -217,17 +254,29 @@ public class UserInteractionController implements UserInteractionObserver {
         }
     }
 
+    /**
+     * collects the member ID from the User Command
+     * @return long, memberID
+     */
     private long getMemberID() {
 
         long memberID = Long.parseLong((String) lastCommands[1]);
         return memberID;
     }
 
+    /**
+     * collects the boat ID from the User Command
+     * @return long, boatID
+     */
     private long getBoatID() {
         long boatID = Long.parseLong((String) lastCommands[2]);
         return boatID;
     }
 
+    /**
+     * Check if the <member nr> input and <boat nr> input is valid
+     * @return true if valid otherwise false
+     */
     private boolean isValidCommandWithBoat() {
         long memberID;
         long boatID;
@@ -242,6 +291,10 @@ public class UserInteractionController implements UserInteractionObserver {
         }
     }
 
+    /**
+     * Check if the <member nr> input is valid
+     * @return true if valid otherwise false
+     */
     private boolean isValidCommand() {
         long memberID;
         try {
@@ -254,6 +307,9 @@ public class UserInteractionController implements UserInteractionObserver {
         }
     }
 
+    /**
+     * collect members from Registry
+     */
     private void updateMemberList() {
         members = registry.getAllMembersInfo();
     }

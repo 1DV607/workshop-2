@@ -77,6 +77,14 @@ public class ConsoleView implements UserInterface {
     }
 
     @Override
+    public void displayMemberInformation(JsonObject jsonMember, JsonArray jsonBoats) {
+        System.out.println(formatter.getMember(jsonMember, jsonBoats));
+        System.out.println();
+        getInput("Press 'Enter' to continue to Menu Options!");
+        interactionObserver.onContinue();
+    }
+
+    @Override
     public void displayEditMember(JsonObject jsonMember) {
         System.out.println();
         System.out.println("Please enter the new information. Leave a field blank to keep current information.");
@@ -163,7 +171,7 @@ public class ConsoleView implements UserInterface {
         System.out.println();
         getInput("Press enter to continue");
 
-        interactionObserver.onErrorDismissed();
+        interactionObserver.onContinue();
     }
 
     @Override

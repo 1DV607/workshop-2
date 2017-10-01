@@ -4,7 +4,7 @@ import javax.json.JsonArray;
 import javax.json.JsonObject;
 
 /**
- * Created by Caroline Nilsson on 2017-09-30.
+ *
  */
 public interface UserInterface {
 
@@ -13,6 +13,8 @@ public interface UserInterface {
     public void displayCompactList(JsonArray jsonArray);
 
     public void displayAddMember();
+
+    public void displayMemberInformation(JsonObject jsonMember, JsonArray jsonBoats);
 
     public void displayEditMember(JsonObject jsonMember);
 

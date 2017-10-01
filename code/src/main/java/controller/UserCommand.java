@@ -7,6 +7,7 @@ package controller;
 public enum UserCommand {
 
     AddMember,
+    ViewMember,
     EditMember,
     RemoveMember,
     AddBoat,
