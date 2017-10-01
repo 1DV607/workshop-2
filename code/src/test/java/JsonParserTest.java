@@ -3,6 +3,8 @@ import java.util.HashMap;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.Arrays;
+import java.util.List;
+import java.util.ArrayList;
 
 import javax.json.Json;
 import javax.json.JsonArray;
@@ -27,6 +29,7 @@ import model.Boat;
 import model.BoatType;
 
 public class JsonParserTest {
+    private static final String JSON_FILE_DIR = "./src/test/parser_test/";
     private static JsonParser parser;
     
     @BeforeClass
@@ -36,20 +39,40 @@ public class JsonParserTest {
 
     @Test 
     public void boatToJsonTest() {
-        JsonObject expected = Json.createObjectBuilder()
-            .add("boatID", "123")
-            .add("size", "0")
-            .add("boatType", "Motorsailer")
-            .build();
+        JsonArray expectedArr = TestUtils.readJsonArrayFromFile(JSON_FILE_DIR + "boat_multiple.json");
+        List<Boat> boats = new ArrayList<>(); 
+        boats.add(new Boat(123, 4, BoatType.Motorsailer));
+        boats.add(new Boat(0, 10, BoatType.Sailboat));
+        boats.add(new Boat(1_000_000_000_000L, 23, BoatType.Canoe));
+        boats.add(new Boat(-1_000_000_000_000L, 23, BoatType.Other));
+        boats.add(new Boat(999, -100, BoatType.Other));
+        boats.add(new Boat(888, 0, BoatType.Other));
+        boats.add(new Boat(777, 2_000_000_000, BoatType.Other));
 
-        Boat boat = new Boat(123, 0, BoatType.Motorsailer);
-        JsonObject actual = parser.boatToJson(boat);
-
-        assertTrue(TestUtils.jsonObjectsEqual(expected, actual));
+        for (int i = 0; i < boats.size(); i++) {
+            JsonObject expected = expectedArr.getJsonObject(i);
+            JsonObject actual = parser.boatToJson(boats.get(i));
+            assertTrue(TestUtils.jsonObjectsEqual(expected, actual));
+        }
     }
 
     @Test
     public void jsonToBoatTest() {
+        Boat expected = new Boat(666, 10, BoatType.Kayak);
+
+        JsonObject json = Json.createObjectBuilder()
+            .add("boatID", "666")
+            .add("size", "10")
+            .add("boatType", "Kayak")
+            .build();
+
+        Boat actual = parser.jsonToBoat(json);
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void jsonToBoatListTest() {
         Boat expected = new Boat(666, 10, BoatType.Kayak);
 
         JsonObject json = Json.createObjectBuilder()
@@ -117,22 +140,7 @@ public class JsonParserTest {
         mNode.append(new BoatNode(boat2));
         expected.put(member.getMemberID(), mNode);
 
-        JsonArray jsonArr = TestUtils.createJsonMemberArray(
-            new String[][] {
-                new String[] { "1111111111" },
-                new String[] { "1111" },
-                new String[] { "Anna" },
-                new String[] { "Annasson" },
-                new String[] { "Annagatan 1" },
-                new String[] { "111 222" },
-            },
-            new String[][] {
-                new String[] { "111", "222" },
-                new String[] { "5", "10" },
-                new String[] { "Canoe", "Sailboat" }
-            }
-        );
-
+        JsonArray jsonArr = TestUtils.readJsonArrayFromFile(JSON_FILE_DIR + "member_single.json");
         Map<Long, MemberNode> actual = parser.jsonToMap(jsonArr);
         assertEquals(expected, actual);
     }
@@ -151,22 +159,7 @@ public class JsonParserTest {
         mNode = new MemberNode(new Member(3333, "3333333333", "Cici", "Cicisson", "Cicigatan 1"));
         expected.put(3333L, mNode);
 
-        JsonArray jsonArr = TestUtils.createJsonMemberArray(
-            new String[][] {
-                new String[] { "1111111111", "2222222222", "3333333333" },
-                new String[] { "1111", "2222", "3333" },
-                new String[] { "Anna", "Bertil", "Cici" },
-                new String[] { "Annasson", "Bertilsson", "Cicisson" },
-                new String[] { "Annagatan 1", "Bertilgatan 1", "Cicigatan 1" },
-                new String[] { "111 222", "333 444", "" },
-            },
-            new String[][] {
-                new String[] { "111", "222", "333", "444" },
-                new String[] { "5", "10", "9", "15" },
-                new String[] { "Canoe", "Motorsailer", "Motorsailer", "Sailboat" }
-            }
-        );
-
+        JsonArray jsonArr = TestUtils.readJsonArrayFromFile(JSON_FILE_DIR + "member_multiple.json");
         Map<Long, MemberNode> actual = parser.jsonToMap(jsonArr);
         assertEquals(expected, actual);
     }
@@ -181,18 +174,7 @@ public class JsonParserTest {
 
     @Test
     public void mapToJsonSingleMemberTest() {
-        JsonArray expected = TestUtils.createJsonMemberArray(
-            new String[][] {
-                new String[] { "1111111111" },
-                new String[] { "1111" },
-                new String[] { "Lars" },
-                new String[] { "Larsson" },
-                new String[] { "Larsgatan 1" },
-                new String[] { "" },
-            },
-            new String[][] {}
-        );
-
+        JsonArray expected = TestUtils.readJsonArrayFromFile(JSON_FILE_DIR + "member_single.json");
         Map<Long, MemberNode> map = parser.jsonToMap(expected);
         JsonArray actual = parser.mapToJson(map);
         assertTrue(TestUtils.jsonArraysEqual(expected, actual));
@@ -200,22 +182,7 @@ public class JsonParserTest {
 
     @Test
     public void mapToJsonMultipleMembersTest() {
-        final JsonArray expected = TestUtils.createJsonMemberArray(
-            new String[][] {
-                new String[] { "1111111111", "2222222222", "3333333333" },
-                new String[] { "1111", "2222", "3333" },
-                new String[] { "Lars", "Kalle", "Per" },
-                new String[] { "Larsson", "Kallesson", "Persson" },
-                new String[] { "Larsgatan 1", "Kallegatan 2", "Persgatan 3" },
-                new String[] { "111 222", "333", "444 555 666" },
-            },
-            new String[][] {
-                new String[] { "111", "222", "333", "444", "555", "666" },
-                new String[] { "10", "11", "12", "13", "14", "15" },
-                new String[] { "Sailboat", "Sailboat", "Motorsailer", "Canoe", "Canoe", "Canoe" }
-            });
-
-
+        final JsonArray expected = TestUtils.readJsonArrayFromFile(JSON_FILE_DIR + "member_multiple.json");
         Map<Long, MemberNode> map = parser.jsonToMap(expected);
         JsonArray actual = parser.mapToJson(map);
         assertTrue(TestUtils.jsonArraysEqual(expected, actual));
