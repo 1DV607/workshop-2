@@ -15,7 +15,6 @@ public class UserInteractionController implements UserInteractionObserver {
     JsonArray members;
     UserInterface ui;
     Registry registry;
-    JsonParser jsonParser;
     InputDecoder decoder;
     Object [] lastCommands;
     boolean listChooise;
@@ -24,7 +23,7 @@ public class UserInteractionController implements UserInteractionObserver {
         listChooise = true;
         this.ui = ui;
         this.registry = registry;
-        jsonParser = new JsonParser();
+
         decoder = new InputDecoder();
         members = registry.getAllMembersInfo();
     }
