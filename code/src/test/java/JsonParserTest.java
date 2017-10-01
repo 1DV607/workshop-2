@@ -5,6 +5,7 @@ import java.util.TreeMap;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Optional;
 
 import javax.json.Json;
 import javax.json.JsonArray;
@@ -66,7 +67,7 @@ public class JsonParserTest {
             .add("boatType", "Kayak")
             .build();
 
-        Boat actual = parser.jsonToBoat(json);
+        Boat actual = parser.jsonToBoat(json, Optional.empty(), Optional.empty());
 
         assertEquals(expected, actual);
     }
@@ -81,7 +82,7 @@ public class JsonParserTest {
             .add("boatType", "Kayak")
             .build();
 
-        Boat actual = parser.jsonToBoat(json);
+        Boat actual = parser.jsonToBoat(json, Optional.empty(), Optional.empty());
 
         assertEquals(expected, actual);
     }

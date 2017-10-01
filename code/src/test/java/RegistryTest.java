@@ -2,6 +2,7 @@ import java.util.NoSuchElementException;
 import java.util.List;
 import java.util.ArrayList;
 import java.io.File;
+import java.util.Optional;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -44,8 +45,8 @@ public class RegistryTest {
         assertTrue(registry.addMember(memberJson));
         long memberID = RegistryTest.getMemberBySsn(registry, memberJson.getString("socialSecurityNumber")).getMemberID();
 
-        Member expected = parser.jsonToNewMember(memberJson);
-        Member actual = parser.jsonToNewMember(registry.getMember(memberID));
+        Member expected = parser.jsonToMember(memberJson);
+        Member actual = parser.jsonToMember(registry.getMember(memberID));
         assertEquals(expected.getSocialSecurityNumber(), actual.getSocialSecurityNumber());
         assertEquals(expected.getFirstName(), actual.getFirstName());
         assertEquals(expected.getLastName(), actual.getLastName());
@@ -62,7 +63,7 @@ public class RegistryTest {
         JsonObject memberJsonEdited = TestUtils.readJsonObjectFromFile(JSON_FILE_DIR + "member_edited.json");
         assertTrue(registry.editMember(memberID, memberJsonEdited));
 
-        Member expected = parser.jsonToNewMember(memberJsonEdited);
+        Member expected = parser.jsonToMember(memberJsonEdited);
         Member actual = parser.jsonToMember(registry.getMember(memberID));
         assertEquals(expected.getSocialSecurityNumber(), actual.getSocialSecurityNumber());
         assertEquals(expected.getFirstName(), actual.getFirstName());
@@ -94,7 +95,8 @@ public class RegistryTest {
         List<Boat> boats = parser.jsonToBoatList(registry.getMemberBoats(memberID));
         assertNotNull(boats);
         assertEquals(1, boats.size());
-        Boat expected = parser.jsonToNewBoat(boatJson, memberID, registry.getMemberBoats(memberID).size());
+        Boat expected = parser.jsonToBoat(boatJson, Optional.of(memberID),
+                Optional.of(registry.getMemberBoats(memberID).size()));
         Boat actual = boats.get(0);
         assertEquals(expected.getSize(), actual.getSize());
         assertEquals(expected.getBoatType(), actual.getBoatType());
@@ -117,7 +119,7 @@ public class RegistryTest {
         List<Boat> boats = parser.jsonToBoatList(registry.getMemberBoats(memberID));
         assertNotNull(boats);
         assertEquals(1, boats.size());
-        Boat expected = parser.jsonToNewBoat(boatJsonEdit, memberID, registry.getMemberBoats(memberID).size());
+        Boat expected = parser.jsonToBoat(boatJsonEdit, Optional.of(memberID), Optional.of(registry.getMemberBoats(memberID).size()));
         Boat actual = boats.get(0);
         assertEquals(expected.getSize(), actual.getSize());
         assertEquals(expected.getBoatType(), actual.getBoatType());

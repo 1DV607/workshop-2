@@ -38,27 +38,76 @@ public class DaoTest {
     private static JsonArray oneMember;
     private static JsonArray tenMembers;
 
-    private final JsonObject MEMBER1 = jsonParser.memberStringToJson("Anders", "Andersson",
-            "Andersson v. 1", "85042249300001", "1111111111");
-    private final JsonObject MEMBER2 = jsonParser.memberStringToJson("Lars", "Larsson",
-            "Larsson v. 2", "85042249300002", "2222222222");
-    private final JsonObject MEMBER3 = jsonParser.memberStringToJson("Johan", "Johansson",
-            "Johansson v. 3", "85042249300003", "3333333333");
-    private final JsonObject MEMBER4 = jsonParser.memberStringToJson("Lennart", "Lennartsson",
-            "Lennartsson v. 4", "85042249300004", "4444444444");
-    private final JsonObject MEMBER5 = jsonParser.memberStringToJson("Erik", "Eriksson",
-            "Eriksson v. 5", "85042249300005", "5555555555");
-    private final JsonObject MEMBER6 = jsonParser.memberStringToJson("Erling", "Erlingsson",
-            "Erlings v. 6", "85042249300006", "6666666666");
-    private final JsonObject MEMBER7 = jsonParser.memberStringToJson("Roger", "Rogersdotter",
-            "Rogersgatan 7", "85042249300007", "7777777777");
-    private final JsonObject MEMBER8 = jsonParser.memberStringToJson("Peter", "Petersson",
-            "Petersson v. 8", "85042249300008", "8888888888");
-    private final JsonObject MEMBER9 = jsonParser.memberStringToJson("Jöns", "Jönsson",
-            "Jönsson v. 9", "85042249300009", "9999999999");
-    private final JsonObject MEMBER10 = jsonParser.memberStringToJson("Daniel", "Danielsson",
-            "Daniels v. 10", "85042249300010", "1010101010");
-
+    private final JsonObject MEMBER1 = Json.createObjectBuilder()
+        .add("socialSecurityNumber", "1111111111")
+        .add("memberID", "85042249300001")
+        .add("firstName", "Anders")
+        .add("lastName", "Andersson")
+        .add("address", "Andersson v. 1")
+        .build();
+    private final JsonObject MEMBER2 = Json.createObjectBuilder()
+        .add("socialSecurityNumber", "2222222222")
+        .add("memberID", "85042249300002")
+        .add("firstName", "Lars")
+        .add("lastName", "Larsson")
+        .add("address", "Larsson v. 2")
+        .build();
+    private final JsonObject MEMBER3 = Json.createObjectBuilder()
+        .add("socialSecurityNumber", "3333333333")
+        .add("memberID", "85042249300003")
+        .add("firstName", "Johan")
+        .add("lastName", "Johansson")
+        .add("address", "Johansson v. 3")
+        .build();
+    private final JsonObject MEMBER4 = Json.createObjectBuilder()
+        .add("socialSecurityNumber", "4444444444")
+        .add("memberID", "85042249300004")
+        .add("firstName", "Lennart")
+        .add("lastName", "Lennartsson")
+        .add("address", "Lennartsson v. 4")
+        .build();
+    private final JsonObject MEMBER5 = Json.createObjectBuilder()
+        .add("socialSecurityNumber", "5555555555")
+        .add("memberID", "85042249300005")
+        .add("firstName", "Erik")
+        .add("lastName", "Eriksson")
+        .add("address", "Eriksson v. 5")
+        .build();
+    private final JsonObject MEMBER6 = Json.createObjectBuilder()
+        .add("socialSecurityNumber", "6666666666")
+        .add("memberID", "85042249300006")
+        .add("firstName", "Erling")
+        .add("lastName", "Erlingsson")
+        .add("address", "Erlings v. 6")
+        .build();
+    private final JsonObject MEMBER7 = Json.createObjectBuilder()
+        .add("socialSecurityNumber", "7777777777")
+        .add("memberID", "85042249300007")
+        .add("firstName", "Roger")
+        .add("lastName", "Rogersdotter")
+        .add("address", "Rogersgatan 7")
+        .build();
+    private final JsonObject MEMBER8 = Json.createObjectBuilder()
+        .add("socialSecurityNumber", "8888888888")
+        .add("memberID", "85042249300008")
+        .add("firstName", "Peter")
+        .add("lastName", "Petersson")
+        .add("address", "Petersson v. 8")
+        .build();
+    private final JsonObject MEMBER9 = Json.createObjectBuilder()
+        .add("socialSecurityNumber", "9999999999")
+        .add("memberID", "85042249300009")
+        .add("firstName", "Jöns")
+        .add("lastName", "Jönsson")
+        .add("address", "Jönsson v. 9")
+        .build();
+    private final JsonObject MEMBER10 = Json.createObjectBuilder()
+        .add("socialSecurityNumber", "1010101010")
+        .add("memberID", "85042249300010")
+        .add("firstName", "Daniel")
+        .add("lastName", "Danielsson")
+        .add("address", "Daniels v. 10")
+        .build();
 
     @BeforeClass
     public static void beforeAll() {
@@ -90,7 +139,6 @@ public class DaoTest {
 
     @Before
     public void beforeEach() {
-
        empty = jsonArrayBuilder.build();
        oneMember = jsonArrayBuilder.add(MEMBER1).build();
        threeMembers = jsonArrayBuilder.add(MEMBER1).add(MEMBER2).add(MEMBER3).build();
