@@ -13,7 +13,7 @@ public class Main {
         ConsoleView consoleView = new ConsoleView();
 
         UserInteractionController controller = new UserInteractionController(consoleView, registry);
-        consoleView.addObserver(controller);
+        consoleView.setObserver(controller);
         controller.launch();
     }
 }
