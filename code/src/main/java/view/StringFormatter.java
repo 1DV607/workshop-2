@@ -6,7 +6,7 @@ import javax.json.JsonValue;
 
 /**
  * Formats text to show in console.
- * Verbose/Compact Member List, and the Menu options
+ * Verbose/Compact Member List, the Menu options and specific member information
  */
 public class StringFormatter {
 
@@ -129,28 +129,30 @@ public class StringFormatter {
         stringBuilder.append(String.format("%-1s %-65s %-2s \n",
                "||", "1. Add member", "||" ));
         stringBuilder.append(String.format("%-1s %-65s %-2s \n",
-                "||", "2. Edit member <member nr>", "||" ));
+                "||", "2. View member <member nr>", "||" ));
         stringBuilder.append(String.format("%-1s %-65s %-2s \n",
-                "||", "3. Remove member <member nr>", "||" ));
+                "||", "3. Edit member <member nr>", "||" ));
         stringBuilder.append(String.format("%-1s %-65s %-2s \n",
-                "||", "4. Add boat <member nr>", "||" ));
+                "||", "4. Remove member <member nr>", "||" ));
+        stringBuilder.append(String.format("%-1s %-65s %-2s \n",
+                "||", "5. Add boat <member nr>", "||" ));
 
         if (verbose) {
             stringBuilder.append(String.format("%-1s %-65s %-2s \n",
-                    "||", "5. Edit boat <member nr> <boat nr>", "||" ));
+                    "||", "6. Edit boat <member nr> <boat nr>", "||" ));
             stringBuilder.append(String.format("%-1s %-65s %-2s \n",
-                    "||", "6. Remove boat <member nr> <boat nr>", "||" ));
+                    "||", "7. Remove boat <member nr> <boat nr>", "||" ));
         }
         else {
             stringBuilder.append(String.format("%-1s %-65s %-2s \n",
-                    "||", "5. Edit boat <member nr> <boat nr> (NOT AVAILABLE)", "||" ));
+                    "||", "6. Edit boat <member nr> <boat nr> (NOT AVAILABLE)", "||" ));
             stringBuilder.append(String.format("%-1s %-65s %-2s \n",
-                    "||", "6. Remove boat <member nr> <boat nr> (NOT AVAILABLE)", "||" ));
+                    "||", "7. Remove boat <member nr> <boat nr> (NOT AVAILABLE)", "||" ));
         }
         stringBuilder.append(String.format("%-1s %-65s %-2s \n",
-                "||", "7. Change list verbosity.", "||" ));
+                "||", "8. Change list verbosity.", "||" ));
         stringBuilder.append(String.format("%-1s %-65s %-2s \n",
-                "||", "8. Exit", "||" ));
+                "||", "9. Exit", "||" ));
         if (!verbose) {
             stringBuilder.append(String.format("%-2s %-65s %-2s \n",
                     "||", "", "||"));
@@ -162,10 +164,64 @@ public class StringFormatter {
         stringBuilder.append("=======================================================================\n");
         stringBuilder.append("\n");
         stringBuilder.append("Enter selection nr <Menu Choice> <Member Nr> <Boat Nr> \n");
-        stringBuilder.append("Ex: '5 2 1' = Edit boat 1 at member 2. Ex: '1' = Add new member\n ");
+        stringBuilder.append("Ex: '5 3 1' = Edit boat 1 at member 2. Ex: '1' = Add new member\n ");
         stringBuilder.append("-----------------------------------------------------------------------\n");
         stringBuilder.append("\n");
 
+
+
+        return stringBuilder.toString();
+    }
+
+    /**
+     * Takes a Member as a JsonObject and the members boats as a JsonArray and formats it
+     * to a output String
+     * @param member - JsonObject, the member
+     * @param boats - JsonArray, the members boats
+     * @return - Formatted String
+     */
+    public String getMember(JsonObject member, JsonArray boats) {
+        stringBuilder = new StringBuilder();
+        JsonObject boat;
+
+        stringBuilder.append("\n");
+        stringBuilder.append("==========================================================================="+
+                "========================================\n");
+        stringBuilder.append(String.format("%-30s %-40s %-15s %-25s %-2s \n",
+                "| Name", "| Address", "| Member ID", "| Social Security Number", "|"));
+        stringBuilder.append("==========================================================================="+
+                "========================================\n");
+
+
+        String name = " "+member.getString("firstName")+" "+member.getString("lastName");
+        String address = " "+ member.getString("address");
+        String memberID = " "+member.getString("memberID");
+        String SSN = " "+member.getString("socialSecurityNumber");
+
+        stringBuilder.append(String.format("%-30s %-40s %-15s %-25s \n",
+                 name, address, memberID, SSN ));
+
+        for (int j = 0; j < boats.size(); j++) {
+            if (j == 0) {
+                stringBuilder.append(String.format("%-8s %-30s \n",
+                        "", "----------------------------------------------------------------------------"+
+                                "------------------------------"));
+                stringBuilder.append(String.format("%-8s %-4s %-15s %-10s %-72s %-2s \n",
+                        "", "| Nr", "| Boat Type", "| Size", "| Boat ID", "|"));
+                stringBuilder.append(String.format("%-8s %-30s \n" ,
+                        "", "----------------------------------------------------------------------------"+
+                                "------------------------------"));
+            }
+            boat = boats.getJsonObject(j);
+
+            String boatNr = (j+1) + ". ";
+            String boatType = boat.getString("boatType");
+            String size = boat.getString("size");
+            String boatID = boat.getString("boatID");
+
+            stringBuilder.append(String.format("%-9s %-4s %-15s %-10s %-15s \n",
+                    "", boatNr, boatType, size, boatID));
+        }
 
 
         return stringBuilder.toString();
