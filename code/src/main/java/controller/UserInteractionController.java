@@ -232,7 +232,6 @@ public class UserInteractionController implements UserInteractionObserver {
     private boolean isValidCommandWithBoat() {
         long memberID;
         long boatID;
-        System.out.println("boat id = " + (String) lastCommands[2]);
         try {
             memberID = getMemberID();
             boatID = getBoatID();

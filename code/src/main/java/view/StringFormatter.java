@@ -148,7 +148,7 @@ public class StringFormatter {
         if (!verbose) {
             stringBuilder.append(String.format("%-2s %-65s %-2s \n",
                     "||", "", "||"));
-            stringBuilder.append(String.format("%-1s %-65s %-2s \n",
+            stringBuilder.append(String.format("%-1s %-64s %-2s \n",
                     "|| ", "Actions 5, 6 only available at verbose listings", "||" ));
         }
         stringBuilder.append(String.format("%-2s %-65s %-2s \n",
