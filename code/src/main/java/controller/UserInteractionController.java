@@ -8,8 +8,8 @@ import javax.json.JsonObject;
 
 /**
  * implements UserInteractionObserver
- * Collects User Input and decides what view is to be shown,
- * Collects information from the User and Registry and provide information
+ * Receives User Input from the view and decides what view is to be shown,
+ * Receives information from the View and Registry and provide information
  * to the User and Registry.
  */
 public class UserInteractionController implements UserInteractionObserver {

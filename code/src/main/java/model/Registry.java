@@ -11,7 +11,8 @@ import javax.json.JsonObject;
 import java.util.Map;
 
 /**
- *
+ * Contains all Member and Boat objects
+ * Implements CRUD functionality for Member and Boat
  */
 public class Registry {
 
