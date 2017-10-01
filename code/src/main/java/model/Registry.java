@@ -1,5 +1,6 @@
 package model;
 
+import java.util.Optional;
 
 import io.Dao;
 
@@ -31,7 +32,7 @@ public class Registry {
      */
     public boolean addMember(JsonObject json) {
         try {
-            Member member = jsonParser.jsonToNewMember(json);
+            Member member = jsonParser.jsonToMember(json);
             long memberID = member.getMemberID();
             MemberNode memberNode = new MemberNode(member);
             members.put(memberID, memberNode);
@@ -91,7 +92,6 @@ public class Registry {
      * @return true if successful otherwise false
      */
     public boolean addBoat(long memberID, JsonObject json) {
-        System.out.println("in add boat");
         try {
             MemberNode memberNode = findMember(memberID);
 
@@ -101,7 +101,7 @@ public class Registry {
                 nrOfBoats++;
             }
 
-            Boat boat = jsonParser.jsonToNewBoat(json, memberID, nrOfBoats + 1);
+            Boat boat = jsonParser.jsonToBoat(json, Optional.of(memberID), Optional.of(nrOfBoats + 1));
             BoatNode boatNode = new BoatNode(boat);
             memberNode.append(boatNode);
             saveChanges();

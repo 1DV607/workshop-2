@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Optional;
 
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -13,9 +14,9 @@ import javax.json.JsonArrayBuilder;
 import javax.json.JsonValue;
 
 /**
- *  Parses single Member and Boat objects to/from JSON as JsonObjects. Also
- *  parses the specific Map used in the Registry to/from a JSON array as a
- *  JsonArray for use when saving and loading the Registry.
+ *  Parses single as well as collections of Member and Boat objects to/from 
+ *  JSON as JsonObject/JsonArray. The JSON is validated using the helper class
+ *  JsonValidator before being parsed.
  */
 public class JsonParser {
 
@@ -26,108 +27,111 @@ public class JsonParser {
     }
 
     /**
-     *  Given a valid member JsonObject, parses it into a Member object
-     *  
+     *  Given a valid member JsonObject, parses it into a Member object.
+     *
+     *  If the JsonObject does not contain the field "memberID", a new Member
+     *  is created and a memberID is generated for it.
+     *
      *  @param json - JsonObject to parse to Member. Expects the JSON to have
      *                the following values: 
      *                
      *                      "socialSecurityNumber"  (String)
-     *                      "memberID"              (String)
+     *                      "memberID"              (String) [Optional]
      *                      "firstName"             (String)
      *                      "lastName"              (String)
      *                      "address"               (String)
      *
-     *  @return - A Member object initialized with the values in the provided
-     *            JSON object.
+     *  @return - A Member object initialized with the values in the provided JSON object.
+     *
+     *  @throws IllegalArgumentException if the json is not a valid Member Json Object.
      */
     public Member jsonToMember(JsonObject json) {
-
         if ( ! validator.isValidMember(json)) {
             throw new IllegalArgumentException();
         }
 
+        Member member;
         String ssn = json.getString("socialSecurityNumber");
-        long memberID = Long.parseLong(json.getString("memberID"));
         String firstName = json.getString("firstName");
         String lastName = json.getString("lastName");
         String address = json.getString("address");
+        Long memberID;
 
-        Member member = new Member(memberID);
-        member.setSocialSecurityNumber(ssn);
+        /*
+         *  Try to read and set member's memberID. If the memberID field is 
+         *  not found in the JSON, a member with a generated memberID is
+         *  created instead.
+         */
+        try {
+            memberID = Long.parseLong(json.getString("memberID"));
+            member = new Member(memberID);
+            member.setSocialSecurityNumber(ssn);
+        } catch (Exception ex) {
+            member = new Member(ssn);
+        }
+
         member.setFirstName(firstName);
         member.setLastName(lastName);
         member.setAddress(address);
 
         return member;
-    }
-
-    public Member jsonToNewMember(JsonObject json) {
-        if ( ! validator.isValidMember(json)) {
-            throw new IllegalArgumentException();
-        }
-
-        String ssn = json.getString("socialSecurityNumber");
-        String firstName = json.getString("firstName");
-        String lastName = json.getString("lastName");
-        String address = json.getString("address");
-
-        Member member = new Member(ssn);
-        member.setSocialSecurityNumber(ssn);
-        member.setFirstName(firstName);
-        member.setLastName(lastName);
-        member.setAddress(address);
-        return member;
-    }
-
-    public JsonObject memberStringToJson(String firstName, String lastName,
-            String address, String memberID, String socialSecurityNumber) {
-        return Json.createObjectBuilder()
-            .add("socialSecurityNumber", socialSecurityNumber)
-            .add("memberID", memberID)
-            .add("firstName", firstName)
-            .add("lastName", lastName)
-            .add("address", address)
-            .build();
     }
 
     /**
-     *  Given a valid boat JsonObject, parses it into a Boat object
-     *  
+     *  Given a valid boat JsonObject, parses it into a Boat object.
+     *
+     *  If the JsonObject does not contain the field "boatID", a new Boat
+     *  is created and a boatID is generated for it.
+     *
      *  @param json - JsonObject to parse to Boat. Expects the JSON to have
      *                the following values: 
      *                
-     *                      "boatID"            (String)
+     *                      "boatID"            (String) [Optional]
      *                      "size"              (Int)
      *                      "boatType"          (Int)
      *
+     *  @param [memberID] - Optional. Provided if the caller wants to generate boatID
+     *                      instead of setting it from JSON.
+     *
+     *  @param [nrOfBoats] - Optional. Provided if the caller wants to generate boatID
+     *                       instead of setting it from JSON.
+     *
      *  @return - A Boat object initialized with the values in the provided
      *            JSON object.
+     *
+     *  @throws IllegalArgumentException if Json is not a valid Boat object 
+     *          OR if boatID field is not in json and the optional parameters
+     *          memberID and nrOfBoats are not provided.
      */
-    public Boat jsonToBoat(JsonObject json) {
+    public Boat jsonToBoat(JsonObject json, Optional<Long> memberID,
+            Optional<Integer> nrOfBoats) {
         if ( ! validator.isValidBoat(json)) {
             throw new IllegalArgumentException();
         }
 
-        long boatID = Long.parseLong(json.getString("boatID"));
+        Boat boat;
         int size = Integer.parseInt(json.getString("size"));
         BoatType type = BoatType.fromString(json.getString("boatType"));
+        Long boatID;
 
-        Boat boat = new Boat(boatID);
-        boat.setSize(size);
-        boat.setBoatType(type);
+        /*
+         *  Try to read and set boat's boatID. If the boatID field is 
+         *  not found in the JSON, a boat with a generated boatID is
+         *  created instead.
+         */
+        try {
+            boatID = Long.parseLong(json.getString("boatID"));
+            boat = new Boat(boatID);
+        } catch (Exception ex) {
+            if ( ! (memberID.isPresent() && nrOfBoats.isPresent()) ) {
+                throw new IllegalArgumentException("memberID and nrOfBoats of " 
+                    + "the new boat's owner must be specified if boatID is "
+                    + "missing from JSON.");
+            }
 
-        return boat;
-    }
-
-    public Boat jsonToNewBoat(JsonObject json, long memberId, int nrOfBoats) {
-        if ( ! validator.isValidBoat(json)) {
-            throw new IllegalArgumentException();
+            boat = new Boat(memberID.get(), nrOfBoats.get());
         }
 
-        int size = Integer.parseInt(json.getString("size"));
-        BoatType type = BoatType.fromString(json.getString("boatType"));
-
-        Boat boat = new Boat(memberId, nrOfBoats);
         boat.setSize(size);
         boat.setBoatType(type);
 
@@ -136,6 +140,8 @@ public class JsonParser {
 
     /**
      *  Parses a Member object into a JsonObject.
+     *
+     *  @param member - Member to parse into a JsonObject
      *
      *  @return - A member JsonObject with the values set to the fields in the
      *            provided Member object.
@@ -153,6 +159,8 @@ public class JsonParser {
     /**
      *  Parses a Boat object into a JsonObject.
      *
+     *  @param boat - Boat to parse into a JsonObject
+     *
      *  @return - A boat JsonObject with the values set to the fields in the
      *            provided Boat object.
      */
@@ -164,6 +172,20 @@ public class JsonParser {
             .build();
     }
 
+    /**
+     *  Parses a JsonArray into a list of Boats.
+     *
+     *  @param json - JsonArray containing the boat's information. Expects
+     *                the following format:
+     *
+     *                [
+     *                    { <boat object 1> },
+     *                    { <boat object 2> },
+     *                    ...
+     *                ]
+     *
+     *  @return - An ArrayList with the parsed Boats.
+     */
     public List<Boat> jsonToBoatList(JsonArray json) throws IllegalArgumentException {
         if ( ! validator.isValidBoatArray(json) ) {
             throw new IllegalArgumentException();
@@ -172,7 +194,7 @@ public class JsonParser {
         List<Boat> boats = new ArrayList<>();
 
         for (JsonValue val : json) {
-            boats.add(jsonToBoat((JsonObject)val));
+            boats.add(jsonToBoat((JsonObject)val, Optional.empty(), Optional.empty()));
         }
 
         return boats;
@@ -267,7 +289,7 @@ public class JsonParser {
             MemberNode mNode = new MemberNode(member);
 
             for (JsonObject jBoat : jBoats.getValuesAs(JsonObject.class)) {
-                Boat boat = this.jsonToBoat(jBoat);
+                Boat boat = this.jsonToBoat(jBoat, Optional.empty(), Optional.empty());
                 mNode.append(new BoatNode(boat));
             }
 
