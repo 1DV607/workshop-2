@@ -13,6 +13,7 @@ public class Member extends User {
     public Member(long memberID) {
         this.memberID = memberID;
     }
+
     public Member(String socialSecurityNumber) {
         this.setSocialSecurityNumber(socialSecurityNumber);
         memberID = generateMemberID(socialSecurityNumber);

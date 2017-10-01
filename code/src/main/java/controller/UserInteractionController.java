@@ -1,6 +1,5 @@
 package controller;
 
-import model.JsonParser;
 import model.Registry;
 import view.UserInterface;
 

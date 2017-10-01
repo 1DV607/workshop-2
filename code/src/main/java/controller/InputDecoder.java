@@ -4,7 +4,8 @@ import javax.json.JsonArray;
 import javax.json.JsonObject;
 
 /**
- * Decodes the user command
+ * Decodes the user command and get an Member ID/Boat ID from an JsonArray if the
+ * User asks to perform an Comand where this is necessary
  */
 public class InputDecoder {
 
