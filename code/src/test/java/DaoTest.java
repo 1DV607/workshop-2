@@ -97,9 +97,9 @@ public class DaoTest {
     private final JsonObject MEMBER9 = Json.createObjectBuilder()
         .add("socialSecurityNumber", "9999999999")
         .add("memberID", "85042249300009")
-        .add("firstName", "Jöns")
-        .add("lastName", "Jönsson")
-        .add("address", "Jönsson v. 9")
+        .add("firstName", "Jens")
+        .add("lastName", "Jensson")
+        .add("address", "Jensson v. 9")
         .build();
     private final JsonObject MEMBER10 = Json.createObjectBuilder()
         .add("socialSecurityNumber", "1010101010")
