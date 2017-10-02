@@ -43,7 +43,7 @@ public class RegistryTest {
     public void addMemberTest() {
         JsonObject memberJson = TestUtils.readJsonObjectFromFile(JSON_FILE_DIR + "member.json");
         assertTrue(registry.addMember(memberJson));
-        long memberID = RegistryTest.getMemberBySsn(registry, memberJson.getString("socialSecurityNumber")).getMemberID();
+        long memberID = TestUtils.getMemberBySsn(registry, memberJson.getString("socialSecurityNumber")).getMemberID();
 
         Member expected = parser.jsonToMember(memberJson);
         Member actual = parser.jsonToMember(registry.getMember(memberID));
@@ -57,7 +57,7 @@ public class RegistryTest {
     public void editMemberTest() {
         JsonObject memberJson = TestUtils.readJsonObjectFromFile(JSON_FILE_DIR + "member.json");
         registry.addMember(memberJson);
-        long memberID = RegistryTest.getMemberBySsn(registry,
+        long memberID = TestUtils.getMemberBySsn(registry,
                 memberJson.getString("socialSecurityNumber")).getMemberID();
 
         JsonObject memberJsonEdited = TestUtils.readJsonObjectFromFile(JSON_FILE_DIR + "member_edited.json");
@@ -75,7 +75,7 @@ public class RegistryTest {
     public void removeMemberTest() {
         JsonObject memberJson = TestUtils.readJsonObjectFromFile(JSON_FILE_DIR + "member.json");
         registry.addMember(memberJson);
-        long memberID = RegistryTest.getMemberBySsn(registry,
+        long memberID = TestUtils.getMemberBySsn(registry,
                 memberJson.getString("socialSecurityNumber")).getMemberID();
 
         registry.removeMember(memberID);
@@ -86,7 +86,7 @@ public class RegistryTest {
     public void addBoatTest() {
         JsonObject memberJson = TestUtils.readJsonObjectFromFile(JSON_FILE_DIR + "member.json");
         registry.addMember(memberJson);
-        long memberID = RegistryTest.getMemberBySsn(registry,
+        long memberID = TestUtils.getMemberBySsn(registry,
                 memberJson.getString("socialSecurityNumber")).getMemberID();
 
         JsonObject boatJson = TestUtils.readJsonObjectFromFile(JSON_FILE_DIR + "boat.json");
@@ -106,7 +106,7 @@ public class RegistryTest {
     public void editBoatTest() {
         JsonObject memberJson = TestUtils.readJsonObjectFromFile(JSON_FILE_DIR + "member.json");
         registry.addMember(memberJson);
-        long memberID = RegistryTest.getMemberBySsn(registry,
+        long memberID = TestUtils.getMemberBySsn(registry,
                 memberJson.getString("socialSecurityNumber")).getMemberID();
 
         JsonObject boatJson = TestUtils.readJsonObjectFromFile(JSON_FILE_DIR + "boat.json");
@@ -129,7 +129,7 @@ public class RegistryTest {
     public void removeBoatTest() {
         JsonObject memberJson = TestUtils.readJsonObjectFromFile(JSON_FILE_DIR + "member.json");
         registry.addMember(memberJson);
-        long memberID = RegistryTest.getMemberBySsn(registry,
+        long memberID = TestUtils.getMemberBySsn(registry,
                 memberJson.getString("socialSecurityNumber")).getMemberID();
 
         JsonObject boatJson = TestUtils.readJsonObjectFromFile(JSON_FILE_DIR + "boat.json");
@@ -143,22 +143,5 @@ public class RegistryTest {
     @Test
     public void getAllMembersInfoTest() {
         
-    }
-
-    private static Member getMemberBySsn(Registry registry, String ssn) throws NoSuchElementException {
-        JsonParser parser = new JsonParser();
-
-        for (JsonValue container : registry.getAllMembersInfo()) {
-            JsonObject member = ((JsonObject)container).getJsonObject("member");
-            String mSsn = member.getString("socialSecurityNumber");
-
-            System.out.println("member: " + member);
-
-            if (ssn.equals(mSsn)) {
-                return parser.jsonToMember(member);
-            }
-        }
-
-        throw new NoSuchElementException();
     }
 }

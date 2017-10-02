@@ -57,7 +57,8 @@ public class MemberNode extends Node {
      */
     @Override
     public boolean equals(Object o) {
-        return this.member.equals(o);
+        if (this == o) { return true; }
+        return (o instanceof MemberNode) && (this.member.equals(((MemberNode)o).getMember()));
     }
 
     /**
