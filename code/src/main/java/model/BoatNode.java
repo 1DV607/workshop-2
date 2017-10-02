@@ -43,6 +43,17 @@ public class BoatNode extends Node {
 
     }
 
+    /**
+     *  Compares this BoatNode to another Object for equality. This BoatNode is considered
+     *  equal to the argument if 
+     *
+     *      1) this BoatNode and the argument Object points to the same instance of BoatNode
+     *      2) The Object is an instance of BoatNode AND it has the same hashcode as this BoatNode
+     *
+     *  @param o - Object to compare this BoatNode to
+     *
+     *  @return true if this BoatNode and argument o are equal, false otherwise
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) { return true; }
@@ -51,8 +62,14 @@ public class BoatNode extends Node {
         return this.hashCode() == ((BoatNode)o).hashCode();
     }
 
+    /**
+     *  Calculates a hashcode for this BoatNode from its Boat Object
+     *
+     *  @return a hashcode of this BoatObject
+     *  @see model.Boat#hashCode() Boat.hashCode
+     */
     @Override
     public int hashCode() {
-        return Objects.hash(boat);
+        return boat.hashCode();
     }
 }
