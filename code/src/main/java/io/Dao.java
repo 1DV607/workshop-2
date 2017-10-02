@@ -69,11 +69,10 @@ public class Dao {
      */
     private void initializeJsonFile() {
         try {
-            jsonFile = new File(System.getProperty("user.home")+"/The_Happy_Pirate.json");
+            jsonFile = new File(System.getProperty("user.home") + "/Documents/The_Happy_Pirate.json");
 
         }
         catch (Exception e) {
-            System.out.println(e.getMessage().toString());
         }
     }
 
@@ -86,7 +85,6 @@ public class Dao {
             reader = Json.createReader(fileStream);
         }
         catch (Exception e) {
-            System.out.println(e.getMessage().toString());
         }
     }
 
