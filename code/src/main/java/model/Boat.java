@@ -46,6 +46,17 @@ public class Boat {
         return boatID;
     }
 
+    /**
+     *  Compares this Boat to another Object for equality. This Boat is considered
+     *  equal to the argument if 
+     *
+     *      1) the argument Object points to the same instance of this Boat 
+     *      2) The Object is an instance of Boat AND it has the same hashcode as this Boat
+     *
+     *  @param o - Object to compare this Boat to
+     *
+     *  @return true if this Boat and argument o are equal, false otherwise
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) { return true; }
@@ -54,6 +65,12 @@ public class Boat {
         return this.hashCode() == ((Boat)o).hashCode();
     }
 
+    /**
+     *  Calculates a hashcode for this Boat from its boatID, size and boatType.
+     *
+     *  @return a hashcode of this Boat
+     *  @see java.util.Objects#hash(Object...) Objects.hash
+     */
     @Override
     public int hashCode() {
         return Objects.hash(boatID, size, boatType);

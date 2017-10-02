@@ -28,6 +28,17 @@ public class Member extends User {
         return memberID;
     }
 
+    /**
+     *  Compares this Member to another Object for equality. This Member is considered
+     *  equal to the argument if 
+     *
+     *      1) this Member and the argument Object points to the same instance of Member
+     *      2) The Object is an instance of Member AND it has the same hashcode as this Member
+     *
+     *  @param o - Object to compare this Member to
+     *
+     *  @return true if this Member and argument o are equal, false otherwise
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) { return true; }
@@ -36,6 +47,13 @@ public class Member extends User {
         return this.hashCode() == ((Member)o).hashCode();
     }
 
+    /**
+     *  Calculates a hashcode for this Member from its memberID, socialSecurityNumber,
+     *  firstName, lastName and address.
+     *
+     *  @return a hashcode of this Member
+     *  @see java.util.Objects#hash(Object...) Objects.hash
+     */
     @Override
     public int hashCode() {
         return Objects.hash(this.getMemberID(), this.getSocialSecurityNumber(),

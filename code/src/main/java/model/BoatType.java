@@ -20,6 +20,16 @@ public enum BoatType {
         return name;
     }
 
+    /**
+     *  Parses a String into a BoatType by comparing each BoatType's name to the argument String.
+     *  Cases insensitive.
+     *
+     *  @param str - String to parse to BoatType
+     *
+     *  @return the parsed BoatType
+     *
+     *  @throws IllegalArgumentException if the string could not be parsed into a BoatType
+     */
     public static BoatType fromString(String str) throws IllegalArgumentException {
         for (BoatType type : BoatType.values()) {
             if (type.name.toLowerCase().equals(str.toLowerCase())) {

@@ -45,16 +45,29 @@ public class MemberNode extends Node {
         return true;
     }
 
+    /**
+     *  Compares this MemberNode to another Object for equality. This MemberNode is considered
+     *  equal to the argument if 
+     *
+     *      1) this MemberNode's Member is equal to the argument Object
+     *
+     *  @param o - Object to compare this MemberNode to
+     *
+     *  @return true if this Member's Member and argument o are equal, false otherwise
+     */
     @Override
     public boolean equals(Object o) {
-        if (this == o) { return true; }
-        if ( !(o instanceof MemberNode) ) { return false; }
-
-        return this.hashCode() == ((MemberNode)o).hashCode();
+        return this.member.equals(o);
     }
 
+    /**
+     *  Calculates a hashcode for this MemberNode by hashing its Member
+     *
+     *  @return a hashcode of this MemberNode's Member
+     *  @see model.Member#hashCode() Member.hashCode
+     */
     @Override
     public int hashCode() {
-        return Objects.hash(member);
+        return member.hashCode();
     }
 }
