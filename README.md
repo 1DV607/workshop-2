@@ -12,5 +12,5 @@
 1. Download [src.zip](https://github.com/1DV607/workshop-2/releases/download/ws2/src.zip) or clone repository
 2. Unzip to preferred location
 3. Open 'cmd' or 'Powershell' (Windows) or 'Terminal' (Mac/Linux)
-4. Navigate to 'src/code' folder
+4. Navigate to 'src/' folder
 4. Run `gradlew build` (Windows) or `./gradlew build` (Mac/Linux)
