@@ -49,19 +49,15 @@ public class MemberNode extends Node {
      *  Compares this MemberNode to another Object for equality. This MemberNode is considered
      *  equal to the argument if 
      *
-     *      1) this MemberNode and the argument Object points to the same instance of MemberNode
-     *      2) The Object is an instance of MemberNode AND it has the same hashcode as this MemberNode
+     *      1) this MemberNode's Member is equal to the argument Object
      *
      *  @param o - Object to compare this MemberNode to
      *
-     *  @return true if this MemberNode and argument o are equal, false otherwise
+     *  @return true if this Member's Member and argument o are equal, false otherwise
      */
     @Override
     public boolean equals(Object o) {
-        if (this == o) { return true; }
-        if ( !(o instanceof MemberNode) ) { return false; }
-
-        return this.hashCode() == ((MemberNode)o).hashCode();
+        return this.member.equals(o);
     }
 
     /**
