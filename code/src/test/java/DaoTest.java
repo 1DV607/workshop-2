@@ -3,7 +3,6 @@ import io.Dao;
 import model.JsonParser;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -13,7 +12,7 @@ import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
-import java.io.File;
+import java.io.*;
 import java.util.Scanner;
 
 public class DaoTest {
@@ -22,9 +21,8 @@ public class DaoTest {
     private static Dao emptyDao;
     private static Dao oneMemberDao;
     private static Dao tenMemberDao;
-    private static JsonParser jsonParser = new JsonParser();
-    private static Scanner scanner;
-    private static Scanner outputScanner;
+    private static BufferedReader scanner;
+    private static BufferedReader outputScanner;
 
     private static File outputFile;
     private static File emptyCorrectFile;
@@ -119,7 +117,7 @@ public class DaoTest {
             oneMemberCorrectFile = new File("./src/test/dao_test/one_member_correct.json");
             threeMembersCorrectFile = new File("./src/test/dao_test/three_members_correct.json");
             tenMembersCorrect = new File("./src/test/dao_test/ten_members_correct.json");
-            outputScanner = new Scanner(outputFile);
+
         }
         catch(Exception e) {
             System.out.println(e.getMessage());
@@ -152,7 +150,7 @@ public class DaoTest {
         String expected;
 
         testDao.save(empty);
-        initializeScanner(emptyCorrectFile);
+        initializeFileReader(emptyCorrectFile);
 
         output = readFromFile(outputScanner);
         expected = readFromFile(scanner);
@@ -160,7 +158,7 @@ public class DaoTest {
         assertEquals(expected, output);
 
         testDao.save(oneMember);
-        initializeScanner(oneMemberCorrectFile);
+        initializeFileReader(oneMemberCorrectFile);
 
         output = readFromFile(outputScanner);
         expected = readFromFile(scanner);
@@ -168,7 +166,7 @@ public class DaoTest {
         assertEquals(expected, output);
 
         testDao.save(threeMembers);
-        initializeScanner(threeMembersCorrectFile);
+        initializeFileReader(threeMembersCorrectFile);
 
         output = readFromFile(outputScanner);
         expected = readFromFile(scanner);
@@ -176,7 +174,7 @@ public class DaoTest {
         assertEquals(expected, output);
 
         testDao.save(tenMembers);
-        initializeScanner(tenMembersCorrect);
+        initializeFileReader(tenMembersCorrect);
 
         output = readFromFile(outputScanner);
         expected = readFromFile(scanner);
@@ -202,23 +200,30 @@ public class DaoTest {
         assertEquals(expected, fromFile);
     }
 
-    private void initializeScanner(File file) {
+    private void initializeFileReader(File file) {
         try {
-            scanner = new Scanner(file);
-            outputScanner = new Scanner(outputFile);
+            scanner = new BufferedReader(new InputStreamReader(new FileInputStream(file),"UTF8"));
+            outputScanner = new BufferedReader(new InputStreamReader(new FileInputStream(outputFile),"UTF8"));
         }
         catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
 
-    private String readFromFile(Scanner scanner) {
-       String str = "";
-        while(scanner.hasNext()) {
-            str = str + scanner.nextLine();
+    private String readFromFile(BufferedReader bf) {
+        String str = "";
+        String fromFile = "";
+        try {
+            while ((str = bf.readLine()) != null) {
+                fromFile = fromFile + str;
+            }
         }
+        catch (Exception e) {
 
-        return str;
+        }
+       return fromFile;
     }
+
+
 
 }
