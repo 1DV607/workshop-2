@@ -79,19 +79,25 @@ public class JsonValidator {
      *          AND all json boats are valid, false otherwise.
      */
     public boolean isValidMemberArray(JsonArray arr) {
-        for (JsonValue val : arr) {
-            JsonObject member = ((JsonObject)val).getJsonObject("member");
-            JsonArray boats = ((JsonObject)val).getJsonArray("boats");
 
-            if ( member.getValueType() != JsonValue.ValueType.OBJECT
-                    || boats.getValueType() != JsonValue.ValueType.ARRAY ) {
-                return false;
-            }
+       try {
+           for (JsonValue val : arr) {
+               JsonObject member = ((JsonObject)val).getJsonObject("member");
+               JsonArray boats = ((JsonObject)val).getJsonArray("boats");
 
-            if ( ! (isValidMember(member) && isValidBoatArray(boats)) ) {
-                return false;
-            }
-        }
+               if ( member.getValueType() != JsonValue.ValueType.OBJECT
+                       || boats.getValueType() != JsonValue.ValueType.ARRAY ) {
+                   return false;
+               }
+
+               if ( ! (isValidMember(member) && isValidBoatArray(boats)) ) {
+                   return false;
+               }
+           }
+       }
+       catch (Exception e) {
+           return false;
+       }
 
         return true;
     }
