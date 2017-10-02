@@ -28,3 +28,14 @@ jar {
 run {
     standardInput = System.in
 }
+
+task fatJar(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': 'The Happy Pirate',
+                'Implementation-Version': 0.1,
+                'Main-Class': 'Main'
+    }
+    baseName = project.name + '-all'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
