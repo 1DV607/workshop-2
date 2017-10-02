@@ -55,7 +55,8 @@ public class BoatNode extends Node {
      */
     @Override
     public boolean equals(Object o) {
-        return this.boat.equals(o);
+        if (this == o) { return true; }
+        return (o instanceof BoatNode) && (this.boat.equals(((BoatNode)o).getBoat()));
     }
 
     /**

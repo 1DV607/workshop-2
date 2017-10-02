@@ -1,5 +1,11 @@
+import model.Registry;
+import model.Member;
+import model.JsonParser;
+
 import java.io.File;
 import java.io.FileReader;
+import java.io.PrintWriter;
+import java.util.NoSuchElementException;
 
 import javax.json.Json;
 import javax.json.JsonValue;
@@ -26,6 +32,21 @@ public class TestUtils {
         } catch (Exception ex) {
             throw new JsonException("Error reading from JSON file. Message: " + ex.getMessage());
         }
+    }
+
+    public static Member getMemberBySsn(Registry registry, String ssn) throws NoSuchElementException {
+        JsonParser parser = new JsonParser();
+
+        for (JsonValue container : registry.getAllMembersInfo()) {
+            JsonObject member = ((JsonObject)container).getJsonObject("member");
+            String mSsn = member.getString("socialSecurityNumber");
+
+            if (ssn.equals(mSsn)) {
+                return parser.jsonToMember(member);
+            }
+        }
+
+        throw new NoSuchElementException();
     }
 
     public static boolean jsonObjectsEqual(JsonObject obj1, JsonObject obj2) {
