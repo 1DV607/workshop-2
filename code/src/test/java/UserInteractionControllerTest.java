@@ -1,12 +1,16 @@
 import java.io.File;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 import model.Registry;
-import io.Dao;
 import model.JsonParser;
-import view.UserInterface;
+import model.Member;
+import model.Boat;
+import model.BoatType;
+import io.Dao;
 import controller.UserInteractionObserver;
 import controller.UserInteractionController;
+import view.UserInterface;
 
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -23,6 +27,7 @@ public class UserInteractionControllerTest {
 
     private static final File DAO_TEST_OUT = new File("./build/test/controller_out.json");
 
+    private static JsonParser parser;
     private static Registry registry;
     private static DummyUserInterface dummyUI = new DummyUserInterface();
     private static UserInteractionController controller;
@@ -39,6 +44,7 @@ public class UserInteractionControllerTest {
 
     @BeforeClass
     public static void beforeAll() {
+        parser = new JsonParser();
         dummyUI = new DummyUserInterface();
     }
 
@@ -54,7 +60,7 @@ public class UserInteractionControllerTest {
         displayWelcomeCalled = false;
         displayErrorCalled = false;
 
-        registry = new Registry(new Dao(DAO_TEST_OUT), new JsonParser());
+        registry = new Registry(new Dao(DAO_TEST_OUT), parser);
         controller = new UserInteractionController(dummyUI, registry); 
         dummyUI.observer = controller;
         controller.launch();
@@ -73,36 +79,45 @@ public class UserInteractionControllerTest {
 
     @Test
     public void displayAddMemberTest() {
-        dummyUI.observer.onCommandSelected("3");
+        dummyUI.observer.onCommandSelected("1");
         assertTrue(displayAddMemberCalled);
     }
 
     @Test
+    public void displayMemberInformationTest() {
+        dummyUI.observer.onCommandSelected("1");
+        dummyUI.observer.onSubmitted(Json.createObjectBuilder()
+                .add("firstName", "Abel")
+                .add("lastName", "Abelsson")
+                .add("address", "Abelgatan 1")
+                .add("socialSecurityNumber", "3802110201")
+                .build());
+        
+        dummyUI.observer.onCommandSelected("2 1");
+        assertTrue(displayMemberInformationCalled);
+    }
+
+    @Test
     public void displayEditMemberTest() {
-        registry.addMember(Json.createObjectBuilder()
+        dummyUI.observer.onCommandSelected("1");
+        dummyUI.observer.onSubmitted(Json.createObjectBuilder()
                 .add("firstName", "Abel")
                 .add("lastName", "Abelsson")
                 .add("address", "Abelgatan 1")
                 .add("socialSecurityNumber", "3802110201")
                 .build());
 
-        dummyUI.observer.onCommandSelected("4 1");
-        assertTrue(displayEditMemberCalled);
+        dummyUI.observer.onCommandSelected("3 1");
     }
 
     @Test
     public void displayAddBoatTest() {
-        registry.addMember(Json.createObjectBuilder()
+        dummyUI.observer.onCommandSelected("1");
+        dummyUI.observer.onSubmitted(Json.createObjectBuilder()
                 .add("firstName", "Abel")
                 .add("lastName", "Abelsson")
                 .add("address", "Abelgatan 1")
                 .add("socialSecurityNumber", "3802110201")
-                .add("memberID", "1630662920")
-                .build());
-
-        registry.addBoat(1630662920L, Json.createObjectBuilder()
-                .add("size", "10")
-                .add("boatType", "Sailboat")
                 .build());
 
         dummyUI.observer.onCommandSelected("5 1");
@@ -111,18 +126,19 @@ public class UserInteractionControllerTest {
 
     @Test
     public void displayEditBoatTest() {
-        registry.addMember(Json.createObjectBuilder()
+        dummyUI.observer.onCommandSelected("1");
+        dummyUI.observer.onSubmitted(Json.createObjectBuilder()
                 .add("firstName", "Abel")
                 .add("lastName", "Abelsson")
                 .add("address", "Abelgatan 1")
                 .add("socialSecurityNumber", "3802110201")
-                .add("memberID", "1630662920")
                 .build());
 
-        registry.addBoat(1630662920L, Json.createObjectBuilder()
-                .add("boatID", "1630662921")
-                .add("size", "10")
-                .add("boatType", "Sailboat")
+
+        dummyUI.observer.onCommandSelected("5 1");
+        dummyUI.observer.onSubmitted(Json.createObjectBuilder()
+                .add("size", "5")
+                .add("boatType", "Motorsailer")
                 .build());
 
         dummyUI.observer.onCommandSelected("6 1 1");
@@ -134,7 +150,6 @@ public class UserInteractionControllerTest {
         dummyUI.observer.onCommandSelected("");
         assertTrue(displayErrorCalled);
     }
-
     @Test
     public void displayErrorOnMissingArgumentsTest() {
         dummyUI.observer.onCommandSelected("6");
@@ -157,15 +172,13 @@ public class UserInteractionControllerTest {
 
     @Test
     public void addMemberTest() {
-        JsonObject newMemberJson = Json.createObjectBuilder()
+        dummyUI.observer.onCommandSelected("1");
+        dummyUI.observer.onSubmitted(Json.createObjectBuilder()
             .add("socialSecurityNumber", "7501010505")
             .add("firstName", "Olof")
             .add("lastName", "Olofsson")
             .add("address", "Olofsgatan 1")
-            .build();
-
-        dummyUI.observer.onCommandSelected("1");
-        dummyUI.observer.onSubmitted(newMemberJson);
+            .build());
 
         try {
             TestUtils.getMemberBySsn(registry, "7501010505");
@@ -174,52 +187,120 @@ public class UserInteractionControllerTest {
         }
     }
 
+    @Test
+    public void editMemberTest() {
+        dummyUI.observer.onCommandSelected("1");
+        dummyUI.observer.onSubmitted(Json.createObjectBuilder()
+            .add("socialSecurityNumber", "7501010505")
+            .add("firstName", "Olof")
+            .add("lastName", "Olofsson")
+            .add("address", "Olofsgatan 1")
+            .build());
+
+        dummyUI.observer.onCommandSelected("3 1");
+        dummyUI.observer.onSubmitted(Json.createObjectBuilder()
+            .add("firstName", "Olof")
+            .add("lastName", "Olofsson")
+            .add("address", "Olofsgatan 10")
+            .build());
+
+        Member member = TestUtils.getMemberBySsn(registry, "7501010505");
+        assertEquals("Olof", member.getFirstName());
+        assertEquals("Olofsson", member.getLastName());
+        assertEquals("Olofsgatan 10", member.getAddress());
+    }
+
+    @Test
+    public void addBoatTest() {
+        dummyUI.observer.onCommandSelected("1");
+        dummyUI.observer.onSubmitted(Json.createObjectBuilder()
+            .add("socialSecurityNumber", "7501010505")
+            .add("firstName", "Olof")
+            .add("lastName", "Olofsson")
+            .add("address", "Olofsgatan 1")
+            .build());
+
+        dummyUI.observer.onCommandSelected("5 1");
+        dummyUI.observer.onSubmitted(Json.createObjectBuilder()
+            .add("size", "5")
+            .add("boatType", "Motorsailer")
+            .build());
+
+        Member member = TestUtils.getMemberBySsn(registry, "7501010505");
+        List<Boat> boats = parser.jsonToBoatList(registry.getMemberBoats(member.getMemberID()));
+        assertEquals(1, boats.size());
+        assertEquals(5, boats.get(0).getSize());
+        assertEquals(BoatType.Motorsailer, boats.get(0).getBoatType());
+    }
+
+    @Test
+    public void editBoatTest() {
+        dummyUI.observer.onCommandSelected("1");
+        dummyUI.observer.onSubmitted(Json.createObjectBuilder()
+            .add("socialSecurityNumber", "7501010505")
+            .add("firstName", "Olof")
+            .add("lastName", "Olofsson")
+            .add("address", "Olofsgatan 1")
+            .build());
+
+        dummyUI.observer.onCommandSelected("5 1");
+        dummyUI.observer.onSubmitted(Json.createObjectBuilder()
+            .add("size", "5")
+            .add("boatType", "Motorsailer")
+            .build());
+
+        dummyUI.observer.onCommandSelected("6 1 1");
+        dummyUI.observer.onSubmitted(Json.createObjectBuilder()
+            .add("size", "6")
+            .add("boatType", "Motorsailer")
+            .build());
+        
+        Member member = TestUtils.getMemberBySsn(registry, "7501010505");
+        List<Boat> boats = parser.jsonToBoatList(registry.getMemberBoats(member.getMemberID()));
+        assertEquals(1, boats.size());
+        assertEquals(6, boats.get(0).getSize());
+        assertEquals(BoatType.Motorsailer, boats.get(0).getBoatType());
+    }
+
     private static class DummyUserInterface implements UserInterface {
         private UserInteractionObserver observer;
 
         public void displayVerboseList(JsonArray jsonArray) {
             displayVerboseListCalled = true;
-            System.out.println("In displayVerboseList()");
         }
 
         public void displayCompactList(JsonArray jsonArray) {
             displayCompactListCalled = true;
-            System.out.println("In displayCompactList()");
         }
 
         public void displayAddMember() { 
             displayAddMemberCalled = true;
-            System.out.println("In displayAddMember()");
         }
 
         public void displayMemberInformation(JsonObject jsonMember, JsonArray jsonBoats) {
             displayMemberInformationCalled = true;
-            System.out.println("In displayMemberInformation()");
+            observer.onContinue();
         }
 
         public void displayEditMember(JsonObject jsonMember) {
             displayEditMemberCalled = true;
-            System.out.println("In displayEditMember()");
         }
 
         public void displayAddBoat(JsonObject jsonMember) {
             displayAddBoatCalled = true;
-            System.out.println("In displayAddBoat()");
         }
 
         public void displayEditBoat(JsonObject jsonMember, JsonObject jsonBoat) {
             displayEditBoatCalled = true;
-            System.out.println("In displayEditBoat()");
         }
 
         public void displayError(String message) {
             displayErrorCalled = true;
-            System.out.println("In displayError()");
+            observer.onContinue();
         }
 
         public void displayWelcome() {
             displayWelcomeCalled = true;
-            System.out.println("In displayWelcome()");
         }
     }
 }
