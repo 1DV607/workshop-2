@@ -40,6 +40,61 @@ public class RegistryTest {
     }
 
     @Test
+    public void getMemberTest() {
+        JsonObject expected = Json.createObjectBuilder()
+                .add("firstName", "Zack")
+                .add("lastName", "Zackberg")
+                .add("address", "Z-Gatan 22")
+                .add("socialSecurityNumber", "2020202020")
+                .add("memberID", "22222")
+                .build();
+
+        registry.addMember(expected);
+        JsonObject actual = registry.getMember(22222);
+        assertTrue(TestUtils.jsonObjectsEqual(expected, actual));
+    }
+
+    @Test
+    public void getMemberBoatsTest() {
+        registry.addMember(Json.createObjectBuilder()
+                .add("firstName", "Jonas")
+                .add("lastName", "Jonasson")
+                .add("address", "Jonasson gatan 1")
+                .add("memberID", "22224")
+                .add("socialSecurityNumber", "1234012124")
+                .build());
+
+        JsonArray expected = TestUtils.readJsonArrayFromFile(JSON_FILE_DIR + "boat_multiple.json");
+        for (JsonValue val : expected) {
+            registry.addBoat(22224, (JsonObject)val);
+        }
+
+        JsonArray actual = registry.getMemberBoats(22224);
+        assertTrue(TestUtils.jsonArraysEqual(expected, actual));
+    }
+
+    @Test
+    public void getBoatTest() {
+        JsonObject expected = Json.createObjectBuilder()
+                .add("boatID", "1234567")
+                .add("size", "10")
+                .add("boatType", "Sailboat")
+                .build();
+
+        registry.addMember(Json.createObjectBuilder()
+                .add("firstName", "Jonas")
+                .add("lastName", "Jonasson")
+                .add("address", "Jonasson gatan 1")
+                .add("memberID", "22223")
+                .add("socialSecurityNumber", "1234012124")
+                .build());
+
+        registry.addBoat(22223, expected);
+        JsonObject actual = registry.getBoat(22223, 1234567);
+        assertTrue(TestUtils.jsonObjectsEqual(expected, actual));
+    }
+
+    @Test
     public void addMemberTest() {
         JsonObject memberJson = TestUtils.readJsonObjectFromFile(JSON_FILE_DIR + "member.json");
         assertTrue(registry.addMember(memberJson));
@@ -140,8 +195,4 @@ public class RegistryTest {
         assertNull(registry.getBoat(memberID, boatId));
     }
 
-    @Test
-    public void getAllMembersInfoTest() {
-        
-    }
 }
