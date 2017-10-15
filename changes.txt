@@ -1,0 +1,15 @@
+Author:     Caroline Nilsson (cn222nd)
+            Daniel Alm Grundström (dg222dw)
+
+We got feedback about not using the correct UML notation for the class diagram 
+since we had not used association arrows in the diagram but only dependency and 
+realization.
+
+Change Log:
+• Adds association arrows to class diagram.
+
+We also got feedback that our model was highly coupled because of the use of 
+the MemberNode and BoatNode classes and that a better solution might be to 
+simply have each member contain a list of boats. We thought this was good 
+feedback but we decided not to change this now because it would take a lot of 
+time, but it's something we will take with us in the future while designing.  
