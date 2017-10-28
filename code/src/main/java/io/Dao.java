@@ -15,15 +15,16 @@ public class Dao {
     private File jsonFile;
     private JsonWriter writer;
     private JsonReader reader;
+    private JsonParser parser;
 
     public Dao() {
         initializeJsonFile();
     }
 
     public Dao(File file) {
+        parser = new JsonParser();
         try {
             jsonFile = file;
-
         }
         catch (Exception e) {
             System.out.println(e.getMessage().toString());
@@ -36,10 +37,11 @@ public class Dao {
      * @return      successful - true
      *              unsuccessful - false
      */
-    public boolean save(JsonArray members) {
+    public boolean save(List<Member> members) {
         try {
             initializeWriter();
-            writer.writeArray(members);
+            JsonArray jMembers = parser.membersToJson(members);
+            writer.writeArray(jMembers);
         }
         catch (Exception e) {
             return false;
@@ -51,13 +53,15 @@ public class Dao {
      * Loads information from file and transform to an JsonArray
      * @return members as an JsonArray
      */
-    public JsonArray load() {
-        JsonArray members;
+    public List<Member> load() {
+        JsonArray jMembers;
+        ArrayList<Member> members;
+
         try {
             initializeReader();
-            members = reader.readArray();
-        }
-        catch (Exception e) {
+            jMembers = reader.readArray();
+            members = parser.jsonToMembers(jMembers);
+        } catch (Exception e) {
             return Json.createArrayBuilder().build();
         }
 

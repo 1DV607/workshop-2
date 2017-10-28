@@ -96,14 +96,8 @@ public class ConsoleView implements UserInterface {
         String lastName = getInput("Last name: ");
         String address = getInput("Address: ");
 
-        JsonObject info = Json.createObjectBuilder()
-            .add("socialSecurityNumber", socialSecurityNumber)
-            .add("firstName", firstName)
-            .add("lastName", lastName)
-            .add("address", address)
-            .build();
-
-        interactionObserver.onSubmitted(info);
+        interactionObserver.onAddMemberSubmitted(socialSecurityNumber, firstName,
+            lastName, address);
     }
 
     /**

@@ -70,7 +70,7 @@ public class JsonValidator {
 
     /**
      *  Checks that the provided JsonArray has the correct structure in order
-     *  to be parsed as a Map by JsonParser. Also checks each member and each boat
+     *  to be parsed as a List by JsonParser. Also checks each member and each boat
      *  for validity.
      *
      *  @param arr - JsonArray to validate.

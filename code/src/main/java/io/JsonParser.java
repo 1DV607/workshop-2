@@ -201,8 +201,7 @@ public class JsonParser {
     }
 
     /**
-     *  Takes a Map with member ID and a linked list containing Member and
-     *  associated boats and creates a JSON array in the format:
+     *  Takes a List of Members and creates a JSON array in the format:
      *
      *  [
      *      {
@@ -216,35 +215,30 @@ public class JsonParser {
      *      ...
      *  ]
      *  
-     *  @param  map - A Map with memberID as key and a linked list containing 
-     *                Member and associated boats as value  
+     *  @param  members - A List of Members  
      *  
-     *  @return - a JSON array containing all Members and Boats in 'map'
+     *  @return - a JSON array containing all Members and Boats in 'members'
      */
-    public JsonArray mapToJson(Map<Long, MemberNode> map) {
+    public JsonArray membersToJson(List<Member> members) {
         JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
 
-        for (Long key : map.keySet()) {        // Iterate over all member nodes in the map
-            MemberNode mNode = map.get(key);
+        for (Member member : members) {        // Iterate over all members
+            JsonObject jMember = this.memberToJson(member);    // Create JSON member object
+            JsonArrayBuilder jBoats = Json.createArrayBuilder();
 
-            JsonObject member = memberToJson(mNode.getMember());    // Create JSON member object
-            JsonArrayBuilder boatsBuilder = Json.createArrayBuilder();
-
-            Node currentNode = mNode;
+            ArrayList<Boat> boats = member.getBoats();
 
             /*
              * Collect all boats associated with the member in a JSON array
              */
-            while (currentNode.getNextNode() != null) {
-                currentNode = currentNode.getNextNode();
-                BoatNode bNode = (BoatNode)currentNode;
-                boatsBuilder.add(boatToJson(bNode.getBoat()));
+            for (Boat boat : boats) {
+                jBoats.add(this.boatToJson(boat));
             }
 
             // Store member and associated boats in a JSON container object
             JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
-            objectBuilder.add("member", member);
-            objectBuilder.add("boats", boatsBuilder.build());
+            objectBuilder.add("member", jMember);
+            objectBuilder.add("boats", jBoats.build());
 
             arrayBuilder.add(objectBuilder.build());  // Add container object to array
         }
@@ -253,10 +247,10 @@ public class JsonParser {
     }
 
     /**
-     *  Parses a JsonArray into a Map with memberID as key and a linked list 
-     *  a Member and it's associated Boats.
+     *  Parses a JsonArray into a List of Members. The boats associated
+     *  with a member are added to the respective Member object.
      *
-     *  @param array - JsonArray to parse to Map. Expects the following format:
+     *  @param array - JsonArray to parse to List. Expects the following format:
      *
      *  [
      *      {
@@ -270,30 +264,29 @@ public class JsonParser {
      *      ...
      *  ]
      *
-     *  @return - A Map with the Members and associated Boats that are 
-     *            contained in the JsonArray.
+     *  @return - A List, in the form of an ArrayList, of Members which
+     *            each contain respective associated Boats.
      */
-    public Map<Long, MemberNode> jsonToMap(JsonArray array) {
+    public List<Member> jsonToMembers(JsonArray array) {
 
         if ( ! validator.isValidMemberArray(array)) {
             throw new IllegalArgumentException();
         }
 
-        Map<Long, MemberNode> result = new HashMap<>();
+        ArrayList<Member> result = new ArrayList<>();
 
         for (JsonValue jStruct : array) {
             JsonObject jObject = (JsonObject)jStruct;
             JsonObject jMember = jObject.getJsonObject("member");
             JsonArray jBoats = jObject.getJsonArray("boats");
             Member member = this.jsonToMember(jObject.getJsonObject("member"));
-            MemberNode mNode = new MemberNode(member);
 
             for (JsonObject jBoat : jBoats.getValuesAs(JsonObject.class)) {
                 Boat boat = this.jsonToBoat(jBoat, Optional.empty(), Optional.empty());
-                mNode.append(new BoatNode(boat));
+                member.addBoat(boat);
             }
 
-            result.put(member.getMemberID(), mNode);
+            result.add(member);
         }
 
         return result;
