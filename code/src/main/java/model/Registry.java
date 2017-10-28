@@ -1,20 +1,13 @@
 package model;
 
-import java.util.ArrayList;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 import io.Dao;
 
-import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonObject;
-import java.util.Map;
 
 /**
- * Contains all Member and Boat objects
- * Implements CRUD functionality for Member and Boat
+ * Contains all Member Objects
+ * Implements CRUD functionality for Member
  */
 public class Registry {
 
@@ -23,6 +16,7 @@ public class Registry {
 
     public Registry(Dao dao) {
         this.dao = dao;
+
         members = dao.load();
     }
 

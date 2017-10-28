@@ -1,10 +1,15 @@
 package io;
 
-import javax.json.*;
+import model.JsonParser;
+import model.Member;
+
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.util.Scanner;
+import java.util.ArrayList;
+import javax.json.*;
+
 
 /**
  * Write and Read from "The Happy Pirate.json" located at user.home directory
@@ -37,7 +42,7 @@ public class Dao {
      * @return      successful - true
      *              unsuccessful - false
      */
-    public boolean save(List<Member> members) {
+    public boolean save(ArrayList<Member> members) {
         try {
             initializeWriter();
             JsonArray jMembers = parser.membersToJson(members);
@@ -53,7 +58,7 @@ public class Dao {
      * Loads information from file and transform to an JsonArray
      * @return members as an JsonArray
      */
-    public List<Member> load() {
+    public ArrayList<Member> load() {
         JsonArray jMembers;
         ArrayList<Member> members;
 

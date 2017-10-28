@@ -5,7 +5,7 @@ import java.util.NoSuchElementException;
 
 /**
  * Represents a Member, inherits from User Class
- * Generates and contains the Member's unique member ID
+ * Contains the Boat Objects associated with the Member
  */
 public class Member extends User {
 
@@ -64,23 +64,44 @@ public class Member extends User {
         throw new NoSuchElementException();
     }
 
+    private int generateBoatID() {
+        int id = 0;
+        if (boats.size() == 0) {
+            return id + 1;
+        }
+        for (Boat boat : boats) {
+            if (boat.getBoatID() >= id) {
+                id = boat.getBoatID() +1;
+            }
+        }
+        return id;
+    }
+
     /**
      *  Compares this Member to another Object for equality. This Member is considered
-     *  equal to the argument if 
-     *
-     *      1) this Member and the argument Object points to the same instance of Member
-     *      2) The Object is an instance of Member AND it has the same hashcode as this Member
+     *  equal to the argument if memberID, socialSecurityNumber, firstName, lastName and address is equal.
      *
      *  @param o - Object to compare this Member to
-     *
      *  @return true if this Member and argument o are equal, false otherwise
      */
     @Override
     public boolean equals(Object o) {
-        if (this == o) { return true; }
-        if ( !(o instanceof Member) ) { return false; }
-
-        return this.hashCode() == ((Member)o).hashCode();
+       try {
+           Member memberObject = (Member) o;
+           if (memberObject.getMemberID() == memberID &&
+                   memberObject.getSocialSecurityNumber().equals(this.getSocialSecurityNumber()) &&
+                   memberObject.getFirstName().equals(this.getFirstName()) &&
+                   memberObject.getLastName().equals(this.getLastName()) &&
+                   memberObject.getAddress().equals(this.getAddress())) {
+               return true;
+           }
+           else {
+               return false;
+           }
+       }
+       catch (Exception exception) {
+           return false;
+       }
     }
 
 }
