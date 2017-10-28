@@ -1,7 +1,11 @@
 package view;
 
+import model.Boat;
+import model.Member;
+
 import javax.json.JsonArray;
 import javax.json.JsonObject;
+import java.util.List;
 
 /**
  * interface that connects the Controller and the View

@@ -1,12 +1,12 @@
 package view;
 
+import java.util.List;
 import java.util.Scanner;
 
 import controller.UserInteractionObserver;
+import model.Boat;
+import model.Member;
 
-import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonObject;
 
 /**
  *  Implements a console/terminal user interface for the application. 
@@ -35,7 +35,7 @@ public class ConsoleView implements UserInterface {
      * 
      * Information displayed for each boat is boat ID, size in meters and boat type.
      *
-     * @param jsonArray - json array with member/boat information
+     * @param members - List<Member> contains all members
      */
     @Override
     public void displayVerboseList(List<Member> members) {
@@ -49,7 +49,7 @@ public class ConsoleView implements UserInterface {
      * Information displayed for each member in the list is name, member ID,
      * social security number and number of registered boats.
      * 
-     * @param jsonArray - json array with member/boat information
+     * @param members - List<Member> containing all members
      */
     @Override
     public void displayCompactList(List<Member> members) {
@@ -60,11 +60,11 @@ public class ConsoleView implements UserInterface {
     /**
      *  Helper method for displayVerboseList and displayCompactList.
      *
-     *  Passes Json to StringFormatter which formats the list, then
+     *  Passes List to StringFormatter which formats the list to a String, then
      *  outputs the list, displays the menu, waits for input and finally
      *  notifies the observer of the input.
      *
-     *  @param jsonArray - json array with member/boat information.
+     *  @param members - List<Member> containing all members
      */
     private void displayMemberList(List<Member> members) {
         String list;
@@ -110,12 +110,11 @@ public class ConsoleView implements UserInterface {
      *  Information shown about each boat registered to the member is:
      *  boat ID, size in meters and boat type.
      *
-     *  @param jsonMember - member information in JSON format
-     *  @param jsonBoats - list of boats registered to the user in JSON format
+     *  @param member - Member
      */
     @Override
-    public void displayMemberInformation(JsonObject jsonMember, JsonArray jsonBoats) {
-        System.out.println(formatter.getMember(jsonMember, jsonBoats));
+    public void displayMemberInformation(Member member) {
+        System.out.println(formatter.getMember(member));
         System.out.println();
         getInput("Press 'Enter' to continue to Menu Options!");
         interactionObserver.onContinue();
@@ -126,40 +125,24 @@ public class ConsoleView implements UserInterface {
      *  to input the new information about the member and sends the 
      *  new information to the observer.
      *
-     *  @param jsonMember - current information about the member in JSON format
+     *  @param member - Member Object
      */
     @Override
-    public void displayEditMember(JsonObject jsonMember) {
+    public void displayEditMember(Member member) {
         System.out.println();
         System.out.println("Please enter the new information. Leave a field blank to keep current information.");
         System.out.println("");
         String firstName = getInput(String.format("First name (current: %s): ",
-                    jsonMember.getString("firstName")));
+                    member.getFirstName()));
         String lastName = getInput(String.format("Last name (current: %s): ",
-                    jsonMember.getString("lastName")));
+                    member.getLastName()));
+        String socialSecurityNumber = getInput(String.format("Social Security Number (current: %s): ",
+                member.getSocialSecurityNumber()));
         String address = getInput(String.format("Address (current: %s): ",
-                    jsonMember.getString("address")));
+                    member.getAddress()));
 
-        if (firstName.isEmpty()) {
-            firstName = jsonMember.getString("firstName");
-        } 
 
-        if (lastName.isEmpty()) {
-            lastName = jsonMember.getString("lastName");
-        }
-
-        if (address.isEmpty()) {
-            address = jsonMember.getString("address");
-        }
-
-        JsonObject info = Json.createObjectBuilder()
-            .add("socialSecurityNumber", "")
-            .add("firstName", firstName)
-            .add("lastName", lastName)
-            .add("address", address)
-            .build();
-
-        interactionObserver.onSubmitted(info);
+        interactionObserver.onEditMemberSubmitted(member.getMemberID(), socialSecurityNumber, firstName, lastName, address );
     }
 
     /**
@@ -167,24 +150,19 @@ public class ConsoleView implements UserInterface {
      *  to input the information about the new boat and sends the 
      *  user input to the observer.
      *
-     *  @param jsonMember - Information about the owner of the boat in
-     *                      JSON format.
+     *  @param member - Member owner of the new Boat
      */
     @Override
-    public void displayAddBoat(JsonObject jsonMember) {
+    public void displayAddBoat(Member member) {
         System.out.println();
         System.out.printf("Please enter the information about %s's new boat.",
-                jsonMember.getString("firstName"));
+                member.getFirstName());
         System.out.println("");
         String size = getInput("Enter length (meters): ");
         String boatType = getInput("Enter type (SailBoat/Motorsailer/Canoe/Kayak/Other): ");
 
-        JsonObject info = Json.createObjectBuilder()
-            .add("size", size)
-            .add("boatType", boatType)
-            .build();
 
-        interactionObserver.onSubmitted(info);
+        interactionObserver.onAddBoatSubmitted(boatType, size);
     }
 
     /**
@@ -192,35 +170,20 @@ public class ConsoleView implements UserInterface {
      *  to input the new information about the boat and sends the 
      *  user input to the observer.
      *
-     *  @param jsonMember - Information about the owner of the boat to edit in
-     *                      JSON format.
-     *  @param jsonBoat - Current information about the boat to be edited
+     *  @param boat - Boat the boat to edit
      */
     @Override
-    public void displayEditBoat(JsonObject jsonMember, JsonObject jsonBoat) {
+    public void displayEditBoat(Boat boat) {
         System.out.println();
         System.out.println("Please enter the new information. Leave a field blank to keep current information.");
         System.out.println("");
         String size = getInput(String.format("Boat length (meters) (current: %s): ",
-                    jsonBoat.getString("size")));
+                    boat.getSize()));
         String boatType = getInput(String.format("Boat type (current: %s): ",
-                    jsonBoat.getString("boatType")));
+                    boat.getBoatType().getName()));
 
-        if (size.isEmpty()) {
-            size = jsonBoat.getString("size");
-        } 
 
-        if (boatType.isEmpty()) {
-            boatType = jsonBoat.getString("boatType");
-        }
-
-        JsonObject info = Json.createObjectBuilder()
-            .add("boatID", "")
-            .add("size", size)
-            .add("boatType", boatType)
-            .build();
-
-        interactionObserver.onSubmitted(info);
+        interactionObserver.onEditBoatSubmitted(boat.getBoatID(), boatType, size);
     }
 
     /**

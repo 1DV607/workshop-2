@@ -1,8 +1,9 @@
 package view;
 
-import javax.json.JsonArray;
-import javax.json.JsonObject;
-import javax.json.JsonValue;
+import model.Boat;
+import model.Member;
+
+import java.util.List;
 
 /**
  * Formats text to show in console.
@@ -17,19 +18,22 @@ public class StringFormatter {
     }
 
     /**
-     * Creates a verbose Member List containing the information in memberInformation
-     * @param memberInformation - JsonArray, containing Members and Boats
+     * Creates a verbose Member List String containing Member information and information about each
+     * members boat(s)
+     * @param members - List<Members>, containing Members
      * @return - String, listed Members and Boats
      */
-    public String getMemberListVerbose(JsonArray memberInformation) {
+    public String getMemberListVerbose(List<Member> members) {
         stringBuilder = new StringBuilder();
 
         stringBuilder.append("\n \n");
         stringBuilder.append("Verbose Member List \n");
 
-        JsonObject object;
-        JsonArray array;
-        for (int i = 0; i < memberInformation.size(); i++) {
+        Member memberObject;
+        Boat boatObject;
+        List<Boat> boats;
+
+        for (int i = 0; i < members.size(); i++) {
 
             stringBuilder.append("\n");
             stringBuilder.append("============================================================================\n");
@@ -37,17 +41,17 @@ public class StringFormatter {
                     "Nr", "| Name", "| Member ID", "| Social Security Number", "|"));
             stringBuilder.append("============================================================================\n");
 
-            object = memberInformation.getJsonObject(i).getJsonObject("member");
+            memberObject = members.get(i);
             String nr = (i+1) +". ";
-            String name = " "+object.getString("firstName")+" "+object.getString("lastName");
-            String memberID = " "+object.getString("memberID");
-            String SSN = " "+object.getString("socialSecurityNumber");
+            String name = " "+memberObject.getFirstName()+" "+memberObject.getLastName();
+            String memberID = " "+memberObject.getMemberID();
+            String SSN = " "+memberObject.getSocialSecurityNumber();
 
             stringBuilder.append(String.format("%-4s %-30s %-12s %-25s \n",
                      nr, name, memberID, SSN ));
-            array = memberInformation.getJsonObject(i).getJsonArray("boats");
+            boats = memberObject.getAllBoats();
 
-            for (int j = 0; j < array.size(); j++) {
+            for (int j = 0; j < boats.size(); j++) {
                 if (j == 0) {
                     stringBuilder.append(String.format("%-4s %-30s \n",
                             "", "-----------------------------------------------------------------------"));
@@ -56,12 +60,12 @@ public class StringFormatter {
                     stringBuilder.append(String.format("%-4s %-30s \n" ,
                             "", "-----------------------------------------------------------------------"));
                 }
-                object = array.getJsonObject(j);
+                boatObject = boats.get(j);
 
                 String boatNr = (j+1) + ". ";
-                String boatType = object.getString("boatType");
-                String size = object.getString("size");
-                String boatID = object.getString("boatID");
+                String boatType = boatObject.getBoatType().getName();
+                String size = boatObject.getSize()+"";
+                String boatID = boatObject.getBoatID()+"";
 
                 stringBuilder.append(String.format("%-5s %-4s %-15s %-10s %-15s \n",
                         "", boatNr, boatType, size, boatID));
@@ -75,13 +79,14 @@ public class StringFormatter {
 
 
     /**
-     * Creates a compact Member List containing the information in memberInformation
-     * @param memberInformation - JsonArray, containing members and boats
+     * Creates a compact Member List String for output
+     * @param members - List<Member>, containing all members
      * @return String, listed Members
      */
-    public String getMemberListCompact(JsonArray memberInformation) {
+    public String getMemberListCompact(List<Member> members) {
         stringBuilder = new StringBuilder();
-        JsonObject object;
+        Member memberObject;
+
 
         stringBuilder.append("\n \n");
         stringBuilder.append("Compact Member List \n");
@@ -92,14 +97,14 @@ public class StringFormatter {
                 "Nr", "| Name", "| Member ID", "| Nr of boats", "|"));
         stringBuilder.append("=======================================================================\n");
 
-        for (int i = 0; i < memberInformation.size(); i++) {
+        for (int i = 0; i < members.size(); i++) {
 
-            object = memberInformation.getJsonObject(i).getJsonObject("member");
+            memberObject = members.get(i);
 
             String nr = (i+1)+". ";
-            String name = " "+ object.getString("firstName")+" "+object.getString("lastName");
-            String memberID = " " +object.getString("memberID");
-            String numberOfBoats = " "+ memberInformation.getJsonObject(i).getJsonArray("boats").size()+"";
+            String name = " "+ memberObject.getFirstName() +" "+ memberObject.getLastName();
+            String memberID = " "+ memberObject.getMemberID();
+            String numberOfBoats = " "+ memberObject.getAllBoats().size();
 
             stringBuilder.append(String.format("%-4s %-30s %-15s %-17s \n",
                     nr, name, memberID, numberOfBoats));
@@ -174,15 +179,15 @@ public class StringFormatter {
     }
 
     /**
-     * Takes a Member as a JsonObject and the members boats as a JsonArray and formats it
-     * to a output String
-     * @param member - JsonObject, the member
-     * @param boats - JsonArray, the members boats
+     * Takes a Member and formats it to an output String containing Member information and
+     * Boat information
+     * @param member - Member Object
      * @return - Formatted String
      */
-    public String getMember(JsonObject member, JsonArray boats) {
+    public String getMember(Member member) {
         stringBuilder = new StringBuilder();
-        JsonObject boat;
+        Boat boatObject;
+        List<Boat> boats;
 
         stringBuilder.append("\n");
         stringBuilder.append("==========================================================================="+
@@ -193,13 +198,15 @@ public class StringFormatter {
                 "========================================\n");
 
 
-        String name = " "+member.getString("firstName")+" "+member.getString("lastName");
-        String address = " "+ member.getString("address");
-        String memberID = " "+member.getString("memberID");
-        String SSN = " "+member.getString("socialSecurityNumber");
+        String name = " " + member.getFirstName() +" "+ member.getLastName();
+        String address = " "+ member.getAddress();
+        String memberID = " "+member.getMemberID();
+        String SSN = " "+member.getSocialSecurityNumber();
 
         stringBuilder.append(String.format("%-30s %-40s %-15s %-25s \n",
                  name, address, memberID, SSN ));
+
+        boats = member.getAllBoats();
 
         for (int j = 0; j < boats.size(); j++) {
             if (j == 0) {
@@ -212,12 +219,12 @@ public class StringFormatter {
                         "", "----------------------------------------------------------------------------"+
                                 "------------------------------"));
             }
-            boat = boats.getJsonObject(j);
+            boatObject = boats.get(j);
 
             String boatNr = (j+1) + ". ";
-            String boatType = boat.getString("boatType");
-            String size = boat.getString("size");
-            String boatID = boat.getString("boatID");
+            String boatType = boatObject.getBoatType().getName();
+            String size = boatObject.getSize()+"";
+            String boatID = boatObject.getBoatID()+"";
 
             stringBuilder.append(String.format("%-9s %-4s %-15s %-10s %-15s \n",
                     "", boatNr, boatType, size, boatID));
