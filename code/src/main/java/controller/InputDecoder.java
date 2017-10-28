@@ -4,7 +4,7 @@ import javax.json.JsonArray;
 import javax.json.JsonObject;
 
 /**
- * Decodes the user command and get an Member ID/Boat ID from an JsonArray if the
+ * Decodes the user command and get an Member ID/Boat ID from a List of Members if the
  * User asks to perform an Comand where this is necessary
  */
 public class InputDecoder {
@@ -16,7 +16,7 @@ public class InputDecoder {
     }
 
     /**
-     * Takes user input and a JsonArray and transform it to a
+     * Takes user input and a List of members and transform it to a
      * command, memberID (if present) and boatID (if present)
      * The userInput choices has to be separated by space.
      * @param userInput - String, the command choices made by the user
@@ -28,10 +28,10 @@ public class InputDecoder {
 
         String [] inputParts =  userInput.split(" ");
         String command = inputParts[0];
-        String member = (inputParts.length >= 2)
+        int member = (inputParts.length >= 2)
                 ? inputParts[1]
                 : "";
-        String boat = (inputParts.length >= 3)
+        int boat = (inputParts.length >= 3)
                 ? inputParts[2]
                 : "";
 
@@ -41,16 +41,18 @@ public class InputDecoder {
         }
 
         if (member.length() != 0) {
-            JsonObject jsonMember = json.getJsonObject((Integer.parseInt(member))-1).getJsonObject("member");
-            String memberID = jsonMember.getString("memberID");
-            userCommands [1] = memberID;
+            int memberIndex = Integer.parseInt(member);
+            Member member = members.get(memberIndex - 1);
+            userCommands [1] = member.getMemberID();
         }
 
         if (boat.length() != 0) {
-            JsonObject jsonBoat = json.getJsonObject((Integer.parseInt(member))-1).getJsonArray("boats")
-                    .getJsonObject((Integer.parseInt(boat))-1);
-            String boatID = jsonBoat.getString("boatID");
-            userCommands [2] = boatID;
+            int memberIndex = Integer.parseInt(member);
+            int boatIndex = Integer.parseInt(boat);
+            Member member = members.get(memberIndex - 1);
+            List<Boat> boats = member.getBoats();
+            Boat boat = boats.get(boatIndex);
+            userCommands [2] = boat.getBoatID();
         }
 
         return userCommands;

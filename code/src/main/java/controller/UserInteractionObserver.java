@@ -15,16 +15,16 @@ public interface UserInteractionObserver {
     public void onAddMemberSubmitted(String socialSecurityNumber, String firstName,
             String lastName, String address);
 
-    public void onEditMemberSubmitted(long memberID, String socialSecurityNumber,
+    public void onEditMemberSubmitted(int memberID, String socialSecurityNumber,
             String firstName, String lastName, String address);
 
     public void onRemoveMemberSubmitted(int memberID);
 
-    public void onAddBoatSubmitted(BoatType type, int size);
+    public void onAddBoatSubmitted(String type, int size);
 
-    public void onEditBoatSubmitted(long boatID, BoatType type, int size);
+    public void onEditBoatSubmitted(int boatID, String type, int size);
 
-    public void onRemoveBoatSubmitted(long boatID);
+    public void onRemoveBoatSubmitted(int boatID);
 
     public void onContinue();                               //called after Error or when program is waiting for
                                                             //the user to continue
