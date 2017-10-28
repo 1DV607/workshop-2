@@ -38,9 +38,9 @@ public class ConsoleView implements UserInterface {
      * @param jsonArray - json array with member/boat information
      */
     @Override
-    public void displayVerboseList(JsonArray jsonArray) {
+    public void displayVerboseList(List<Member> members) {
         verbose = true;
-        displayMemberList(jsonArray);
+        displayMemberList(members);
     }
 
     /**
@@ -52,9 +52,9 @@ public class ConsoleView implements UserInterface {
      * @param jsonArray - json array with member/boat information
      */
     @Override
-    public void displayCompactList(JsonArray jsonArray) {
+    public void displayCompactList(List<Member> members) {
         verbose = false;
-        displayMemberList(jsonArray);
+        displayMemberList(members);
     }
 
     /**
@@ -66,13 +66,13 @@ public class ConsoleView implements UserInterface {
      *
      *  @param jsonArray - json array with member/boat information.
      */
-    private void displayMemberList(JsonArray jsonArray) {
+    private void displayMemberList(List<Member> members) {
         String list;
         
         if (verbose) {
-            list = formatter.getMemberListVerbose(jsonArray);
+            list = formatter.getMemberListVerbose(members);
         } else {
-            list = formatter.getMemberListCompact(jsonArray);
+            list = formatter.getMemberListCompact(members);
         }
 
         System.out.println(list);

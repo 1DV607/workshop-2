@@ -267,7 +267,7 @@ public class JsonParser {
      *  @return - A List, in the form of an ArrayList, of Members which
      *            each contain respective associated Boats.
      */
-    public List<Member> jsonToMembers(JsonArray array) {
+    public ArrayList<Member> jsonToMembers(JsonArray array) {
 
         if ( ! validator.isValidMemberArray(array)) {
             throw new IllegalArgumentException();
