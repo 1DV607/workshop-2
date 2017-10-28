@@ -20,10 +20,10 @@ public class InputDecoder {
      * command, memberID (if present) and boatID (if present)
      * The userInput choices has to be separated by space.
      * @param userInput - String, the command choices made by the user
-     * @param json - JsonArray, array of Members and Boats
+     * @param members - List of Members
      * @return Object [], [0] = command, [1] = memberID, [2] = boatID
      */
-    public Object [] getUserCommands(String userInput, JsonArray json) {
+    public Object [] getUserCommands(String userInput, List<Member> members) {
         userCommands = new Object[3];
 
         String [] inputParts =  userInput.split(" ");

@@ -14,7 +14,7 @@ import javax.json.JsonObject;
  */
 public class UserInteractionController implements UserInteractionObserver {
 
-    JsonArray members;
+    List<Member> members;
     UserInterface ui;
     Registry registry;
     InputDecoder decoder;
@@ -147,94 +147,84 @@ public class UserInteractionController implements UserInteractionObserver {
                 System.exit(0);
             }
         }
-
-
     }
 
-    /**
-     * Takes a JsonObject containing new information and sends this to the Registry, and
-     * updates the Member List with the new information.
-     * Shows error message if the desired task could not be completed
-     * @param information - JsonObject, containing the new information
-     */
     @Override
-    public void onSubmitted(JsonObject information) {
-
-        switch ((UserCommand)lastCommands[0]) {
-
-            case AddMember: {
-
-                if (registry.addMember(information)) {
-                    updateMemberList();
-                }
-                else {
-                    ui.displayError("Unable to add member");
-                }
-                break;
-            }
-            case ViewMember: {
-                break;
-            }
-            case EditMember: {
-
-                if (registry.editMember(getMemberID(), information)) {
-                    updateMemberList();
-                }
-                else {
-                    ui.displayError("Unable to edit member");
-                }
-                break;
-            }
-            case RemoveMember: {
-
-                if (registry.removeMember(getMemberID())) {
-                    updateMemberList();
-                }
-                else {
-                    ui.displayError("Unable to remove member");
-                }
-                break;
-            }
-            case AddBoat: {
-
-                if (registry.addBoat(getMemberID(), information)) {
-                    updateMemberList();
-                }
-                else {
-                    ui.displayError("Unable to add boat");
-                }
-                break;
-            }
-            case EditBoat: {
-
-                if (registry.editBoat(getMemberID(), getBoatID(), information)) {
-                    updateMemberList();
-                }
-                else {
-                    ui.displayError("Unable to edit boat");
-                }
-                break;
-            }
-            case RemoveBoat: {
-
-                if (!listChoise) {
-                    ui.displayError("Not possible to edit boat in compact list view");
-                }
-                else if (registry.removeBoat(getMemberID(), getBoatID())) {
-                    updateMemberList();
-                }
-                else {
-                    ui.displayError("Unable to remove boat");
-                }
-                break;
-            }
-            case ChangeList: {
-                break;
-            }
+    public void onAddMemberSubmitted(String socialSecurityNumber, String firstName,
+            String lastName, String address) {
+        if (registry.addMember(socialSecurityNumber, firstName, lastName, address)) {
+            updateMemberList();
         }
+        else {
+            ui.displayError("Unable to add member");
+        }
+
         chooseCorrectListVerbosity();
     }
 
+    @Override
+    public void onEditMemberSubmitted(long memberID, String socialSecurityNumber,
+            String firstName, String lastName, String address) {
+        if (registry.editMember(getMemberID(), member)) {
+            updateMemberList();
+        }
+        else {
+            ui.displayError("Unable to edit member");
+        }
+
+        chooseCorrectListVerbosity();
+    }
+
+    @Override
+    public void onRemoveMemberSubmitted(int memberID) {
+        if (registry.removeMember(getMemberID())) {
+            updateMemberList();
+        }
+        else {
+            ui.displayError("Unable to remove member");
+        }
+
+        chooseCorrectListVerbosity();
+    }
+
+    @Override
+    public void onAddBoatSubmitted(BoatType type, int size) {
+        if (registry.addBoat(getMemberID(), information)) {
+            updateMemberList();
+        }
+        else {
+            ui.displayError("Unable to add boat");
+        }
+
+        chooseCorrectListVerbosity();
+    }
+
+    @Override
+    public void onEditBoatSubmitted(long boatID, BoatType type, int size) {
+        if (registry.editBoat(getMemberID(), getBoatID(), information)) {
+            updateMemberList();
+        }
+        else {
+            ui.displayError("Unable to edit boat");
+        }
+
+        chooseCorrectListVerbosity();
+    }
+
+    @Override
+    public void onRemoveBoatSubmitted(int boatID) {
+        if (!listChoise) {
+            ui.displayError("Not possible to edit boat in compact list view");
+        }
+        else if (registry.removeBoat(getMemberID(), getBoatID())) {
+            updateMemberList();
+        }
+        else {
+            ui.displayError("Unable to remove boat");
+        }
+
+        chooseCorrectListVerbosity();
+    }
 
     @Override
     public void onContinue() {
