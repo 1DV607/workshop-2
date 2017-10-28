@@ -1,8 +1,5 @@
 import java.util.Map;
 import java.util.HashMap;
-import java.util.SortedMap;
-import java.util.TreeMap;
-import java.util.Arrays;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Optional;
@@ -22,8 +19,6 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-import model.MemberNode;
-import model.BoatNode;
 import model.JsonParser;
 import model.Member;
 import model.Boat;

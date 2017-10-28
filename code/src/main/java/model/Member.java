@@ -1,6 +1,7 @@
 package model;
 
-import java.util.Objects;
+import java.util.ArrayList;
+import java.util.NoSuchElementException;
 
 /**
  * Represents a Member, inherits from User Class
@@ -8,24 +9,59 @@ import java.util.Objects;
  */
 public class Member extends User {
 
-    private long memberID;
+    private int memberID;
+    private ArrayList<Boat> boats;
 
-    public Member(long memberID) {
+    public Member(int memberID) {
         this.memberID = memberID;
+        boats = new ArrayList<>();
     }
 
-    public Member(String socialSecurityNumber) {
-        this.setSocialSecurityNumber(socialSecurityNumber);
-        memberID = generateMemberID(socialSecurityNumber);
-    }
-    public Member(long memberID, String socialSecurityNumber, String firstName,
+    public Member(int memberID, String socialSecurityNumber, String firstName,
                   String lastName, String address) {
         super(socialSecurityNumber, firstName, lastName, address);
         this.memberID = memberID;
     }
 
-    public long getMemberID() {
+    public int getMemberID() {
         return memberID;
+    }
+
+    public void addBoat(BoatType boatType, int boatSize) {
+        int id = boats.size() +1;
+        Boat boat = new Boat(id, boatSize, boatType);
+        boats.add(boat);
+    }
+
+    public Boat getBoat(int boatID) {
+        return findBoat(boatID);
+
+    }
+
+    public void editBoat(int boatID, BoatType boatType, int boatSize) {
+        Boat boat = findBoat(boatID);
+        boat.setBoatType(boatType);
+        boat.setSize(boatSize);
+
+    }
+
+    public void removeBoat(int boatID) {
+        Boat boat = findBoat(boatID);
+        boats.remove(boat);
+
+    }
+
+    public ArrayList<Boat> getAllBoats() {
+        return boats;
+    }
+
+    private Boat findBoat(int boatID) {
+        for (Boat boat : boats) {
+            if (boat.getBoatID() == boatID) {
+                return boat;
+            }
+        }
+        throw new NoSuchElementException();
     }
 
     /**
@@ -45,31 +81,6 @@ public class Member extends User {
         if ( !(o instanceof Member) ) { return false; }
 
         return this.hashCode() == ((Member)o).hashCode();
-    }
-
-    /**
-     *  Calculates a hashcode for this Member from its memberID, socialSecurityNumber,
-     *  firstName, lastName and address.
-     *
-     *  @return a hashcode of this Member
-     *  @see java.util.Objects#hash(Object...) Objects.hash
-     */
-    @Override
-    public int hashCode() {
-        return Objects.hash(this.getMemberID(), this.getSocialSecurityNumber(),
-                this.getFirstName(), this.getLastName(), this.getAddress()); 
-    }
-
-    /**
-     * Takes the social security number of the member and creates a unique memberID
-     * by using the String hashCode() method
-     * @param socialSecurityNumber
-     * @return memberID - long
-     */
-    private long generateMemberID(String socialSecurityNumber) {
-        int id = socialSecurityNumber.hashCode();
-
-        return (long)id;
     }
 
 }

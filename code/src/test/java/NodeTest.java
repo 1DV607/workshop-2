@@ -1,6 +1,4 @@
 import model.Member;
-import model.MemberNode;
-import model.Node;
 import org.junit.BeforeClass;
 import org.junit.After;
 import org.junit.Test;

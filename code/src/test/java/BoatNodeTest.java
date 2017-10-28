@@ -1,6 +1,4 @@
 import model.Boat;
-import model.BoatNode;
-import model.Node;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
