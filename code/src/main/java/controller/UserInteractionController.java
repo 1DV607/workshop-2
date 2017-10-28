@@ -1,10 +1,9 @@
 package controller;
 
+import java.util.List;
+
 import model.Registry;
 import view.UserInterface;
-
-import javax.json.JsonArray;
-import javax.json.JsonObject;
 
 /**
  * implements UserInteractionObserver
@@ -19,15 +18,15 @@ public class UserInteractionController implements UserInteractionObserver {
     Registry registry;
     InputDecoder decoder;
     Object [] lastCommands;
-    boolean listChoise;
+    boolean listChoice;
 
     public UserInteractionController(UserInterface ui, Registry registry) {
-        listChoise = true;
+        listChoice = true;
         this.ui = ui;
         this.registry = registry;
 
         decoder = new InputDecoder();
-        members = registry.getAllMembersInfo();
+        members = registry.getAllMembers();
     }
 
     /**
@@ -52,6 +51,10 @@ public class UserInteractionController implements UserInteractionObserver {
             }
 
             lastCommands = decoder.getUserCommands(userInput, members);
+            isValidCommand();
+            if (lastCommands[3] != null) {
+                isValidCommandWithBoat();
+            }
         }
         catch (Exception e) {
             ui.displayError("Invalid command, please try again");
@@ -67,7 +70,7 @@ public class UserInteractionController implements UserInteractionObserver {
             case ViewMember: {
                 if (isValidCommand()) {
                     long memberID = getMemberID();
-                    ui.displayMemberInformation(registry.getMember(memberID), registry.getMemberBoats(memberID));
+                    ui.displayMemberInformation(registry.getMember(memberID));
                 }
                 else {
                     ui.displayError("Invalid command, please try again.");
@@ -89,7 +92,7 @@ public class UserInteractionController implements UserInteractionObserver {
 
                 if (isValidCommand()) {
                     registry.removeMember(getMemberID());
-                    members = registry.getAllMembersInfo();
+                    members = registry.getAllMembers();
                     chooseCorrectListVerbosity();
                 }
                 else {
@@ -107,7 +110,7 @@ public class UserInteractionController implements UserInteractionObserver {
                 break;
             }
             case EditBoat: {
-                if (!listChoise) {
+                if (!listChoice) {
                     ui.displayError("Not possible to edit boat in compact list view");
                 }
                 else if (isValidCommandWithBoat()) {
@@ -123,7 +126,7 @@ public class UserInteractionController implements UserInteractionObserver {
             }
             case RemoveBoat: {
 
-                if (!listChoise) {
+                if (!listChoice) {
                     ui.displayError("Not possible to remove boat in compact list view");
                 }
                 else if (isValidCommandWithBoat()) {
@@ -139,7 +142,7 @@ public class UserInteractionController implements UserInteractionObserver {
                 break;
             }
             case ChangeList: {
-                listChoise = !listChoise;
+                listChoice = !listChoice;
                 chooseCorrectListVerbosity();
                 break;
             }
@@ -165,7 +168,11 @@ public class UserInteractionController implements UserInteractionObserver {
     @Override
     public void onEditMemberSubmitted(long memberID, String socialSecurityNumber,
             String firstName, String lastName, String address) {
-        if (registry.editMember(getMemberID(), member)) {
+        
+        Member newMemberInfo = new Member(memberID, socialSecurityNumber, 
+                firstName, lastName, address);
+
+        if (registry.editMember(getMemberID(), newMemberInfo)) {
             updateMemberList();
         }
         else {
@@ -189,41 +196,31 @@ public class UserInteractionController implements UserInteractionObserver {
 
     @Override
     public void onAddBoatSubmitted(BoatType type, int size) {
-        if (registry.addBoat(getMemberID(), information)) {
-            updateMemberList();
-        }
-        else {
-            ui.displayError("Unable to add boat");
-        }
-
+        Member member = registry.getMember(getMemberID());
+        member.addBoat(type, size);
+        updateMemberList();
         chooseCorrectListVerbosity();
     }
 
     @Override
     public void onEditBoatSubmitted(long boatID, BoatType type, int size) {
-        if (registry.editBoat(getMemberID(), getBoatID(), information)) {
-            updateMemberList();
-        }
-        else {
-            ui.displayError("Unable to edit boat");
-        }
-
+        Member member = registry.getMember(getMemberID());
+        member.editBoat(getBoatID(), type, size);
+        updateMemberList();
         chooseCorrectListVerbosity();
     }
 
     @Override
     public void onRemoveBoatSubmitted(int boatID) {
-        if (!listChoise) {
+        if (!listChoice) {
             ui.displayError("Not possible to edit boat in compact list view");
         }
-        else if (registry.removeBoat(getMemberID(), getBoatID())) {
-            updateMemberList();
-        }
         else {
-            ui.displayError("Unable to remove boat");
+            Member member = registry.getMember(getMemberID());
+            member.removeBoat(getBoatID());
+            updateMemberList();
+            chooseCorrectListVerbosity();
         }
-
-        chooseCorrectListVerbosity();
     }
 
     @Override
@@ -236,7 +233,7 @@ public class UserInteractionController implements UserInteractionObserver {
      * Allways the list option latest chosen by the User
      */
     private void chooseCorrectListVerbosity() {
-        if (listChoise) {
+        if (listChoice) {
             ui.displayVerboseList(members);
         }
         else {
