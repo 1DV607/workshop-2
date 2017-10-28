@@ -1,4 +1,6 @@
-package model;
+package io;
+
+import model.BoatType;
 
 import javax.json.JsonObject;
 import javax.json.JsonArray;
@@ -8,7 +10,7 @@ import javax.json.JsonValue;
  *  Helper class that validates that JsonObjects/JsonArrays representing Boats and Members has 
  *  the correct structure and the correct fields.
  */
-public class JsonValidator {
+class JsonValidator {
     
     /**
      *  Checks if the specified JsonObject contains the neccessary fields in 
@@ -18,7 +20,7 @@ public class JsonValidator {
      *
      *  @return true if JSON is valid, false if it is not.
      */
-    public boolean isValidBoat(JsonObject jsonBoat) {
+    boolean isValidBoat(JsonObject jsonBoat) {
         if ( ! (jsonBoat.keySet().contains("size")
                && jsonBoat.keySet().contains("boatType")) ) {
             return false;
@@ -45,7 +47,7 @@ public class JsonValidator {
      *
      *  @return true if JSON is valid, false if it is not.
      */
-    public boolean isValidMember(JsonObject jsonMember) {
+    boolean isValidMember(JsonObject jsonMember) {
         if ( ! (jsonMember.keySet().contains("socialSecurityNumber")
                && jsonMember.keySet().contains("firstName")
                && jsonMember.keySet().contains("lastName")
@@ -60,7 +62,7 @@ public class JsonValidator {
         }
 
         try {
-            Long.parseLong(jsonMember.getString("socialSecurityNumber"));
+            Integer.parseInt(jsonMember.getString("socialSecurityNumber"));
         } catch (Exception ex) {
             return false;
         }
@@ -78,7 +80,7 @@ public class JsonValidator {
      *  @return true if array structure is valid AND all json members are valid 
      *          AND all json boats are valid, false otherwise.
      */
-    public boolean isValidMemberArray(JsonArray arr) {
+    boolean isValidMemberArray(JsonArray arr) {
 
        try {
            for (JsonValue val : arr) {
@@ -111,7 +113,7 @@ public class JsonValidator {
      *
      *  @return true if array structure is valid AND each json boat is valid, false otherwise.
      */
-    public boolean isValidBoatArray(JsonArray arr) {
+    private boolean isValidBoatArray(JsonArray arr) {
         for (JsonValue val : arr) {
             JsonObject boat = (JsonObject)val;
 

@@ -1,7 +1,11 @@
 package controller;
 
+import model.Boat;
+import model.Member;
+
 import javax.json.JsonArray;
 import javax.json.JsonObject;
+import java.util.List;
 
 /**
  * Decodes the user command and get an Member ID/Boat ID from a List of Members if the
@@ -25,13 +29,15 @@ public class InputDecoder {
      */
     public Object [] getUserCommands(String userInput, List<Member> members) {
         userCommands = new Object[3];
+        Member memberObject;
+        Boat boatObject;
 
         String [] inputParts =  userInput.split(" ");
         String command = inputParts[0];
-        int member = (inputParts.length >= 2)
+        String member = (inputParts.length >= 2)
                 ? inputParts[1]
                 : "";
-        int boat = (inputParts.length >= 3)
+        String boat = (inputParts.length >= 3)
                 ? inputParts[2]
                 : "";
 
@@ -42,17 +48,17 @@ public class InputDecoder {
 
         if (member.length() != 0) {
             int memberIndex = Integer.parseInt(member);
-            Member member = members.get(memberIndex - 1);
-            userCommands [1] = member.getMemberID();
+            memberObject = members.get(memberIndex-1);
+            userCommands [1] = memberObject.getMemberID();
         }
 
         if (boat.length() != 0) {
             int memberIndex = Integer.parseInt(member);
             int boatIndex = Integer.parseInt(boat);
-            Member member = members.get(memberIndex - 1);
-            List<Boat> boats = member.getBoats();
-            Boat boat = boats.get(boatIndex);
-            userCommands [2] = boat.getBoatID();
+            memberObject = members.get(memberIndex - 1);
+            List<Boat> boats = memberObject.getAllBoats();
+            boatObject = boats.get(boatIndex-1);
+            userCommands [2] = boatObject.getBoatID();
         }
 
         return userCommands;

@@ -137,12 +137,12 @@ public class ConsoleView implements UserInterface {
         String lastName = getInput(String.format("Last name (current: %s): ",
                     member.getLastName()));
         String socialSecurityNumber = getInput(String.format("Social Security Number (current: %s): ",
-                member.getSocialSecurityNumber()));
+                member.getSocialSecurityNumber()+""));
         String address = getInput(String.format("Address (current: %s): ",
                     member.getAddress()));
 
 
-        interactionObserver.onEditMemberSubmitted(member.getMemberID(), socialSecurityNumber, firstName, lastName, address );
+        interactionObserver.onEditMemberSubmitted(socialSecurityNumber, firstName, lastName, address );
     }
 
     /**
@@ -183,7 +183,7 @@ public class ConsoleView implements UserInterface {
                     boat.getBoatType().getName()));
 
 
-        interactionObserver.onEditBoatSubmitted(boat.getBoatID(), boatType, size);
+        interactionObserver.onEditBoatSubmitted(boatType, size);
     }
 
     /**

@@ -12,15 +12,12 @@ public class Member extends User {
     private int memberID;
     private ArrayList<Boat> boats;
 
-    public Member(int memberID) {
-        this.memberID = memberID;
-        boats = new ArrayList<>();
-    }
 
     public Member(int memberID, String socialSecurityNumber, String firstName,
                   String lastName, String address) {
         super(socialSecurityNumber, firstName, lastName, address);
         this.memberID = memberID;
+        boats = new ArrayList<>();
     }
 
     public int getMemberID() {
@@ -28,8 +25,12 @@ public class Member extends User {
     }
 
     public void addBoat(BoatType boatType, int boatSize) {
-        int id = boats.size() +1;
-        Boat boat = new Boat(id, boatSize, boatType);
+        int id = generateBoatID();
+        addBoat(id, boatType, boatSize);
+    }
+
+    public void addBoat(int boatID, BoatType boatType, int size) {
+        Boat boat = new Boat(boatID, size,  boatType);
         boats.add(boat);
     }
 

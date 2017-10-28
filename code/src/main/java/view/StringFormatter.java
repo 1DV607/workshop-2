@@ -9,11 +9,11 @@ import java.util.List;
  * Formats text to show in console.
  * Verbose/Compact Member List, the Menu options and specific member information
  */
-public class StringFormatter {
+ class StringFormatter {
 
     private StringBuilder stringBuilder;
 
-    public StringFormatter() {
+    StringFormatter() {
 
     }
 
@@ -23,7 +23,7 @@ public class StringFormatter {
      * @param members - List<Members>, containing Members
      * @return - String, listed Members and Boats
      */
-    public String getMemberListVerbose(List<Member> members) {
+    String getMemberListVerbose(List<Member> members) {
         stringBuilder = new StringBuilder();
 
         stringBuilder.append("\n \n");
@@ -83,7 +83,7 @@ public class StringFormatter {
      * @param members - List<Member>, containing all members
      * @return String, listed Members
      */
-    public String getMemberListCompact(List<Member> members) {
+    String getMemberListCompact(List<Member> members) {
         stringBuilder = new StringBuilder();
         Member memberObject;
 
@@ -119,7 +119,7 @@ public class StringFormatter {
      * @param verbose - boolean, whether the list is in compact or verbose format
      * @return String, containing the Menu options in a nice output format
      */
-    public String getMenu(boolean verbose) {
+    String getMenu(boolean verbose) {
         stringBuilder = new StringBuilder();
 
         stringBuilder.append("\n");
@@ -184,7 +184,7 @@ public class StringFormatter {
      * @param member - Member Object
      * @return - Formatted String
      */
-    public String getMember(Member member) {
+    String getMember(Member member) {
         stringBuilder = new StringBuilder();
         Boat boatObject;
         List<Boat> boats;

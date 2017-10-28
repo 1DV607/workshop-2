@@ -24,16 +24,7 @@ public class Dao {
 
     public Dao() {
         initializeJsonFile();
-    }
-
-    public Dao(File file) {
         parser = new JsonParser();
-        try {
-            jsonFile = file;
-        }
-        catch (Exception e) {
-            System.out.println(e.getMessage().toString());
-        }
     }
 
     /**
@@ -67,7 +58,7 @@ public class Dao {
             jMembers = reader.readArray();
             members = parser.jsonToMembers(jMembers);
         } catch (Exception e) {
-            return Json.createArrayBuilder().build();
+            return new ArrayList<>();
         }
 
         return members;
@@ -106,7 +97,7 @@ public class Dao {
            writer = Json.createWriter(fileStream);
        }
        catch (Exception e) {
-           System.out.println(e.getMessage().toString());
+           System.out.println(e.getMessage());
        }
     }
 

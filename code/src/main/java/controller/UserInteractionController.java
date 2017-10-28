@@ -2,6 +2,8 @@ package controller;
 
 import java.util.List;
 
+import model.BoatType;
+import model.Member;
 import model.Registry;
 import view.UserInterface;
 
@@ -13,12 +15,12 @@ import view.UserInterface;
  */
 public class UserInteractionController implements UserInteractionObserver {
 
-    List<Member> members;
-    UserInterface ui;
-    Registry registry;
-    InputDecoder decoder;
-    Object [] lastCommands;
-    boolean listChoice;
+    private List<Member> members;
+    private UserInterface ui;
+    private Registry registry;
+    private InputDecoder decoder;
+    private Object [] lastCommands;
+    private boolean listChoice;
 
     public UserInteractionController(UserInterface ui, Registry registry) {
         listChoice = true;
@@ -114,7 +116,7 @@ public class UserInteractionController implements UserInteractionObserver {
                     ui.displayError("Not possible to edit boat in compact list view");
                 }
                 else if (isValidCommandWithBoat()) {
-                    ui.displayEditBoat(registry.getMember(getMemberID()), registry.getBoat(getMemberID(), getBoatID()));
+                    ui.displayEditBoat(registry.getMember(getMemberID()).getBoat(getBoatID()));
 
                 }
                 else {
@@ -130,8 +132,8 @@ public class UserInteractionController implements UserInteractionObserver {
                     ui.displayError("Not possible to remove boat in compact list view");
                 }
                 else if (isValidCommandWithBoat()) {
-                    registry.removeBoat(getMemberID(), getBoatID());
-                    members = registry.getAllMembersInfo();
+                    registry.getMember(getMemberID()).removeBoat(getBoatID());
+                    members = registry.getAllMembers();
                     chooseCorrectListVerbosity();
                 }
                 else{
@@ -166,10 +168,10 @@ public class UserInteractionController implements UserInteractionObserver {
     }
 
     @Override
-    public void onEditMemberSubmitted(long memberID, String socialSecurityNumber,
+    public void onEditMemberSubmitted(String socialSecurityNumber,
             String firstName, String lastName, String address) {
         
-        Member newMemberInfo = new Member(memberID, socialSecurityNumber, 
+        Member newMemberInfo = new Member(getMemberID(), socialSecurityNumber,
                 firstName, lastName, address);
 
         if (registry.editMember(getMemberID(), newMemberInfo)) {
@@ -183,43 +185,30 @@ public class UserInteractionController implements UserInteractionObserver {
     }
 
     @Override
-    public void onRemoveMemberSubmitted(int memberID) {
-        if (registry.removeMember(getMemberID())) {
-            updateMemberList();
-        }
-        else {
-            ui.displayError("Unable to remove member");
-        }
-
-        chooseCorrectListVerbosity();
-    }
-
-    @Override
-    public void onAddBoatSubmitted(BoatType type, int size) {
+    public void onAddBoatSubmitted(String type, String size) {
         Member member = registry.getMember(getMemberID());
-        member.addBoat(type, size);
-        updateMemberList();
-        chooseCorrectListVerbosity();
-    }
 
-    @Override
-    public void onEditBoatSubmitted(long boatID, BoatType type, int size) {
-        Member member = registry.getMember(getMemberID());
-        member.editBoat(getBoatID(), type, size);
-        updateMemberList();
-        chooseCorrectListVerbosity();
-    }
-
-    @Override
-    public void onRemoveBoatSubmitted(int boatID) {
-        if (!listChoice) {
-            ui.displayError("Not possible to edit boat in compact list view");
-        }
-        else {
-            Member member = registry.getMember(getMemberID());
-            member.removeBoat(getBoatID());
+        if (isValidBoatInput(type, size)) {
+            member.addBoat(BoatType.fromString(type), Integer.parseInt(size));
             updateMemberList();
             chooseCorrectListVerbosity();
+        }
+        else {
+            ui.displayError("Invalid input, Unable to add boat");
+        }
+    }
+
+    @Override
+    public void onEditBoatSubmitted(String type, String size) {
+        Member member = registry.getMember(getMemberID());
+
+        if (isValidBoatInput(type, size)) {
+            member.editBoat(getBoatID(), BoatType.fromString(type), Integer.parseInt(size));
+            updateMemberList();
+            chooseCorrectListVerbosity();
+        }
+        else {
+            ui.displayError("Invalid input, Unable to add boat");
         }
     }
 
@@ -245,19 +234,16 @@ public class UserInteractionController implements UserInteractionObserver {
      * collects the member ID from the User Command
      * @return long, memberID
      */
-    private long getMemberID() {
-
-        long memberID = Long.parseLong((String) lastCommands[1]);
-        return memberID;
+    private int getMemberID() {
+        return Integer.parseInt((String) lastCommands[1]);
     }
 
     /**
      * collects the boat ID from the User Command
      * @return long, boatID
      */
-    private long getBoatID() {
-        long boatID = Long.parseLong((String) lastCommands[2]);
-        return boatID;
+    private int getBoatID() {
+        return Integer.parseInt((String) lastCommands[2]);
     }
 
     /**
@@ -265,11 +251,10 @@ public class UserInteractionController implements UserInteractionObserver {
      * @return true if valid otherwise false
      */
     private boolean isValidCommandWithBoat() {
-        long memberID;
-        long boatID;
+
         try {
-            memberID = getMemberID();
-            boatID = getBoatID();
+            getMemberID();
+            getBoatID();
             return true;
         }
         catch (Exception e) {
@@ -283,9 +268,8 @@ public class UserInteractionController implements UserInteractionObserver {
      * @return true if valid otherwise false
      */
     private boolean isValidCommand() {
-        long memberID;
         try {
-            memberID = getMemberID();
+            getMemberID();
             return true;
         }
         catch (Exception e) {
@@ -294,10 +278,21 @@ public class UserInteractionController implements UserInteractionObserver {
         }
     }
 
+    private boolean isValidBoatInput(String type, String size) {
+        try {
+            BoatType.fromString(type);
+            Integer.parseInt(size);
+            return true;
+        }
+        catch (Exception exception) {
+            return false;
+        }
+    }
+
     /**
      * collect members from Registry
      */
     private void updateMemberList() {
-        members = registry.getAllMembersInfo();
+        members = registry.getAllMembers();
     }
 }
