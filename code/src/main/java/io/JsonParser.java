@@ -171,7 +171,6 @@ class JsonParser {
      *            each contain respective associated Boats.
      */
     ArrayList<Member> jsonToMembers(JsonArray array) {
-
         if ( ! validator.isValidMemberArray(array)) {
             throw new IllegalArgumentException();
         }
@@ -184,7 +183,7 @@ class JsonParser {
             JsonArray jBoats = jObject.getJsonArray("boats");
             try {
                 Member member = this.jsonToMember(jMember);
-
+                
                 for (JsonObject jBoat : jBoats.getValuesAs(JsonObject.class)) {
                     if (!validator.isValidBoat(jBoat)) {
                         throw new IllegalArgumentException();
@@ -196,15 +195,16 @@ class JsonParser {
 
                     boatID = Integer.parseInt(jBoat.getString("boatID"));
                     member.addBoat(boatID, type, size);
-                    result.add(member);
                 }
+                
+                result.add(member);
+
             }
             catch(Exception exception){
                 System.out.println("Not able to load members");
             }
 
         }
-
 
         return result;
     }

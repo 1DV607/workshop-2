@@ -57,13 +57,8 @@ class JsonValidator {
         
         if (jsonMember.getString("firstName").isEmpty()
             || jsonMember.getString("lastName").isEmpty()
-            || jsonMember.getString("address").isEmpty()) {
-            return false;
-        }
-
-        try {
-            Integer.parseInt(jsonMember.getString("socialSecurityNumber"));
-        } catch (Exception ex) {
+            || jsonMember.getString("address").isEmpty()
+            || jsonMember.getString("socialSecurityNumber").isEmpty()) {
             return false;
         }
 
@@ -98,7 +93,7 @@ class JsonValidator {
            }
        }
        catch (Exception e) {
-           return false;
+          return false;
        }
 
         return true;

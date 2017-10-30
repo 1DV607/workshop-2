@@ -53,10 +53,6 @@ public class UserInteractionController implements UserInteractionObserver {
             }
 
             lastCommands = decoder.getUserCommands(userInput, members);
-            isValidCommand();
-            if (lastCommands[3] != null) {
-                isValidCommandWithBoat();
-            }
         }
         catch (Exception e) {
             ui.displayError("Invalid command, please try again");
@@ -235,7 +231,7 @@ public class UserInteractionController implements UserInteractionObserver {
      * @return long, memberID
      */
     private int getMemberID() {
-        return Integer.parseInt((String) lastCommands[1]);
+        return (Integer) lastCommands[1];
     }
 
     /**
@@ -243,7 +239,7 @@ public class UserInteractionController implements UserInteractionObserver {
      * @return long, boatID
      */
     private int getBoatID() {
-        return Integer.parseInt((String) lastCommands[2]);
+        return (Integer) lastCommands[2];
     }
 
     /**
@@ -274,7 +270,6 @@ public class UserInteractionController implements UserInteractionObserver {
         }
         catch (Exception e) {
             return false;
-
         }
     }
 

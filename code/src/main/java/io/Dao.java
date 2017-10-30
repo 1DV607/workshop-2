@@ -1,6 +1,6 @@
 package io;
 
-import model.JsonParser;
+import io.JsonParser;
 import model.Member;
 
 
