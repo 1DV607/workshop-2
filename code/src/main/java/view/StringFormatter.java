@@ -36,39 +36,37 @@ import java.util.List;
         for (int i = 0; i < members.size(); i++) {
 
             stringBuilder.append("\n");
-            stringBuilder.append("============================================================================\n");
-            stringBuilder.append(String.format("%-4s %-30s %-12s %-25s %-2s \n",
-                    "Nr", "| Name", "| Member ID", "| Social Security Number", "|"));
-            stringBuilder.append("============================================================================\n");
+            stringBuilder.append("=======================================================================\n");
+            stringBuilder.append(String.format("%-12s %-30s %-25s %-2s \n",
+                    "Member ID", "| Name", "| Social Security Number", "|"));
+            stringBuilder.append("=======================================================================\n");
 
             memberObject = members.get(i);
-            String nr = (i+1) +". ";
-            String name = " "+memberObject.getFirstName()+" "+memberObject.getLastName();
             String memberID = " "+memberObject.getMemberID();
+            String name = " "+memberObject.getFirstName()+" "+memberObject.getLastName();
             String SSN = " "+memberObject.getSocialSecurityNumber();
 
-            stringBuilder.append(String.format("%-4s %-30s %-12s %-25s \n",
-                     nr, name, memberID, SSN ));
+            stringBuilder.append(String.format("%-12s %-30s %-25s \n",
+                     memberID, name, SSN ));
             boats = memberObject.getAllBoats();
 
             for (int j = 0; j < boats.size(); j++) {
                 if (j == 0) {
-                    stringBuilder.append(String.format("%-4s %-30s \n",
-                            "", "-----------------------------------------------------------------------"));
-                    stringBuilder.append(String.format("%-4s %-4s %-15s %-10s %-37s %-2s \n",
-                            "", "| Nr", "| Boat Type", "| Size", "| Boat ID", "|"));
-                    stringBuilder.append(String.format("%-4s %-30s \n" ,
-                            "", "-----------------------------------------------------------------------"));
+                    stringBuilder.append(String.format("%-6s %-30s \n",
+                            "", "-----------------------------------------"));
+                    stringBuilder.append(String.format("%-6s %-12s %-15s %-10s %-2s \n",
+                            "", "| Boat ID", "| Boat Type", "| Size", "|"));
+                    stringBuilder.append(String.format("%-6s %-30s \n" ,
+                            "", "-----------------------------------------"));
                 }
                 boatObject = boats.get(j);
 
-                String boatNr = (j+1) + ". ";
+                String boatID = boatObject.getBoatID()+"";
                 String boatType = boatObject.getBoatType().getName();
                 String size = boatObject.getSize()+"";
-                String boatID = boatObject.getBoatID()+"";
 
-                stringBuilder.append(String.format("%-5s %-4s %-15s %-10s %-15s \n",
-                        "", boatNr, boatType, size, boatID));
+                stringBuilder.append(String.format("%-7s %-12s %-15s %-10s \n",
+                        "", boatID, boatType, size));
             }
             stringBuilder.append("\n");
 
@@ -93,21 +91,20 @@ import java.util.List;
 
         stringBuilder.append("\n");
         stringBuilder.append("=======================================================================\n");
-        stringBuilder.append(String.format("%-4s %-30s %-15s %-17s %-2s \n",
-                "Nr", "| Name", "| Member ID", "| Nr of boats", "|"));
+        stringBuilder.append(String.format("%-12s %-30s %-17s %-2s \n",
+                "Member ID", "| Name", "| Nr of boats", "|"));
         stringBuilder.append("=======================================================================\n");
 
         for (int i = 0; i < members.size(); i++) {
 
             memberObject = members.get(i);
 
-            String nr = (i+1)+". ";
-            String name = " "+ memberObject.getFirstName() +" "+ memberObject.getLastName();
             String memberID = " "+ memberObject.getMemberID();
+            String name = " "+ memberObject.getFirstName() +" "+ memberObject.getLastName();
             String numberOfBoats = " "+ memberObject.getAllBoats().size();
 
-            stringBuilder.append(String.format("%-4s %-30s %-15s %-17s \n",
-                    nr, name, memberID, numberOfBoats));
+            stringBuilder.append(String.format("%-12s %-30s %-17s \n",
+                    memberID, name, numberOfBoats));
 
         }
 
@@ -168,8 +165,8 @@ import java.util.List;
                 "||", "", "||"));
         stringBuilder.append("=======================================================================\n");
         stringBuilder.append("\n");
-        stringBuilder.append("Enter selection nr <Menu Choice> <Member Nr> <Boat Nr> \n");
-        stringBuilder.append("Ex: '5 3 1' = Edit boat 1 at member 2. Ex: '1' = Add new member\n ");
+        stringBuilder.append("Enter selection nr <Menu Choice> <Member ID> <Boat ID> \n");
+        stringBuilder.append("Ex: '5 3 1' = Edit boat with ID 1 at member with ID 2. Ex: '1' = Add new member\n ");
         stringBuilder.append("-----------------------------------------------------------------------\n");
         stringBuilder.append("\n");
 
@@ -192,8 +189,8 @@ import java.util.List;
         stringBuilder.append("\n");
         stringBuilder.append("==========================================================================="+
                 "========================================\n");
-        stringBuilder.append(String.format("%-30s %-40s %-15s %-25s %-2s \n",
-                "| Name", "| Address", "| Member ID", "| Social Security Number", "|"));
+        stringBuilder.append(String.format("%-15s %-30s %-40s %-25s %-2s \n",
+                "Member ID", "| Name", "| Address", "| Social Security Number", "|"));
         stringBuilder.append("==========================================================================="+
                 "========================================\n");
 
@@ -203,8 +200,8 @@ import java.util.List;
         String memberID = " "+member.getMemberID();
         String SSN = " "+member.getSocialSecurityNumber();
 
-        stringBuilder.append(String.format("%-30s %-40s %-15s %-25s \n",
-                 name, address, memberID, SSN ));
+        stringBuilder.append(String.format("%-15s %-30s %-40s %-25s \n",
+                 memberID, name, address, SSN ));
 
         boats = member.getAllBoats();
 
@@ -213,21 +210,20 @@ import java.util.List;
                 stringBuilder.append(String.format("%-8s %-30s \n",
                         "", "----------------------------------------------------------------------------"+
                                 "------------------------------"));
-                stringBuilder.append(String.format("%-8s %-4s %-15s %-10s %-72s %-2s \n",
-                        "", "| Nr", "| Boat Type", "| Size", "| Boat ID", "|"));
+                stringBuilder.append(String.format("%-8s %-15s %-15s %-10s %-2s \n",
+                        "", "| Boat ID", "| Boat Type", "| Size", "|"));
                 stringBuilder.append(String.format("%-8s %-30s \n" ,
                         "", "----------------------------------------------------------------------------"+
                                 "------------------------------"));
             }
             boatObject = boats.get(j);
 
-            String boatNr = (j+1) + ". ";
+            String boatID = boatObject.getBoatID()+"";
             String boatType = boatObject.getBoatType().getName();
             String size = boatObject.getSize()+"";
-            String boatID = boatObject.getBoatID()+"";
 
-            stringBuilder.append(String.format("%-9s %-4s %-15s %-10s %-15s \n",
-                    "", boatNr, boatType, size, boatID));
+            stringBuilder.append(String.format("%-9s %-15s %-15s %-10s \n",
+                    "", boatID, boatType, size));
         }
 
 

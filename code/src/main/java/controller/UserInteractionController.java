@@ -145,6 +145,7 @@ public class UserInteractionController implements UserInteractionObserver {
                 break;
             }
             case Exit: {
+                registry.saveChanges();
                 System.exit(0);
             }
         }

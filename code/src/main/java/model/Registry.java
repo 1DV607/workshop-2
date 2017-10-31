@@ -162,7 +162,7 @@ public class Registry {
     /**
      * Calls the method save() in dao to save new information.
      */
-    private void saveChanges() {
+    public void saveChanges() {
         dao.save(members);
     }
 

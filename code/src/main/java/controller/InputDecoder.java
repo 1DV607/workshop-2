@@ -47,18 +47,11 @@ public class InputDecoder {
         }
 
         if (member.length() != 0) {
-            int memberIndex = Integer.parseInt(member);
-            memberObject = members.get(memberIndex-1);
-            userCommands [1] = memberObject.getMemberID();
+            userCommands [1] = Integer.parseInt(member);
         }
 
         if (boat.length() != 0) {
-            int memberIndex = Integer.parseInt(member);
-            int boatIndex = Integer.parseInt(boat);
-            memberObject = members.get(memberIndex - 1);
-            List<Boat> boats = memberObject.getAllBoats();
-            boatObject = boats.get(boatIndex-1);
-            userCommands [2] = boatObject.getBoatID();
+            userCommands [2] = Integer.parseInt(boat);
         }
 
         return userCommands;
