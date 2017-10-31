@@ -78,7 +78,7 @@ public class Registry {
      * @param newMemberInfo - Member, temporary Member Object that contains new information
      * @return true if edit was successful otherwise false
      */
-    public boolean editMember(long memberID, Member newMemberInfo) {
+    public boolean editMember(int memberID, Member newMemberInfo) {
         try {
             Member member = findMember(memberID);
             if (newMemberInfo.getSocialSecurityNumber().length() != 0) {
@@ -117,7 +117,7 @@ public class Registry {
      * @return Member
      * @throws NoSuchElementException
      */
-    public Member getMember(long memberID) {
+    public Member getMember(int memberID) {
         return findMember(memberID);
 
     }
@@ -129,7 +129,7 @@ public class Registry {
      * @return Member, belonging to the member id
      * @throws NoSuchElementException
      */
-    private Member findMember(long memberID) {
+    private Member findMember(int memberID) {
         for (Member member : members) {
             if (member.getMemberID() == memberID) {
                 return member;

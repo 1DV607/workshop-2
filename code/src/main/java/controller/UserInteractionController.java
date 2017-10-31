@@ -67,7 +67,7 @@ public class UserInteractionController implements UserInteractionObserver {
             }
             case ViewMember: {
                 if (isValidCommand()) {
-                    long memberID = getMemberID();
+                    int memberID = getMemberID();
                     ui.displayMemberInformation(registry.getMember(memberID));
                 }
                 else {
@@ -233,6 +233,7 @@ public class UserInteractionController implements UserInteractionObserver {
      */
     private int getMemberID() {
         return (Integer) lastCommands[1];
+
     }
 
     /**
@@ -250,8 +251,11 @@ public class UserInteractionController implements UserInteractionObserver {
     private boolean isValidCommandWithBoat() {
 
         try {
-            getMemberID();
-            getBoatID();
+            int memberID = getMemberID();
+            int boatID = getBoatID();
+
+            Member member = registry.getMember(memberID);
+            member.getBoat(boatID);
             return true;
         }
         catch (Exception e) {
@@ -266,7 +270,8 @@ public class UserInteractionController implements UserInteractionObserver {
      */
     private boolean isValidCommand() {
         try {
-            getMemberID();
+            int memberID = getMemberID();
+            registry.getMember(memberID);
             return true;
         }
         catch (Exception e) {
