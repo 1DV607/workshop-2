@@ -22,11 +22,11 @@ public class Registry {
 
     /**
      * Creates a new Member and adds it to the members ArrayList
-     * @param memberID,
-     * @param socialSecurityNr
-     * @param firstName
-     * @param lastName
-     * @param address
+     * @param memberID -         ID of the member to add
+     * @param socialSecurityNr - social security number of the member to add
+     * @param firstName -        first name of the member to add
+     * @param lastName -         last name of the member to add
+     * @param address -          address of the member to add
      * @return true of the Member was successfully created and added otherwise false
      */
     public boolean addMember(int memberID, String socialSecurityNr, String firstName, String lastName, String address) {
@@ -44,10 +44,10 @@ public class Registry {
 
     /**
      * Generates an member id and calls addMember to create and add the new Member
-     * @param socialSecurityNr
-     * @param firstName
-     * @param lastName
-     * @param address
+     * @param socialSecurityNr - social security number of the member to add
+     * @param firstName -        first name of the member to add
+     * @param lastName -         last name of the member to add
+     * @param address -          address of the member to add
      * @return true if the Member was successfully created and added otherwise false
      */
     public boolean addMember(String socialSecurityNr, String firstName, String lastName, String address) {
@@ -74,7 +74,7 @@ public class Registry {
     /**
      * Takes a member id and change the Members information to the information
      * contained within the Member Object
-     * @param memberID - long, the id of the Member to change information
+     * @param memberID - the id of the Member to change information
      * @param newMemberInfo - Member, temporary Member Object that contains new information
      * @return true if edit was successful otherwise false
      */
@@ -114,12 +114,11 @@ public class Registry {
     /**
      * Returns the Member object
      * @param memberID - ID of the Member
-     * @return Member
-     * @throws NoSuchElementException
+     * @return the member with the specified memberID, if found.
+     * @throws NoSuchElementException if no member with the specified memberID was found
      */
     public Member getMember(int memberID) {
         return findMember(memberID);
-
     }
 
 
@@ -127,7 +126,7 @@ public class Registry {
      * Takes a member id and uses the id as key to finding the Member in the ArrayList
      * @param memberID - id of the Member to find
      * @return Member, belonging to the member id
-     * @throws NoSuchElementException
+     * @throws NoSuchElementException if no member with the specified memberID was found
      */
     private Member findMember(int memberID) {
         for (Member member : members) {

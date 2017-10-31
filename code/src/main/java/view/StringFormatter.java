@@ -13,10 +13,6 @@ import java.util.List;
 
     private StringBuilder stringBuilder;
 
-    StringFormatter() {
-
-    }
-
     /**
      * Creates a verbose Member List String containing Member information and information about each
      * members boat(s)
