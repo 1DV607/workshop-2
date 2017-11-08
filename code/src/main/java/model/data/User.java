@@ -1,4 +1,4 @@
-package model;
+package model.data;
 
 /**
  * Represent a User (Abstract class)
@@ -11,11 +11,8 @@ public abstract class User {
     private String lastName;
     private String address;
 
-    protected User() {
 
-    }
-
-    protected User(String socialSecurityNumber, String firstName,
+    public User(String socialSecurityNumber, String firstName,
                    String lastName, String address) {
         this.socialSecurityNumber = socialSecurityNumber;
         this.firstName = firstName;

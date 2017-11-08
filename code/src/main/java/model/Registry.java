@@ -3,6 +3,7 @@ package model;
 import java.util.*;
 
 import io.Dao;
+import model.data.Member;
 
 
 /**
@@ -23,15 +24,16 @@ public class Registry {
     /**
      * Creates a new Member and adds it to the members ArrayList
      * @param memberID -         ID of the member to add
-     * @param socialSecurityNr - social security number of the member to add
-     * @param firstName -        first name of the member to add
-     * @param lastName -         last name of the member to add
-     * @param address -          address of the member to add
      * @return true of the Member was successfully created and added otherwise false
      */
-    public boolean addMember(int memberID, String socialSecurityNr, String firstName, String lastName, String address) {
+    public boolean addMember(int memberID, Member memberCopy) {
         try {
-            Member member = new Member(memberID, socialSecurityNr, firstName, lastName, address);
+            Member member = new Member(memberID,
+                    memberCopy.getSocialSecurityNumber(),
+                    memberCopy.getFirstName(),
+                    memberCopy.getLastName(),
+                    memberCopy.getAddress());
+
             members.add(member);
             saveChanges();
             return true;
@@ -44,14 +46,11 @@ public class Registry {
 
     /**
      * Generates an member id and calls addMember to create and add the new Member
-     * @param socialSecurityNr - social security number of the member to add
-     * @param firstName -        first name of the member to add
-     * @param lastName -         last name of the member to add
-     * @param address -          address of the member to add
      * @return true if the Member was successfully created and added otherwise false
      */
-    public boolean addMember(String socialSecurityNr, String firstName, String lastName, String address) {
-        return addMember(generateMemberID(), socialSecurityNr, firstName, lastName, address);
+    public boolean addMember(Member memberCopy) {
+
+        return addMember(generateMemberID(), memberCopy);
     }
 
     /**

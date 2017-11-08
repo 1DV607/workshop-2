@@ -1,8 +1,5 @@
 package controller;
 
-import javax.json.JsonObject;
-import javax.json.JsonString;
-
 /**
  * interface that Connects the View and Controller
  *

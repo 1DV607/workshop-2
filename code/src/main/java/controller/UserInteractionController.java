@@ -1,10 +1,9 @@
 package controller;
 
-import java.util.List;
-
-import model.BoatType;
-import model.Member;
-import model.Registry;
+import model.*;
+import model.data.Boat;
+import model.data.BoatType;
+import model.data.Member;
 import view.UserInterface;
 
 /**
@@ -15,7 +14,7 @@ import view.UserInterface;
  */
 public class UserInteractionController implements UserInteractionObserver {
 
-    private List<Member> members;
+
     private UserInterface ui;
     private Registry registry;
     private InputDecoder decoder;
@@ -28,7 +27,6 @@ public class UserInteractionController implements UserInteractionObserver {
         this.registry = registry;
 
         decoder = new InputDecoder();
-        members = registry.getAllMembers();
     }
 
     /**
@@ -36,7 +34,7 @@ public class UserInteractionController implements UserInteractionObserver {
      */
     public void launch() {
         ui.displayWelcome();
-        ui.displayVerboseList(members); 
+        ui.displayVerboseList(registry.getAllMembers());
     }
 
     /**
@@ -52,7 +50,7 @@ public class UserInteractionController implements UserInteractionObserver {
                 throw new IllegalArgumentException("Empty input");
             }
 
-            lastCommands = decoder.getUserCommands(userInput, members);
+            lastCommands = decoder.getUserCommands(userInput);
         }
         catch (Exception e) {
             ui.displayError("Invalid command, please try again");
@@ -90,7 +88,6 @@ public class UserInteractionController implements UserInteractionObserver {
 
                 if (isValidCommand()) {
                     registry.removeMember(getMemberID());
-                    members = registry.getAllMembers();
                     chooseCorrectListVerbosity();
                 }
                 else {
@@ -129,7 +126,6 @@ public class UserInteractionController implements UserInteractionObserver {
                 }
                 else if (isValidCommandWithBoat()) {
                     registry.getMember(getMemberID()).removeBoat(getBoatID());
-                    members = registry.getAllMembers();
                     chooseCorrectListVerbosity();
                 }
                 else{
@@ -154,8 +150,7 @@ public class UserInteractionController implements UserInteractionObserver {
     @Override
     public void onAddMemberSubmitted(String socialSecurityNumber, String firstName,
             String lastName, String address) {
-        if (registry.addMember(socialSecurityNumber, firstName, lastName, address)) {
-            updateMemberList();
+        if (registry.addMember(new Member(socialSecurityNumber, firstName, lastName, address))) {
         }
         else {
             ui.displayError("Unable to add member");
@@ -172,7 +167,6 @@ public class UserInteractionController implements UserInteractionObserver {
                 firstName, lastName, address);
 
         if (registry.editMember(getMemberID(), newMemberInfo)) {
-            updateMemberList();
         }
         else {
             ui.displayError("Unable to edit member");
@@ -186,8 +180,8 @@ public class UserInteractionController implements UserInteractionObserver {
         Member member = registry.getMember(getMemberID());
 
         if (isValidBoatInput(type, size)) {
-            member.addBoat(BoatType.fromString(type), Integer.parseInt(size));
-            updateMemberList();
+
+            member.addBoat(new Boat(Integer.parseInt(size), BoatType.fromString(type)));
             chooseCorrectListVerbosity();
         }
         else {
@@ -200,8 +194,7 @@ public class UserInteractionController implements UserInteractionObserver {
         Member member = registry.getMember(getMemberID());
 
         if (isValidBoatInput(type, size)) {
-            member.editBoat(getBoatID(), BoatType.fromString(type), Integer.parseInt(size));
-            updateMemberList();
+            member.editBoat(getBoatID(), new Boat(Integer.parseInt(size), BoatType.fromString(type)));
             chooseCorrectListVerbosity();
         }
         else {
@@ -220,10 +213,10 @@ public class UserInteractionController implements UserInteractionObserver {
      */
     private void chooseCorrectListVerbosity() {
         if (listChoice) {
-            ui.displayVerboseList(members);
+            ui.displayVerboseList(registry.getAllMembers());
         }
         else {
-            ui.displayCompactList(members);
+            ui.displayCompactList(registry.getAllMembers());
         }
     }
 
@@ -290,10 +283,4 @@ public class UserInteractionController implements UserInteractionObserver {
         }
     }
 
-    /**
-     * collect members from Registry
-     */
-    private void updateMemberList() {
-        members = registry.getAllMembers();
-    }
 }

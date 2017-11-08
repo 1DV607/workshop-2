@@ -1,4 +1,4 @@
-package model;
+package model.data;
 
 /**
  * Represents a Boat Object
@@ -11,6 +11,11 @@ public class Boat {
 
     public Boat(int boatID, int size, BoatType type) {
         this.boatID = boatID;
+        setSize(size);
+        setBoatType(type);
+    }
+
+    public Boat(int size, BoatType type) {
         setSize(size);
         setBoatType(type);
     }

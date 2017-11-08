@@ -1,4 +1,4 @@
-package model;
+package model.data;
 
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
@@ -19,6 +19,11 @@ public class Member extends User {
         boats = new ArrayList<>();
     }
 
+    public Member(String socialSecurityNumber, String firstName,
+                  String lastName, String address) {
+        super(socialSecurityNumber, firstName, lastName, address);
+    }
+
     public int getMemberID() {
         return memberID;
     }
@@ -27,24 +32,19 @@ public class Member extends User {
      * Creates a boat and adds it to this members list of boats. Generates
      * an ID for the new boat which is unique compared to this member's other
      * boats.
-     *
-     * @param boatType, type of new boat
-     * @param boatSize, size in meters of the new boat
      */
-    public void addBoat(BoatType boatType, int boatSize) {
+    public void addBoat(Boat boatCopy) {
         int id = generateBoatID();
-        addBoat(id, boatType, boatSize);
+        addBoat(id, boatCopy);
     }
 
     /**
      * Creates a boat and adds it to this members list of boats.
      *
      * @param boatID, ID of the boat to add
-     * @param boatType, type of the boat to add
-     * @param size, size of the boat to add  
      */
-    public void addBoat(int boatID, BoatType boatType, int size) {
-        Boat boat = new Boat(boatID, size,  boatType);
+    public void addBoat(int boatID, Boat boatCopy) {
+        Boat boat = new Boat(boatID, boatCopy.getSize(), boatCopy.getBoatType());
         boats.add(boat);
     }
 
@@ -57,13 +57,11 @@ public class Member extends User {
      * Updates the information of the boat with the specified 'boatID'.
      *
      * @param boatID, ID of boat to edit
-     * @param boatType, new boat type
-     * @param boatSize, new boat size  
      */
-    public void editBoat(int boatID, BoatType boatType, int boatSize) {
+    public void editBoat(int boatID, Boat boatCopy) {
         Boat boat = findBoat(boatID);
-        boat.setBoatType(boatType);
-        boat.setSize(boatSize);
+        boat.setBoatType(boatCopy.getBoatType());
+        boat.setSize(boatCopy.getSize());
 
     }
 

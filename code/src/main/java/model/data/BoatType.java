@@ -1,4 +1,4 @@
-package model;
+package model.data;
 
 /**
  * Represents the different types of Boats
