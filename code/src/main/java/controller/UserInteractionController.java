@@ -209,7 +209,7 @@ public class UserInteractionController implements UserInteractionObserver {
 
     /**
      * calls different display methods depending on boolean - listChoice
-     * Allways the list option latest chosen by the User
+     * Always the list option latest chosen by the User
      */
     private void chooseCorrectListVerbosity() {
         if (listChoice) {
@@ -272,6 +272,10 @@ public class UserInteractionController implements UserInteractionObserver {
         }
     }
 
+    /**
+     * Check if the boat input is valid
+     * @return true if valid otherwise false
+     */
     private boolean isValidBoatInput(String type, String size) {
         try {
             BoatType.fromString(type);

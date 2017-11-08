@@ -13,7 +13,7 @@ public class InputDecoder {
     }
 
     /**
-     * Takes user input and a List of members and transform it to a
+     * Takes user input and transform it to a
      * command, memberID (if present) and boatID (if present)
      * The userInput choices has to be separated by space.
      * @param userInput - String, the command choices made by the user

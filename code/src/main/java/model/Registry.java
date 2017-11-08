@@ -23,7 +23,8 @@ public class Registry {
 
     /**
      * Creates a new Member and adds it to the members ArrayList
-     * @param memberID -         ID of the member to add
+     * @param memberID      - ID of the member to add
+     * @param memberCopy    - Member, contains the information for the new Member
      * @return true of the Member was successfully created and added otherwise false
      */
     public boolean addMember(int memberID, Member memberCopy) {
@@ -46,6 +47,7 @@ public class Registry {
 
     /**
      * Generates an member id and calls addMember to create and add the new Member
+     * @param memberCopy        - Member, contains the information of the new Member
      * @return true if the Member was successfully created and added otherwise false
      */
     public boolean addMember(Member memberCopy) {
@@ -54,7 +56,7 @@ public class Registry {
     }
 
     /**
-     * Removes a Member and all Boats connected to this member
+     * Removes a Member from the ArrayList
      * @param memberID - id of the Member to remove
      * @return true if the Member was successfully removed, otherwise false
      */

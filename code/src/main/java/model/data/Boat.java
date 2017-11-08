@@ -15,6 +15,11 @@ public class Boat {
         setBoatType(type);
     }
 
+    /**
+     * Constructor used to create a Boat object without a boat ID
+     * @param size - int
+     * @param type - BoatType
+     */
     public Boat(int size, BoatType type) {
         setSize(size);
         setBoatType(type);
