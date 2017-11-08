@@ -1,6 +1,6 @@
 package io;
 
-import model.BoatType;
+import model.data.BoatType;
 
 import javax.json.JsonObject;
 import javax.json.JsonArray;

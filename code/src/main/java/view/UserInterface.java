@@ -1,7 +1,7 @@
 package view;
 
-import model.Boat;
-import model.Member;
+import model.data.Boat;
+import model.data.Member;
 
 import java.util.List;
 

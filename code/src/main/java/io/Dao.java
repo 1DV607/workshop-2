@@ -1,7 +1,6 @@
 package io;
 
-import io.JsonParser;
-import model.Member;
+import model.data.Member;
 
 
 import java.io.File;

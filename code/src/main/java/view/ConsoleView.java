@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Scanner;
 
 import controller.UserInteractionObserver;
-import model.Boat;
-import model.Member;
+import model.data.Boat;
+import model.data.Member;
 
 
 /**

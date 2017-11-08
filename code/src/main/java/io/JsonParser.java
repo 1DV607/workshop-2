@@ -2,9 +2,9 @@ package io;
 
 
 
-import model.Boat;
-import model.BoatType;
-import model.Member;
+import model.data.Boat;
+import model.data.BoatType;
+import model.data.Member;
 
 import java.util.ArrayList;
 import java.util.List;
