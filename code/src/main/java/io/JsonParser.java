@@ -1,7 +1,5 @@
 package io;
 
-
-
 import model.data.Boat;
 import model.data.BoatType;
 import model.data.Member;
@@ -64,8 +62,6 @@ class JsonParser {
         member = new Member(memberID, ssn, firstName, lastName, address);
         member.setSocialSecurityNumber(ssn);
         return member;
-
-
     }
 
 
@@ -194,7 +190,8 @@ class JsonParser {
                     int boatID;
 
                     boatID = Integer.parseInt(jBoat.getString("boatID"));
-                    member.addBoat(boatID, type, size);
+                    Boat boat = new Boat(boatID, size, type);
+                    member.addBoat(boat);
                 }
                 
                 result.add(member);
