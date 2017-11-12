@@ -25,34 +25,23 @@ public class Registry {
      * Creates a new Member and adds it to the members ArrayList
      * @param memberID      - ID of the member to add
      * @param memberCopy    - Member, contains the information for the new Member
-     * @return true of the Member was successfully created and added otherwise false
      */
-    public boolean addMember(int memberID, Member memberCopy) {
-        try {
-            Member member = new Member(memberID,
-                    memberCopy.getSocialSecurityNumber(),
-                    memberCopy.getFirstName(),
-                    memberCopy.getLastName(),
-                    memberCopy.getAddress());
+    public void addMember(int memberID, Member memberCopy) {
+        Member member = new Member(memberID,
+                memberCopy.getSocialSecurityNumber(),
+                memberCopy.getFirstName(),
+                memberCopy.getLastName(),
+                memberCopy.getAddress());
 
-            members.add(member);
-            saveChanges();
-            return true;
-        }
-        catch (Exception exception) {
-            return false;
-        }
-
+        members.add(member);
     }
 
     /**
      * Generates an member id and calls addMember to create and add the new Member
      * @param memberCopy        - Member, contains the information of the new Member
-     * @return true if the Member was successfully created and added otherwise false
      */
-    public boolean addMember(Member memberCopy) {
-
-        return addMember(generateMemberID(), memberCopy);
+    public void addMember(Member memberCopy) {
+        addMember(generateMemberID(), memberCopy);
     }
 
     /**
@@ -64,7 +53,6 @@ public class Registry {
         try {
             Member member = findMember(memberID);
             members.remove(member);
-            saveChanges();
             return true;
         }
         catch (Exception exception) {
@@ -94,7 +82,6 @@ public class Registry {
             if (newMemberInfo.getAddress().length() != 0) {
                 member.setAddress(newMemberInfo.getAddress());
             }
-            saveChanges();
             return true;
         }
         catch (Exception exception) {
