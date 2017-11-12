@@ -95,9 +95,10 @@ public class ConsoleView implements UserInterface {
         String firstName = getInput("First name: ");
         String lastName = getInput("Last name: ");
         String address = getInput("Address: ");
+        
+        Member memberInfo = new Member(socialSecurityNumber, firstName, lastName, address);
 
-        interactionObserver.onAddMemberSubmitted(socialSecurityNumber, firstName,
-            lastName, address);
+        interactionObserver.onAddMemberSubmitted(memberInfo);
     }
 
     /**
@@ -141,8 +142,9 @@ public class ConsoleView implements UserInterface {
         String address = getInput(String.format("Address (current: %s): ",
                     member.getAddress()));
 
+        Member memberInfo = new Member(socialSecurityNumber, firstName, lastName, address);
 
-        interactionObserver.onEditMemberSubmitted(socialSecurityNumber, firstName, lastName, address );
+        interactionObserver.onEditMemberSubmitted(memberInfo);
     }
 
     /**
@@ -160,7 +162,6 @@ public class ConsoleView implements UserInterface {
         System.out.println("");
         String size = getInput("Enter length (meters): ");
         String boatType = getInput("Enter type (SailBoat/Motorsailer/Canoe/Kayak/Other): ");
-
 
         interactionObserver.onAddBoatSubmitted(boatType, size);
     }
@@ -181,7 +182,6 @@ public class ConsoleView implements UserInterface {
                     boat.getSize()));
         String boatType = getInput(String.format("Boat type (current: %s): ",
                     boat.getBoatType().getName()));
-
 
         interactionObserver.onEditBoatSubmitted(boatType, size);
     }

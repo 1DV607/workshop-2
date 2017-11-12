@@ -148,21 +148,16 @@ public class UserInteractionController implements UserInteractionObserver {
     }
 
     @Override
-    public void onAddMemberSubmitted(String socialSecurityNumber, String firstName,
-            String lastName, String address) {
-        registry.addMember(new Member(socialSecurityNumber, firstName, lastName, address));
+    public void onAddMemberSubmitted(Member memberInfo) {
+        registry.addMember(memberInfo);
 
         chooseCorrectListVerbosity();
     }
 
     @Override
-    public void onEditMemberSubmitted(String socialSecurityNumber,
-            String firstName, String lastName, String address) {
+    public void onEditMemberSubmitted(Member memberInfo) {
         
-        Member newMemberInfo = new Member(getMemberID(), socialSecurityNumber,
-                firstName, lastName, address);
-
-        if (registry.editMember(getMemberID(), newMemberInfo)) {
+        if (registry.editMember(getMemberID(), memberInfo)) {
         }
         else {
             ui.displayError("Unable to edit member");
