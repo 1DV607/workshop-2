@@ -192,6 +192,15 @@ public class UserInteractionController implements UserInteractionObserver {
     @Override
     public void onEditBoatSubmitted(String type, String size) {
         Member member = registry.getMember(getMemberID());
+        Boat boatToEdit = member.getBoat(getBoatID());
+        
+        if (type.isEmpty()) {
+            type = boatToEdit.getBoatType().getName();
+        }
+
+        if (size.isEmpty()) {
+            size = Integer.toString(boatToEdit.getSize());
+        }
 
         if (isValidBoatInput(type, size)) {
             member.editBoat(getBoatID(), new Boat(Integer.parseInt(size), BoatType.fromString(type)));
